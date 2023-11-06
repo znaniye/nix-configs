@@ -10,6 +10,9 @@
     extraConfig = ''
       colorscheme gruvbox
       set number relativenumber
+      set tabstop=4
+      set shiftwidth=4
+      set expandtab
 
       nnoremap <C-l> :bnext<CR>
       nnoremap <C-h> :bprevious<CR>

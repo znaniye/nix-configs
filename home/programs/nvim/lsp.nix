@@ -33,6 +33,7 @@ in {
 
           add_lsp("gopls", lspconfig.gopls, {})
           add_lsp("ols", lspconfig.ols, {})
+          add_lsp("clangd", lspconfig.clangd, {})
           add_lsp("ocamllsp", lspconfig.ocamllsp, {})
           add_lsp("erlang_ls", lspconfig.erlangls, {})
           add_lsp("nil", lspconfig.nil_ls, {})

@@ -1,8 +1,18 @@
-{pkgs, ...}: {
+{pkgs, inputs, ...}: {
   imports = [
     ./hardware-configuration.nix
     ./i3.nix
+    inputs.sops-nix.nixosModules.sops
   ];
+
+  sops = {
+    defaultSopsFile = ./secrets/secrets.yaml;
+    defaultSopsFormat = "yaml";
+
+    age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";
+    secrets.example-key = { };
+    secrets."myservice/my_subdir/my_secret" = { };
+  }; 
 
   nix = {
     gc = {
@@ -25,23 +35,8 @@
 
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = ["mydatabase"];
-    enableTCPIP = true;
-    # port = 5432;
-    authentication = pkgs.lib.mkOverride 10 ''
-      #...
-      #type database DBuser origin-address auth-method
-      # ipv4
-      host  all      all     127.0.0.1/32   trust
-      # ipv6
-      host all       all     ::1/128        trust
-      local all all trust
-    '';
+    remotePlay.openFirewall = true; 
+    dedicatedServer.openFirewall = true;
   };
 
   boot = {

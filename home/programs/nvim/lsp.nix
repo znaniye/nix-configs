@@ -62,8 +62,8 @@ in {
           end
           vim.api.nvim_set_hl(0, '@lsp.type.comment.rust', {})
         '';
-      }
-    (fromGitHub "0d738ff893ba1a1e1b944feedf3451df8b2ff744" "master" "Tetralux/odin.vim") 
+    }
+    (fromGitHub "0d738ff893ba1a1e1b944feedf3451df8b2ff744" "master" "Tetralux/odin.vim")
     cmp-nvim-lsp
     cmp-buffer
     lspkind-nvim

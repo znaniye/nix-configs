@@ -1,4 +1,4 @@
-{pkgs,  ...}: {
+{pkgs, ...}: {
   imports = [
     ./programs
     ./services/polybar.nix
@@ -11,7 +11,6 @@
   };
 
   home.packages = with pkgs; [
-
     (pkgs.factorio.override {
       username = "znaniye";
       token = "903c217867449653fcb687a0b149b6";

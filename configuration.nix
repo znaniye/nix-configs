@@ -1,20 +1,24 @@
-{pkgs, inputs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ./i3.nix
     inputs.sops-nix.nixosModules.sops
   ];
-  
- #TODO finish this 
+
+  #TODO finish this
   sops = {
     defaultSopsFile = ./secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
 
     age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";
 
-    secrets.example-key = { };
-    secrets."myservice/my_subdir/my_secret" = { };
-  }; 
+    secrets.example-key = {};
+    secrets."myservice/my_subdir/my_secret" = {};
+  };
 
   nix = {
     gc = {
@@ -37,7 +41,7 @@
 
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; 
+    remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
   };
 

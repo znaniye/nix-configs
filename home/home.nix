@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs,  ...}: {
   imports = [
     ./programs
     ./services/polybar.nix
@@ -45,6 +45,7 @@
 
     qbittorrent
     spotifyd
+    sonic-pi
     firefox
     brightnessctl
     rofi

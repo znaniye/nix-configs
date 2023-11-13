@@ -20,8 +20,9 @@
 
     nerdfonts
     ripgrep
-    discord
+    discord 
     telegram-desktop
+    element-desktop
     dbeaver
     obsidian
     ranger

@@ -18,6 +18,7 @@
     })
     mindustry
 
+    bluez
     nerdfonts
     ripgrep
     discord

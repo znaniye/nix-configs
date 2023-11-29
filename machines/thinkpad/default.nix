@@ -59,7 +59,10 @@
   console.keyMap = "br-abnt2";
 
   services.blueman.enable = true;
-  hardware.bluetooth.enable = true;
+  hardware.bluetooth = {
+    enable = true;
+    package = pkgs.bluez;
+  };
 
   sound.enable = true;
   hardware.pulseaudio.enable = false;

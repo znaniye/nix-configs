@@ -20,7 +20,7 @@
 
     nerdfonts
     ripgrep
-    discord 
+    discord
     telegram-desktop
     element-desktop
     dbeaver
@@ -60,9 +60,6 @@
     mindustry
     xclip
     pavucontrol
-
-    #android-studio
-    #android-tools
   ];
 
   programs.home-manager.enable = true;

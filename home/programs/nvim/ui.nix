@@ -5,6 +5,7 @@
       vim-nix
       vim-go
       vim-elixir
+
       {
         plugin = toggleterm-nvim;
         type = "lua";

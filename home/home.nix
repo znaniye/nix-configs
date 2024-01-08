@@ -38,6 +38,7 @@
     tree
     neofetch
     alacritty
+    jetbrains.idea-community
 
     nix-tree
     nix-prefetch

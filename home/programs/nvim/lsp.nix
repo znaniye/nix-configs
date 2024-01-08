@@ -48,6 +48,7 @@ in {
         require("elixir").setup()
       '';
     }
+    
     {
       plugin = rust-tools-nvim;
       type = "lua";

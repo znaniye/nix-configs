@@ -6,7 +6,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs = {
@@ -33,12 +32,12 @@
       ];
     };
 
-   # nixosConfigurations.sandex = nixpkgs.lib.nixosSystem {
-   #   system = "x86_64-linux";
-   #   specialArgs = {inherit inputs;};
-   #   modules = [
-   #     ./hosts/
-   #   ];
-   # }
+    # nixosConfigurations.sandex = nixpkgs.lib.nixosSystem {
+    #   system = "x86_64-linux";
+    #   specialArgs = {inherit inputs;};
+    #   modules = [
+    #     ./hosts/
+    #   ];
+    # }
   };
 }

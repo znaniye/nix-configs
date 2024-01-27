@@ -110,6 +110,11 @@
           }
         '';
       }
+      {
+        plugin = indent-blankline-nvim;
+        type = "lua";
+        config = '''';
+      }
     ];
   };
 }

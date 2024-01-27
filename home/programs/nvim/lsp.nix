@@ -52,7 +52,7 @@ in {
       config = ''
         require("elixir").setup()
       '';
-    } 
+    }
     {
       plugin = rust-tools-nvim;
       type = "lua";

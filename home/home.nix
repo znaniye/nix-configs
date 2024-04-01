@@ -13,6 +13,7 @@
   home.packages = with pkgs; [
     mindustry
 
+    htop
     bluez
     nerdfonts
     ripgrep

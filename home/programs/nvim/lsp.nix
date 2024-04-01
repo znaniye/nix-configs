@@ -40,6 +40,8 @@ in {
           end
 
           add_lsp(lspconfig.gopls, {})
+          add_lsp(lspconfig.erlangls, {})
+          add_lsp(lspconfig.pylsp, {})
           add_lsp(lspconfig.ols, {})
           add_lsp(lspconfig.clangd, {})
           add_lsp(lspconfig.nil_ls, {})

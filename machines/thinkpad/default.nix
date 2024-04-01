@@ -77,11 +77,15 @@
 
   programs.zsh.enable = true;
 
+  virtualisation.docker = {
+    enable = true;
+  };
+
   users = {
     users.znaniye = {
       isNormalUser = true;
       description = "znaniye";
-      extraGroups = ["networkmanager" "wheel"];
+      extraGroups = ["networkmanager" "wheel" "docker"];
     };
     defaultUserShell = pkgs.zsh;
   };

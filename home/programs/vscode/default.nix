@@ -5,11 +5,13 @@
     extensions = with pkgs.vscode-extensions; [
       jdinhlife.gruvbox
       pkief.material-icon-theme
+      vscodevim.vim
 
       elixir-lsp.vscode-elixir-ls
       phoenixframework.phoenix
       ms-python.python
       jnoortheen.nix-ide
+      golang.go
     ];
 
     userSettings = {

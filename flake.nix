@@ -8,26 +8,19 @@
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: {
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations.felix = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       #specialArgs = {inherit inputs;};
       modules = [
-        ./machines/thinkpad
+        ./hosts/thinkpad
         home-manager.nixosModules.home-manager
         {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             users.znaniye = import ./home/home.nix;
-            extraSpecialArgs = {
-              inherit inputs;
-            };
+            extraSpecialArgs = { inherit inputs; };
           };
         }
       ];

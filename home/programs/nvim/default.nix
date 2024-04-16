@@ -19,6 +19,7 @@
       nnoremap <C-y> :ToggleTerm direction=float size=40<CR>
     '';
     plugins = with pkgs.vimPlugins; [
+      markdown-preview-nvim
       {
         plugin = nvim-autopairs;
         type = "lua";

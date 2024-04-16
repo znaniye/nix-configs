@@ -17,6 +17,7 @@
     bluez
     nerdfonts
     ripgrep
+    tokei
     discord
     telegram-desktop
     element-desktop
@@ -39,7 +40,6 @@
     nix-tree
     nix-prefetch
     nix-prefetch-git
-    alejandra
     gh
     nil
 

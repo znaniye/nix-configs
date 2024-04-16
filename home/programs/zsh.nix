@@ -42,7 +42,7 @@
       "f" = "nix search";
       "fs" = "nix search self";
       "cat" = "${pkgs.bat}/bin/bat";
-      "ls" = "${pkgs.exa}/bin/exa";
+      "ls" = "${pkgs.eza}/bin/eza";
     };
   };
 }

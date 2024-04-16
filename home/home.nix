@@ -40,6 +40,7 @@
     nix-tree
     nix-prefetch
     nix-prefetch-git
+    nixfmt-rfc-style
     gh
     nil
 

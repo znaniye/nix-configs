@@ -1,8 +1,5 @@
+{ pkgs, lib, ... }:
 {
-  pkgs,
-  lib,
-  ...
-}: {
   home.pointerCursor = {
     package = pkgs.breeze-qt5;
     name = "Breeze";

@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./lsp.nix
     ./ui.nix
@@ -24,9 +25,7 @@
         plugin = nvim-autopairs;
         type = "lua";
         config =
-          /*
-          lua
-          */
+          # lua
           ''
             require('nvim-autopairs').setup{}
           '';

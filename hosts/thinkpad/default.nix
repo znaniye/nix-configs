@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ./i3.nix
@@ -20,7 +21,7 @@
 
   services.printing = {
     enable = true;
-    drivers = [pkgs.hplipWithPlugin];
+    drivers = [ pkgs.hplipWithPlugin ];
   };
 
   programs.steam = {
@@ -85,7 +86,11 @@
     users.znaniye = {
       isNormalUser = true;
       description = "znaniye";
-      extraGroups = ["networkmanager" "wheel" "docker"];
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "docker"
+      ];
     };
     defaultUserShell = pkgs.zsh;
   };

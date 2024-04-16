@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.alacritty = {
     enable = true;
 
@@ -26,7 +27,9 @@
         size = 10;
       };
 
-      shell = {program = "${pkgs.zsh}/bin/zsh";};
+      shell = {
+        program = "${pkgs.zsh}/bin/zsh";
+      };
 
       colors = {
         primary = {

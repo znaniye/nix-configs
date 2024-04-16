@@ -8,7 +8,7 @@
 
     settings = {
       no-fading-openclose = true;
-      invert-color-include = ["TAG_INVERT@:8c = 1"];
+      invert-color-include = [ "TAG_INVERT@:8c = 1" ];
 
       blur = {
         method = "gaussian";
@@ -19,9 +19,12 @@
 
     fade = true;
     fadeDelta = 12;
-    fadeSteps = [0.15 0.15];
+    fadeSteps = [
+      0.15
+      0.15
+    ];
 
-    inactiveOpacity = 0.90;
+    inactiveOpacity = 0.9;
 
     menuOpacity = 0.98;
 
@@ -31,7 +34,10 @@
       "name = 'cpt_frame_xcb_window'"
       "class_g ?= 'zoom'"
     ];
-    shadowOffsets = [(-15) (-15)];
+    shadowOffsets = [
+      (-15)
+      (-15)
+    ];
     shadowOpacity = 0.7;
 
     opacityRules = [

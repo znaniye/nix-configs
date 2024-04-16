@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.neovim = {
     plugins = with pkgs.vimPlugins; [
       gruvbox-nvim
@@ -33,9 +34,7 @@
         plugin = bufferline-nvim;
         type = "lua";
         config =
-          /*
-          lua
-          */
+          # lua
           ''
             require('bufferline').setup{}
           '';
@@ -44,9 +43,7 @@
         plugin = alpha-nvim;
         type = "lua";
         config =
-          /*
-          lua
-          */
+          # lua
           ''
             local alpha = require("alpha")
             local dashboard = require("alpha.themes.dashboard")
@@ -75,9 +72,7 @@
         plugin = nvim-web-devicons;
         type = "lua";
         config =
-          /*
-          lua
-          */
+          # lua
           ''
             require('nvim-web-devicons').setup{}
           '';
@@ -86,9 +81,7 @@
         plugin = gitsigns-nvim;
         type = "lua";
         config =
-          /*
-          lua
-          */
+          # lua
           ''
             require('gitsigns').setup{
               signs = {

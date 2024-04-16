@@ -1,9 +1,7 @@
-{
-  pkgs,
-  lib,
-  ...
-}: let
-  fromGitHub = rev: ref: repo:
+{ pkgs, lib, ... }:
+let
+  fromGitHub =
+    rev: ref: repo:
     pkgs.vimUtils.buildVimPluginFrom2Nix {
       pname = "${lib.strings.sanitizeDerivationName repo}";
       version = ref;
@@ -13,16 +11,15 @@
         rev = rev;
       };
     };
-in {
+in
+{
   programs.neovim.plugins = with pkgs.vimPlugins; [
     # LSP
     {
       plugin = nvim-lspconfig;
       type = "lua";
       config =
-        /*
-        lua
-        */
+        # lua
         ''
           local lspconfig = require('lspconfig')
 
@@ -59,9 +56,7 @@ in {
       plugin = rust-tools-nvim;
       type = "lua";
       config =
-        /*
-        lua
-        */
+        # lua
         ''
           local rust_tools = require('rust-tools')
           if vim.fn.executable("rust-analyzer") == 1 then
@@ -78,9 +73,7 @@ in {
       plugin = nvim-cmp;
       type = "lua";
       config =
-        /*
-        lua
-        */
+        # lua
         ''
           local cmp = require('cmp')
           cmp.setup{

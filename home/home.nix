@@ -41,6 +41,7 @@
     nix-tree
     nix-prefetch
     nix-prefetch-git
+    nixpkgs-review
     nixfmt-rfc-style
     gh
     nil

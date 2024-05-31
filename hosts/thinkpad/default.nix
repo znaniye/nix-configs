@@ -30,6 +30,12 @@
     dedicatedServer.openFirewall = true;
   };
 
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
   boot = {
     loader = {
       systemd-boot.enable = true;

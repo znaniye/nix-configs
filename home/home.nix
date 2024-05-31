@@ -22,7 +22,6 @@
     discord
     telegram-desktop
     element-desktop
-    dbeaver
     obsidian
     ranger
     krita

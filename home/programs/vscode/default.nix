@@ -13,6 +13,7 @@
       ms-python.python
       jnoortheen.nix-ide
       golang.go
+      danielgavin.ols
     ];
 
     userSettings = {

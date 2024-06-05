@@ -21,41 +21,41 @@ in
       config =
         # lua
         ''
-                    local lspconfig = require('lspconfig')
+          local lspconfig = require('lspconfig')
 
-                    lspconfig.tsserver.setup{}
+          lspconfig.tsserver.setup{}
 
-                    function add_lsp(server, options)
-                      if options["cmd"] ~= nil then
-                        binary = options["cmd"][1]
-                      else
-                        binary = server["document_config"]["default_config"]["cmd"][1]
-                      end
-                      if vim.fn.executable(binary) == 1 then
-                        server.setup(options)
-                      end
-                    end
-
-
-                    local function on_attach(client, bufnr)
-                      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-                      local opts = { noremap=true, silent=true }
-
-                      -- Keybindings LSP
-                      buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-                      buf_set_keymap('n', '<C-s>', '<cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>', opts)
-                      buf_set_keymap('i', '<C-s>', '<Esc><cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>i', opts)
-                    end
+          function add_lsp(server, options)
+            if options["cmd"] ~= nil then
+              binary = options["cmd"][1]
+            else
+              binary = server["document_config"]["default_config"]["cmd"][1]
+            end
+            if vim.fn.executable(binary) == 1 then
+              server.setup(options)
+            end
+          end
 
 
-                    add_lsp(lspconfig.ols, {
-                      on_attach = on_attach
-                    })
-                    add_lsp(lspconfig.gopls, {})
-                    add_lsp(lspconfig.erlangls, {})
-                    add_lsp(lspconfig.pylsp, {})
-                    add_lsp(lspconfig.clangd, {})
-                    add_lsp(lspconfig.nil_ls, {})
+          local function on_attach(client, bufnr)
+            local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+            local opts = { noremap=true, silent=true }
+
+            -- Keybindings LSP
+            buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+            buf_set_keymap('n', '<C-s>', '<cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>', opts)
+            buf_set_keymap('i', '<C-s>', '<Esc><cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>i', opts)
+          end
+
+
+          add_lsp(lspconfig.ols, {
+            on_attach = on_attach
+          })
+          add_lsp(lspconfig.gopls, {})
+          add_lsp(lspconfig.erlangls, {})
+          add_lsp(lspconfig.pylsp, {})
+          add_lsp(lspconfig.clangd, {})
+          add_lsp(lspconfig.nil_ls, {})
         '';
     }
 

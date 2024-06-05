@@ -19,11 +19,6 @@
     '';
   };
 
-  services.printing = {
-    enable = true;
-    drivers = [ pkgs.hplipWithPlugin ];
-  };
-
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;

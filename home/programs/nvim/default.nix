@@ -8,7 +8,7 @@
   home.sessionVariables.EDITOR = "nvim";
   programs.neovim = {
     enable = true;
-    extraConfig = ''
+   /* extraConfig = ''
       colorscheme gruvbox
       set number relativenumber
       set tabstop=4
@@ -18,9 +18,9 @@
       nnoremap <C-l> :bnext<CR>
       nnoremap <C-h> :bprevious<CR>
       nnoremap <C-y> :ToggleTerm direction=float size=40<CR>
-    '';
+    '';*/
 
-    extraLuaConfig = ./config.lua;
+    extraLuaConfig = builtins.readFile ./config.lua;
 
     plugins = with pkgs.vimPlugins; [
       markdown-preview-nvim

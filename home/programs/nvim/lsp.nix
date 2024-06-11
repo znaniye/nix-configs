@@ -2,7 +2,7 @@
 let
   fromGitHub =
     rev: ref: repo:
-    pkgs.vimUtils.buildVimPluginFrom2Nix {
+    pkgs.vimUtils.buildVimPlugin {
       pname = "${lib.strings.sanitizeDerivationName repo}";
       version = ref;
       src = builtins.fetchGit {
@@ -52,6 +52,17 @@ in
             on_attach = on_attach
           })
           add_lsp(lspconfig.gopls, {})
+
+          add_lsp(lspconfig.lua_ls, {
+            settings = {
+              Lua = {
+                diagnostics = {
+                  globals = {'vim'},
+                },
+              },
+            },
+          })
+          
           add_lsp(lspconfig.erlangls, {})
           add_lsp(lspconfig.pylsp, {})
           add_lsp(lspconfig.clangd, {})

@@ -14,6 +14,7 @@
   home.packages = with pkgs; [
     mindustry
 
+    appflowy
     htop
     bluez
     nerdfonts

@@ -18,9 +18,10 @@
       nnoremap <C-l> :bnext<CR>
       nnoremap <C-h> :bprevious<CR>
       nnoremap <C-y> :ToggleTerm direction=float size=40<CR>
-
-
     '';
+
+    extraLuaConfig = ./config.lua;
+
     plugins = with pkgs.vimPlugins; [
       markdown-preview-nvim
       {

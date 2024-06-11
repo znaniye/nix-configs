@@ -23,7 +23,6 @@
     discord
     telegram-desktop
     element-desktop
-    obsidian
     ranger
     krita
     hplip

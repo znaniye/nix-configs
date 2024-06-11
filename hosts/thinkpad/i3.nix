@@ -1,16 +1,19 @@
 { pkgs, ... }:
 {
   services = {
-    xserver = {
-      enable = true;
 
-      layout = "br";
-      xkbVariant = "";
-
-      displayManager = {
+    displayManager = {
         defaultSession = "none+i3";
         autoLogin.enable = true;
         autoLogin.user = "znaniye";
+    };
+
+    xserver = {
+      enable = true;
+
+      xkb = {
+        variant = "";
+        layout = "br";
       };
 
       windowManager.i3 = {

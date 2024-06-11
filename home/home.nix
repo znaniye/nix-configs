@@ -46,6 +46,9 @@
     gh
     nil
 
+    lua
+    lua-language-server
+
     qbittorrent
     spotifyd
     sonic-pi

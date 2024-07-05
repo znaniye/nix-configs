@@ -14,6 +14,8 @@
   home.packages = with pkgs; [
     mindustry
 
+    lazygit
+    teams-for-linux
     appflowy
     htop
     bluez

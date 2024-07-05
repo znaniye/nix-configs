@@ -3,9 +3,9 @@
   services = {
 
     displayManager = {
-        defaultSession = "none+i3";
-        autoLogin.enable = true;
-        autoLogin.user = "znaniye";
+      defaultSession = "none+i3";
+      autoLogin.enable = true;
+      autoLogin.user = "znaniye";
     };
 
     xserver = {

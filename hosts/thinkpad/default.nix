@@ -25,12 +25,6 @@
     dedicatedServer.openFirewall = true;
   };
 
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
-
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -43,6 +37,7 @@
     networkmanager.enable = true;
   };
 
+  services.logind.lidSwitchExternalPower = "ignore";
   time.timeZone = "America/Sao_Paulo";
 
   i18n.defaultLocale = "pt_BR.UTF-8";
@@ -61,13 +56,22 @@
   console.keyMap = "br-abnt2";
 
   services.blueman.enable = true;
-  hardware.bluetooth = {
-    enable = true;
-    package = pkgs.bluez;
+  hardware = {
+
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+
+    bluetooth = {
+      enable = true;
+      package = pkgs.bluez;
+    };
+
+    pulseaudio.enable = false;
   };
 
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
   services.pipewire = {

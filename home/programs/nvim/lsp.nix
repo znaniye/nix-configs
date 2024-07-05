@@ -18,14 +18,14 @@ in
       plugin = neodev-nvim;
       type = "lua";
       config = ''
-        require("neodev").setup({
-        override = function(root_dir, library)
-        if root_dir:find("/etc/nixos", 1, true) == 1 then
-          library.enabled = true
-          library.plugins = true
-        end
-      end,
-        })
+          require("neodev").setup({
+          override = function(root_dir, library)
+          if root_dir:find("/etc/nixos", 1, true) == 1 then
+            library.enabled = true
+            library.plugins = true
+          end
+        end,
+          })
       '';
     }
     # LSP
@@ -76,7 +76,7 @@ in
               },
             },
           })
-          
+
           add_lsp(lspconfig.erlangls, {})
           add_lsp(lspconfig.pylsp, {})
           add_lsp(lspconfig.clangd, {})

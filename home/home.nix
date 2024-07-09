@@ -16,8 +16,6 @@
 
     ldtk
     lazygit
-    teams-for-linux
-    appflowy
     htop
     bluez
     nerdfonts
@@ -25,18 +23,13 @@
     tokei
     discord
     telegram-desktop
-    element-desktop
     ranger
     krita
     aseprite
-    godot_4
-    syncthing
     fd
-    ix
     tree
-    neofetch
+    fastfetch
     alacritty
-    jetbrains.idea-community
 
     nix-tree
     nix-prefetch
@@ -51,7 +44,6 @@
 
     qbittorrent
     spotifyd
-    sonic-pi
     firefox
     brightnessctl
     rofi
@@ -61,7 +53,6 @@
     flameshot
     spotify
     libreoffice-qt
-    mindustry
     xclip
     pavucontrol
   ];
@@ -70,5 +61,5 @@
 
   systemd.user.startServices = "sd-switch";
 
-  home.stateVersion = "22.11";
+  home.stateVersion = "24.05";
 }

@@ -14,6 +14,7 @@
   home.packages = with pkgs; [
     mindustry
 
+    ldtk
     lazygit
     teams-for-linux
     appflowy
@@ -27,10 +28,8 @@
     element-desktop
     ranger
     krita
-    hplip
     aseprite
     godot_4
-    blender
     syncthing
     fd
     ix

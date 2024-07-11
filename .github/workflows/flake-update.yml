@@ -3,10 +3,10 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
   push:
   schedule: 
-    - cron: '45 9 * * *'
+    - cron: '55 9 * * *'
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "oi"
+      - run: ls ${{ github.workspace }}

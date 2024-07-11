@@ -3,11 +3,14 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
   push:
   schedule: 
-    - cron: '08 10 * * *'
+    - cron: '0 10 */2 * *'
 
 jobs:
   nix-flake-update:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +25,6 @@ jobs:
         with:
           commit_message: bump
           branch: ${{ github.head_ref }}
-          commit_options: '--no-verify --signoff'
           file_pattern: 'flake.lock'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

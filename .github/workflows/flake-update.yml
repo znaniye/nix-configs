@@ -13,3 +13,16 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
       - run: nix flake check
+
+      - uses: stefanzweifel/git-auto-commit-action@v2.3.0
+        with:
+          commit_message: Apply automatic changes
+          branch: ${{ github.head_ref }}
+
+          # Optional git params
+          commit_options: '--no-verify --signoff'
+
+          # Optional glob pattern of files which should be added to the commit
+          file_pattern: src/\*.js
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

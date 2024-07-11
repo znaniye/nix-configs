@@ -24,7 +24,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v2.3.0
         with:
           commit_message: bump
-          branch: ${{ github.head_ref }}
+          branch: master 
           file_pattern: 'flake.lock'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

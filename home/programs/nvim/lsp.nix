@@ -1,7 +1,9 @@
-{ pkgs, lib, ... }:
-let
-  fromGitHub =
-    rev: ref: repo:
+{
+  pkgs,
+  lib,
+  ...
+}: let
+  fromGitHub = rev: ref: repo:
     pkgs.vimUtils.buildVimPlugin {
       pname = "${lib.strings.sanitizeDerivationName repo}";
       version = ref;
@@ -11,8 +13,7 @@ let
         rev = rev;
       };
     };
-in
-{
+in {
   programs.neovim.plugins = with pkgs.vimPlugins; [
     {
       plugin = neodev-nvim;

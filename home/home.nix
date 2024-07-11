@@ -1,8 +1,7 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./programs
-    ./services/polybar.nix
+    ./services/polybar/polybar.nix
     ./services/picom.nix
   ];
 

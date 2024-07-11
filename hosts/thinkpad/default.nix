@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
     ./i3.nix
@@ -57,7 +56,6 @@
 
   services.blueman.enable = true;
   hardware = {
-
     graphics = {
       enable = true;
       enable32Bit = true;

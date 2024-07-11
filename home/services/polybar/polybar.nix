@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   mf = "#383838";
 
   bg = "#00000000";
@@ -22,8 +21,7 @@ let
 
   # Red
   urgency = "#9d0006";
-in
-{
+in {
   services.polybar = {
     enable = true;
 
@@ -40,6 +38,7 @@ in
       #====================BARS====================#
 
       "bar/top" = {
+        #monitor = "HDMI-1";
         bottom = false;
         fixed-center = true;
 
@@ -65,6 +64,7 @@ in
       };
 
       "bar/bottom" = {
+        #monitor = "HDMI-1";
         bottom = true;
         fixed-center = true;
 

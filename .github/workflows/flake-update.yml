@@ -5,24 +5,26 @@ on:
   schedule: 
     - cron: '08 10 * * *'
 jobs:
-  Explore-GitHub-Actions:
+  nix-flake-update:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      
       - run: nix flake check
 
       - uses: stefanzweifel/git-auto-commit-action@v2.3.0
         with:
-          commit_message: Apply automatic changes
+          commit_message: bump
           branch: ${{ github.head_ref }}
 
           # Optional git params
           commit_options: '--no-verify --signoff'
 
           # Optional glob pattern of files which should be added to the commit
-          file_pattern: src/\*.js
+          file_pattern: 'flake.lock'
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

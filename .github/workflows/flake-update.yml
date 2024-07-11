@@ -1,5 +1,5 @@
 name: "flake-update"
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is updating your system :) 
 on: 
   push:
   schedule: 

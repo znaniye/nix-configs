@@ -1,7 +1,6 @@
 name: "flake-update"
 run-name: ${{ github.actor }} is updating your system :) 
 on: 
-  push:
   schedule: 
     - cron: '0 10 */2 * *'
 

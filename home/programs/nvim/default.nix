@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./lsp.nix
     ./ui.nix
@@ -8,17 +9,17 @@
   programs.neovim = {
     enable = true;
     /*
-    extraConfig = ''
-      colorscheme gruvbox
-      set number relativenumber
-      set tabstop=4
-      set shiftwidth=4
-      set expandtab
+      extraConfig = ''
+        colorscheme gruvbox
+        set number relativenumber
+        set tabstop=4
+        set shiftwidth=4
+        set expandtab
 
-      nnoremap <C-l> :bnext<CR>
-      nnoremap <C-h> :bprevious<CR>
-      nnoremap <C-y> :ToggleTerm direction=float size=40<CR>
-    '';
+        nnoremap <C-l> :bnext<CR>
+        nnoremap <C-h> :bprevious<CR>
+        nnoremap <C-y> :ToggleTerm direction=float size=40<CR>
+      '';
     */
 
     extraLuaConfig = builtins.readFile ./config.lua;

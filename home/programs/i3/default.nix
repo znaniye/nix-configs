@@ -1,15 +1,12 @@
+{ pkgs, lib, ... }:
 {
-  pkgs,
-  lib,
-  ...
-}: {
   xsession.windowManager.i3 = {
     enable = true;
     package = pkgs.i3-gaps;
 
     config = rec {
       modifier = "Mod4";
-      bars = [];
+      bars = [ ];
 
       window.border = 0;
 
@@ -55,5 +52,8 @@
         }
       ];
     };
+    extraConfig = ''
+      default_border pixel 0
+    '';
   };
 }

@@ -38,7 +38,7 @@ in {
       #====================BARS====================#
 
       "bar/top" = {
-        monitor = "HDMI-1";
+        #monitor = "HDMI-1";
         bottom = false;
         fixed-center = true;
 
@@ -64,7 +64,7 @@ in {
       };
 
       "bar/bottom" = {
-        monitor = "HDMI-1";
+        #monitor = "HDMI-1";
         bottom = true;
         fixed-center = true;
 

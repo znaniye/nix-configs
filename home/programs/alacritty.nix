@@ -23,7 +23,7 @@
           family = "Iosevka Nerd Font";
           style = "Medium";
         };
-        size = 14;
+        size = 11;
       };
 
       shell = {

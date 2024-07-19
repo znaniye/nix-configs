@@ -14,8 +14,7 @@
   home.packages = with pkgs; [
     mindustry
 
-    zed-editor
-    ldtk
+    #ldtk
     lazygit
     htop
     bluez

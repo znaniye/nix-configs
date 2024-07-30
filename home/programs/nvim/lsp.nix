@@ -79,7 +79,6 @@ in
 
           add_lsp(lspconfig.erlangls, {})
           add_lsp(lspconfig.pylsp, {})
-          add_lsp(lspconfig.clangd, {})
           add_lsp(lspconfig.nil_ls, {})
         '';
     }

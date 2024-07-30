@@ -54,6 +54,7 @@
     };
     extraConfig = ''
       default_border pixel 0
+      for_window [class="GLFW"] floating enable
     '';
   };
 }

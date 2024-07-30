@@ -2,8 +2,8 @@ name: "flake-update"
 run-name: ${{ github.actor }} is updating your system :) 
 on: 
   schedule: 
-    - cron: '0 10 */2 * *'
-
+    - cron: '0 10 * * 0'
+    
 jobs:
   nix-flake-update:
     runs-on: ubuntu-latest

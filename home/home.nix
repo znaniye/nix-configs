@@ -14,6 +14,7 @@
   home.packages = with pkgs; [
     mindustry
 
+    godot_4
     #ldtk
     lazygit
     htop

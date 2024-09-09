@@ -22,6 +22,7 @@
     nerdfonts
     ripgrep
     tokei
+    tomato-c
     discord
     telegram-desktop
     ranger

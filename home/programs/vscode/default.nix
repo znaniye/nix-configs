@@ -10,7 +10,7 @@
 
       elixir-lsp.vscode-elixir-ls
       phoenixframework.phoenix
-      ms-python.python
+      #ms-python.python
       jnoortheen.nix-ide
       golang.go
       danielgavin.ols

@@ -14,6 +14,7 @@
   home.packages = with pkgs; [
     mindustry
 
+    alsa-utils
     godot_4
     #ldtk
     lazygit

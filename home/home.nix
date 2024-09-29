@@ -44,6 +44,7 @@
 
     lua
     lua-language-server
+    love
 
     qbittorrent
     spotifyd

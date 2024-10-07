@@ -34,6 +34,7 @@ in
       type = "lua";
       config =
         # lua
+        # in config.lua
         '''';
     }
 

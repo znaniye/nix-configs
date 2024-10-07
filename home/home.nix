@@ -16,7 +16,7 @@
 
     alsa-utils
     godot_4
-    #ldtk
+    tiled
     lazygit
     htop
     bluez

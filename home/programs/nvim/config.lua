@@ -43,6 +43,8 @@ end
 add_lsp(lspconfig.ols, {
     on_attach = on_attach
 })
+
+add_lsp(lspconfig.ts_ls, {})
 add_lsp(lspconfig.gopls, {})
 
 add_lsp(lspconfig.lua_ls, {

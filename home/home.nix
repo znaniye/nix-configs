@@ -15,7 +15,7 @@
     mindustry
 
     alsa-utils
-    godot_4
+    kdePackages.kdenlive
     tiled
     lazygit
     htop
@@ -23,7 +23,6 @@
     nerdfonts
     ripgrep
     tokei
-    tomato-c
     discord
     telegram-desktop
     ranger
@@ -46,7 +45,7 @@
     lua-language-server
     love
 
-    qbittorrent
+    #qbittorrent
     spotifyd
     firefox
     brightnessctl

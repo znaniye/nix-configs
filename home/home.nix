@@ -58,7 +58,7 @@
     libreoffice-qt
     xclip
     pavucontrol
-  ];
+  ] ++ (import ./scripts { inherit pkgs; });
 
   programs.home-manager.enable = true;
 

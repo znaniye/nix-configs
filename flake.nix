@@ -18,7 +18,7 @@
     {
       nixosConfigurations.felix = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        #specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs;};
         modules = [
           ./hosts/thinkpad
           home-manager.nixosModules.home-manager

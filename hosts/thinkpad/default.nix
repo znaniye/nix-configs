@@ -55,7 +55,28 @@
 
   console.keyMap = "br-abnt2";
 
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
+  };
+
   services.blueman.enable = true;
+
+  services.printing = {
+    enable = true;
+
+    drivers = [
+      pkgs.epson-escpr
+    ];
+  };
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;  #IPv4
+    nssmdns6 = true;  #IPv6
+    openFirewall = true;
+  };
+
   hardware = {
     graphics = {
       enable = true;

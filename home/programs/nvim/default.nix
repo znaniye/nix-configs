@@ -13,6 +13,7 @@
 
     plugins = with pkgs.vimPlugins; [
       markdown-preview-nvim
+      
       {
         plugin = nvim-autopairs;
         type = "lua";
@@ -22,6 +23,34 @@
             require('nvim-autopairs').setup{}
           '';
       }
+
+      {
+        plugin = gitsigns-nvim;
+        type = "lua";
+        config =
+          # lua
+          ''
+            require('gitsigns').setup{
+              signs = {
+                add = { text = '+' },
+                change = { text = '~' },
+                delete = { text = '_' },
+                topdelete = { text = '‾' },
+                changedelete = { text = '~' },
+              },
+            }
+
+            vim.api.nvim_set_keymap('n', "<leader>gp", ':Gitsigns preview_hunk_inline<CR>', {noremap = true})
+          '';
+      }
+
+      {
+        plugin = vim-fugitive;
+        type = "lua";
+        config = ''
+        '';
+      }
+
     ];
   };
 }

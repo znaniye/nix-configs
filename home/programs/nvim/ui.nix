@@ -83,6 +83,14 @@
         type = "lua";
         config = ''
           require("nvim-tree").setup{
+            sync_root_with_cwd = true,
+            respect_buf_cwd = true,
+
+            update_focused_file = {
+              enable = true,
+              update_root = true,
+            },
+            
             vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { silent = true })
           }
         '';

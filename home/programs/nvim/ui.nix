@@ -27,7 +27,9 @@
         type = "lua";
         config = ''
           require('telescope').setup{
-            vim.api.nvim_set_keymap('n', '<Tab><Space>', ':Telescope find_files<CR>', { silent = true })
+            vim.api.nvim_set_keymap('n', '<Tab><Space>', ':Telescope find_files<CR>', { silent = true }),
+            vim.api.nvim_set_keymap('n', '<Tab><Space>g', ':Telescope live_grep<CR>', { silent = true })
+            
           }
         '';
       }

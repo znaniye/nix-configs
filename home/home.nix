@@ -20,7 +20,7 @@
     lazygit
     htop
     bluez
-    nerdfonts
+    nerd-fonts.iosevka
     ripgrep
     tokei
     discord

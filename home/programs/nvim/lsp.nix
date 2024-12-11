@@ -1,4 +1,8 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  ...
+}:
 let
   fromGitHub =
     rev: ref: repo:
@@ -18,7 +22,7 @@ in
       plugin = neodev-nvim;
       type = "lua";
       config = ''
-          require("neodev").setup({
+        require("neodev").setup({
           override = function(root_dir, library)
           if root_dir:find("/etc/nixos", 1, true) == 1 then
             library.enabled = true
@@ -82,6 +86,48 @@ in
               { name='buffer', option = { get_bufnrs = vim.api.nvim_list_bufs } },
               { name='nvim_lsp' },
             },
+          }
+        '';
+    }
+
+    {
+      plugin = conform-nvim;
+      type = "lua";
+      config =
+        # lua
+        ''
+          require("conform").setup({
+            formatters_by_ft = {
+              lua = { "stylua" },
+              nix = { "nixfmt" },
+          },
+
+          format_on_save = {
+              --these options will be passed to conform.format()
+              timeout_ms = 500,
+              lsp_format = "fallback",
+            },
+          })
+        '';
+    }
+    {
+      plugin = comment-nvim;
+      type = "lua";
+      config =
+        # lua
+        ''
+          require("Comment").setup()
+        '';
+    }
+    {
+      plugin = nvim-treesitter;
+      type = "lua";
+      config =
+        # lua
+        ''
+          require("nvim-treesitter.configs").setup{
+            highlight = { enable = true };
+
           }
         '';
     }

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./lsp.nix
     ./ui.nix
@@ -13,7 +12,7 @@
 
     plugins = with pkgs.vimPlugins; [
       markdown-preview-nvim
-      
+
       {
         plugin = nvim-autopairs;
         type = "lua";
@@ -50,7 +49,6 @@
         config = ''
         '';
       }
-
     ];
   };
 }

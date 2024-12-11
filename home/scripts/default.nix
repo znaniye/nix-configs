@@ -1,6 +1,4 @@
-{ pkgs }:
-
-let
+{pkgs}: let
   organize-downloads = pkgs.writeScriptBin "organize-downloads" ''
     #!${pkgs.bash}/bin/bash
 
@@ -16,7 +14,6 @@ let
     mv *.{zip,rar,7z,tar,gz} compressed/ 2>/dev/null
 
   '';
-
 in [
   organize-downloads
 ]

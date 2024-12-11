@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   services = {
     displayManager = {
       defaultSession = "none+i3";

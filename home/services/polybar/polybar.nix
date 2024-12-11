@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   mf = "#383838";
 
   bg = "#00000000";
@@ -22,8 +21,7 @@ let
 
   # Red
   urgency = "#9d0006";
-in
-{
+in {
   services.polybar = {
     enable = true;
 

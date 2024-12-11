@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs.neovim = {
     plugins = with pkgs.vimPlugins; [
       gruvbox-nvim
@@ -7,7 +6,7 @@
       vim-go
       vim-elixir
       vim-glsl
-      
+
       {
         plugin = toggleterm-nvim;
         type = "lua";
@@ -29,7 +28,7 @@
           require('telescope').setup{
             vim.api.nvim_set_keymap('n', '<Tab><Space>', ':Telescope find_files<CR>', { silent = true }),
             vim.api.nvim_set_keymap('n', '<Tab><Space>g', ':Telescope live_grep<CR>', { silent = true })
-            
+
           }
         '';
       }
@@ -92,7 +91,7 @@
               enable = true,
               update_root = true,
             },
-            
+
             vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { silent = true })
           }
         '';

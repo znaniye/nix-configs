@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
     ./i3.nix
@@ -72,8 +71,8 @@
 
   services.avahi = {
     enable = true;
-    nssmdns4 = true;  #IPv4
-    nssmdns6 = true;  #IPv6
+    nssmdns4 = true; #IPv4
+    nssmdns6 = true; #IPv6
     openFirewall = true;
   };
 

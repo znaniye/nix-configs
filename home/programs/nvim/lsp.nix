@@ -24,24 +24,20 @@ in
       config = ''
         require("neodev").setup({
           override = function(root_dir, library)
-          if root_dir:find("/etc/nixos", 1, true) == 1 then
-            library.enabled = true
-            library.plugins = true
-          end
-        end,
-          })
+            if root_dir:find("/etc/nixos", 1, true) == 1 then
+              library.enabled = true
+              library.plugins = true
+            end
+          end,
+        })
       '';
     }
     # LSP
     {
       plugin = nvim-lspconfig;
       type = "lua";
-      config =
-        # lua
-        # in config.lua
-        '''';
+      config = '''';
     }
-
     {
       plugin = elixir-tools-nvim;
       type = "lua";
@@ -52,15 +48,13 @@ in
     {
       plugin = rust-tools-nvim;
       type = "lua";
-      config =
-        # lua
-        ''
-          local rust_tools = require('rust-tools')
-          if vim.fn.executable("rust-analyzer") == 1 then
-            rust_tools.setup{ tools = { autoSetHints = true } }
-          end
-          vim.api.nvim_set_hl(0, '@lsp.type.comment.rust', {})
-        '';
+      config = ''
+        local rust_tools = require('rust-tools')
+        if vim.fn.executable("rust-analyzer") == 1 then
+          rust_tools.setup{ tools = { autoSetHints = true } }
+        end
+        vim.api.nvim_set_hl(0, '@lsp.type.comment.rust', {})
+      '';
     }
     (fromGitHub "0d738ff893ba1a1e1b944feedf3451df8b2ff744" "master" "Tetralux/odin.vim")
     cmp-nvim-lsp
@@ -69,67 +63,56 @@ in
     {
       plugin = nvim-cmp;
       type = "lua";
-      config =
-        # lua
-        ''
-          local cmp = require('cmp')
-          cmp.setup{
-            formatting = { format = require('lspkind').cmp_format() },
-            -- Same keybinds as vim's vanilla completion
-            mapping = {
-              ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-              ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-              ['<C-e>'] = cmp.mapping.close(),
-              ['<C-y>'] = cmp.mapping.confirm(),
-            },
-            sources = {
-              { name='buffer', option = { get_bufnrs = vim.api.nvim_list_bufs } },
-              { name='nvim_lsp' },
-            },
-          }
-        '';
+      config = ''
+        local cmp = require('cmp')
+        cmp.setup{
+          formatting = { format = require('lspkind').cmp_format() },
+          -- Same keybinds as vim's vanilla completion
+          mapping = {
+            ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+            ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+            ['<C-e>'] = cmp.mapping.close(),
+            ['<C-y>'] = cmp.mapping.confirm(),
+          },
+          sources = {
+            { name='buffer', option = { get_bufnrs = vim.api.nvim_list_bufs } },
+            { name='nvim_lsp' },
+          },
+        }
+      '';
     }
-
     {
       plugin = conform-nvim;
       type = "lua";
-      config =
-        # lua
-        ''
-          require("conform").setup({
-            formatters_by_ft = {
-              lua = { "stylua" },
-              nix = { "nixfmt" },
+      config = ''
+        require("conform").setup({
+          formatters_by_ft = {
+            lua = { "stylua" },
+            nix = { "nixfmt" },
           },
-
           format_on_save = {
-              --these options will be passed to conform.format()
-              timeout_ms = 500,
-              lsp_format = "fallback",
-            },
-          })
-        '';
+            --these options will be passed to conform.format()
+            timeout_ms = 500,
+            lsp_format = "fallback",
+          },
+        })
+      '';
     }
     {
       plugin = comment-nvim;
       type = "lua";
-      config =
-        # lua
-        ''
-          require("Comment").setup()
-        '';
+      config = ''
+        require("Comment").setup()
+      '';
     }
     {
       plugin = nvim-treesitter;
       type = "lua";
-      config =
-        # lua
-        ''
-          require("nvim-treesitter.configs").setup{
-            highlight = { enable = true };
-
-          }
-        '';
+      config = ''
+        require("nvim-treesitter.configs").setup{
+          highlight = { enable = true };
+        }
+      '';
     }
   ];
 }

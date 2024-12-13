@@ -105,6 +105,8 @@ in
         require("Comment").setup()
       '';
     }
+    nvim-treesitter-textobjects
+    nvim-treesitter.withAllGrammars
     {
       plugin = nvim-treesitter;
       type = "lua";

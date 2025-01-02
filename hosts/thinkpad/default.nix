@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+let
+  epsonFixed = pkgs.epson-escpr.overrideAttrs (oldAttrs: {
+    NIX_CFLAGS_COMPILE = "-Wno-error=implicit-function-declaration";
+  });
+in
+{
   imports = [
     ./hardware-configuration.nix
     ./i3.nix
@@ -65,15 +71,27 @@
     enable = true;
 
     drivers = [
-      pkgs.epson-escpr
+      epsonFixed
     ];
   };
 
   services.avahi = {
     enable = true;
-    nssmdns4 = true; #IPv4
-    nssmdns6 = true; #IPv6
+    nssmdns4 = true; # IPv4
+    nssmdns6 = true; # IPv6
     openFirewall = true;
+  };
+
+  services.redshift = {
+    enable = true;
+
+    latitude = "-19.92";
+    longitude = "-43.94";
+
+    temperature = {
+      day = 5500;
+      night = 3700;
+    };
   };
 
   hardware = {

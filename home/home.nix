@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./programs
     ./services/polybar/polybar.nix
@@ -10,7 +11,8 @@
     homeDirectory = "/home/znaniye";
   };
 
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     [
       mindustry
 
@@ -60,7 +62,7 @@
       xclip
       pavucontrol
     ]
-    ++ (import ./scripts {inherit pkgs;});
+    ++ (import ./scripts { inherit pkgs; });
 
   programs.home-manager.enable = true;
 

@@ -17,6 +17,11 @@ local lspconfig = require("lspconfig")
 
 function add_lsp(server, options)
 	local binary
+
+	if options.on_attach == nil then
+		options.on_attach = on_attach
+	end
+
 	if options["cmd"] ~= nil then
 		binary = options["cmd"][1]
 	else
@@ -28,7 +33,7 @@ function add_lsp(server, options)
 	end
 end
 
-local function on_attach(client, bufnr)
+function on_attach(client, bufnr)
 	local function buf_set_keymap(...)
 		vim.api.nvim_buf_set_keymap(bufnr, ...)
 	end
@@ -40,10 +45,8 @@ local function on_attach(client, bufnr)
 	buf_set_keymap("i", "<C-s>", '<Esc><cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>i', opts)
 end
 
-add_lsp(lspconfig.ols, {
-	on_attach = on_attach,
-})
-
+add_lsp(lspconfig.ols, {})
+add_lsp(lspconfig.clangd, { { noremap = false, silent = false } })
 add_lsp(lspconfig.ts_ls, {})
 add_lsp(lspconfig.gopls, {})
 

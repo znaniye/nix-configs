@@ -1,9 +1,9 @@
 { pkgs, ... }:
-let
-  epsonFixed = pkgs.epson-escpr.overrideAttrs (oldAttrs: {
-    NIX_CFLAGS_COMPILE = "-Wno-error=implicit-function-declaration";
-  });
-in
+# let
+#   epsonFixed = pkgs.epson-escpr.overrideAttrs (oldAttrs: {
+#     NIX_CFLAGS_COMPILE = "-Wno-error=implicit-function-declaration";
+#   });
+# in
 {
   imports = [
     ./hardware-configuration.nix
@@ -69,9 +69,8 @@ in
 
   services.printing = {
     enable = true;
-
     drivers = [
-      epsonFixed
+      pkgs.epson-escpr
     ];
   };
 
@@ -140,7 +139,8 @@ in
   environment.systemPackages = with pkgs; [
     git
     vim
+    cups-filters
   ];
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.11";
 }

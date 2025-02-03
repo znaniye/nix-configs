@@ -39,6 +39,10 @@ function on_attach(client, bufnr)
 	end
 	local opts = { noremap = true, silent = true }
 
+	if client.name == "clangd" then
+		client.server_capabilities.documentFormattingProvider = false
+	end
+
 	-- Keybindings LSP
 	buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 	buf_set_keymap("n", "<C-s>", '<cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>', opts)

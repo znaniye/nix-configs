@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.neovim = {
     plugins = with pkgs.vimPlugins; [
       gruvbox-nvim
@@ -99,8 +100,19 @@
       {
         plugin = indent-blankline-nvim;
         type = "lua";
-        config = '''';
+        config = ''
+          require("ibl").setup()
+        '';
       }
+      {
+        plugin = todo-comments-nvim;
+        type = "lua";
+        config = ''
+          require("todo-comments").setup{
+          }
+        '';
+      }
+
     ];
   };
 }

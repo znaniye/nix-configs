@@ -1,6 +1,11 @@
-{ pkgs, lib, ... }:
+{
+  inputs,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  common = import ./common.nix { inherit pkgs; };
+  common = import ./common.nix { inherit pkgs inputs; };
 in
 
 {
@@ -45,4 +50,10 @@ in
       pavucontrol
     ]
     ++ (import ./scripts { inherit pkgs; });
+
+  programs.home-manager.enable = true;
+
+  systemd.user.startServices = "sd-switch";
+
+  home.stateVersion = "24.05";
 }

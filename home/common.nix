@@ -10,8 +10,10 @@
     fd
     tree
     unzip
+    rar
     xclip
     fastfetch
+    direnv
 
     nix-tree
     nix-prefetch

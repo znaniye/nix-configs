@@ -18,6 +18,13 @@ let
 in
 {
   programs.neovim.plugins = with pkgs.vimPlugins; [
+
+    {
+      plugin = avante-nvim;
+      type = "lua";
+      config = ''require("avante").setup()'';
+    }
+
     {
       plugin = neodev-nvim;
       type = "lua";

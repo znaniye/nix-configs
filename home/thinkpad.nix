@@ -36,6 +36,7 @@ in
       krita
       aseprite
       alacritty
+      code-cursor
 
       #qbittorrent
       spotifyd

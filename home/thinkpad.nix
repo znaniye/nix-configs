@@ -27,6 +27,8 @@ in
       mindustry
 
       alsa-utils
+      calibre
+      xfce.thunar
       kdePackages.kdenlive
       tiled
       bluez
@@ -37,6 +39,7 @@ in
       aseprite
       alacritty
       code-cursor
+      tor-browser
 
       #qbittorrent
       spotifyd

@@ -93,6 +93,13 @@
     };
   };
 
+  services.tor = {
+    enable = true;
+    client = {
+      enable = true;
+    };
+  };
+
   hardware = {
     graphics = {
       enable = true;
@@ -139,6 +146,7 @@
   environment.systemPackages = with pkgs; [
     git
     vim
+    tor
     cups-filters
   ];
 

@@ -24,7 +24,7 @@ in
     with pkgs;
     common.home.packages
     ++ [
-      mindustry
+      #mindustry
 
       alsa-utils
       calibre
@@ -32,13 +32,16 @@ in
       kdePackages.kdenlive
       tiled
       bluez
+      godot
+      blender
       nerd-fonts.iosevka
       discord
       telegram-desktop
+      obs-studio
       krita
-      aseprite
+      #aseprite
       alacritty
-      code-cursor
+      #code-cursor
       tor-browser
 
       #qbittorrent

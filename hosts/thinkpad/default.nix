@@ -30,6 +30,8 @@
     dedicatedServer.openFirewall = true;
   };
 
+  #programs.zwift.enable = true;
+
   boot = {
     loader = {
       systemd-boot.enable = true;

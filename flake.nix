@@ -2,6 +2,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    #zwift.url = "github:netbrain/zwift";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,6 +21,7 @@
       nixpkgs,
       home-manager,
       nixos-wsl,
+      #zwift,
       ...
     }@inputs:
     {
@@ -27,6 +30,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
           modules = [
+            #zwift.nixosModules.zwift
             ./hosts/thinkpad
             home-manager.nixosModules.home-manager
             {

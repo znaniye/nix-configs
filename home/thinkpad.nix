@@ -27,8 +27,8 @@ in
       #mindustry
 
       alsa-utils
+      activitywatch
       calibre
-      xfce.thunar
       kdePackages.kdenlive
       tiled
       bluez

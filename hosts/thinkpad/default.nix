@@ -83,6 +83,11 @@
     openFirewall = true;
   };
 
+  programs.thunar.enable = true;
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+  services.devmon.enable = true;
+
   services.redshift = {
     enable = true;
 
@@ -150,6 +155,7 @@
     vim
     tor
     cups-filters
+    udiskie
   ];
 
   system.stateVersion = "24.11";

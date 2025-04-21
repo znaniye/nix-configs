@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixpkgs-friendly/nixpkgs-friendly";
 
     #zwift.url = "github:netbrain/zwift";
 

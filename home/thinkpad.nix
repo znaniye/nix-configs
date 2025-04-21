@@ -25,14 +25,14 @@ in
     common.home.packages
     ++ [
       #mindustry
-
+      dotnetCorePackages.dotnet_9.sdk # For Godot-Mono VSCode-Extension CSharp
       alsa-utils
       activitywatch
       calibre
       kdePackages.kdenlive
       tiled
       bluez
-      godot
+      godot-mono
       blender
       nerd-fonts.iosevka
       discord

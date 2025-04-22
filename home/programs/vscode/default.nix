@@ -50,6 +50,11 @@
         "window.menuBarVisibility" = "toggle";
         "explorer.confirmDelete" = false;
         "explorer.confirmDragAndDrop" = false;
+
+        "files.exclude" = {
+          "**/*.gd.uid" = true;
+          "**/*.cs.uid" = true;
+        };
       };
 
       extensions = with pkgs.vscode-extensions; [

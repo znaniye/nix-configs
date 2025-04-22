@@ -88,11 +88,13 @@
   services.udisks2.enable = true;
   services.devmon.enable = true;
 
+  location = {
+    latitude = -19.92;
+    longitude = -43.94;
+  };
+
   services.redshift = {
     enable = true;
-
-    latitude = "-19.92";
-    longitude = "-43.94";
 
     temperature = {
       day = 5500;
@@ -117,11 +119,11 @@
       enable = true;
       package = pkgs.bluez;
     };
-
-    pulseaudio.enable = false;
   };
 
   security.rtkit.enable = true;
+
+  #services.pulseaudio.enable = true;
 
   services.pipewire = {
     enable = true;

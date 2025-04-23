@@ -36,6 +36,7 @@
         "godotTools.lsp.serverPort" = 6005;
 
         # — Editor stuff —
+        "editor.codeLens" = false;
         "editor.fontFamily" = "Iosevka Nerd Font";
         "editor.fontWeight" = "bold";
         "editor.fontSize" = 18;

@@ -27,6 +27,7 @@ in
       #mindustry
       dotnetCorePackages.dotnet_9.sdk # For Godot-Mono VSCode-Extension CSharp
       alsa-utils
+      obsidian
       calibre
       kdePackages.kdenlive
       tiled

@@ -40,6 +40,7 @@
         "editor.fontFamily" = "Iosevka Nerd Font";
         "editor.fontWeight" = "bold";
         "editor.fontSize" = 18;
+        "editor.acceptSuggestionOnCommitCharacter" = false;
         "terminal.integrated.fontFamily" = "Iosevka Nerd Font";
         "[nix]\"editor.tabSize\"" = 2;
         "nix.enableLanguageServer" = true;

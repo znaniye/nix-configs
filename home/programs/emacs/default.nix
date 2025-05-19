@@ -58,7 +58,7 @@
                       slime-repl-mode-hook))
         (add-hook hook 'rainbow-delimiters-mode))
 
-      ;;; Cores personalizadas
+      ;;color
       (set-face-foreground 'rainbow-delimiters-depth-1-face "#c66")
       (set-face-foreground 'rainbow-delimiters-depth-2-face "#6c6")
       (set-face-foreground 'rainbow-delimiters-depth-3-face "#69f")

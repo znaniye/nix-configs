@@ -53,6 +53,10 @@
         "explorer.confirmDelete" = false;
         "explorer.confirmDragAndDrop" = false;
 
+        "vim.handleKeys" = {
+          "<C-d>" = false;
+        };
+
         "files.exclude" = {
           "**/*.gd.uid" = true;
           "**/*.cs.uid" = true;

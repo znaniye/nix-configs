@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./lsp.nix
     ./ui.nix
@@ -46,8 +47,20 @@
       {
         plugin = vim-fugitive;
         type = "lua";
+        config = '''';
+      }
+      {
+        plugin = comment-nvim;
+        type = "lua";
         config = ''
+          require("Comment").setup()
         '';
+      }
+
+      {
+        plugin = vim-visual-multi;
+        type = "lua";
+        config = '''';
       }
     ];
   };

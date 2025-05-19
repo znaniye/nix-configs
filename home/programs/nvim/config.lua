@@ -12,6 +12,14 @@ vim.api.nvim_set_keymap("n", "<C-l>", ":bnext<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-h>", ":bprevious<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-y>", ":ToggleTerm direction=float size=40<CR>", { noremap = true })
 
+vim.diagnostic.config({
+	virtual_text = true,
+	signs = true,
+	underline = true,
+	update_in_insert = false,
+	severity_sort = true,
+})
+
 -- LSP
 local lspconfig = require("lspconfig")
 

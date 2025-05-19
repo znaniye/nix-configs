@@ -99,13 +99,7 @@ in
         })
       '';
     }
-    {
-      plugin = comment-nvim;
-      type = "lua";
-      config = ''
-        require("Comment").setup()
-      '';
-    }
+
     nvim-treesitter-textobjects
     nvim-treesitter.withAllGrammars
     {

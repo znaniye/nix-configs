@@ -6,6 +6,7 @@
     ./zsh.nix
     ./git.nix
     ./zathura
+    ./emacs
     ./nvim
   ];
 }

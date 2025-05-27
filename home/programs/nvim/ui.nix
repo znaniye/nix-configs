@@ -12,7 +12,9 @@
         plugin = toggleterm-nvim;
         type = "lua";
         config = ''
-          require("toggleterm").setup()
+          require("toggleterm").setup{
+            shell = 'zsh'
+          }
         '';
       }
       {

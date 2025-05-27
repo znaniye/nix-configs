@@ -2,13 +2,13 @@
 {
   home.packages = with pkgs; [
     lazygit
+    starship
     htop
     nerd-fonts.iosevka
     ripgrep
     tokei
     ranger
     fd
-    tree
     unzip
     rar
     xclip

@@ -88,19 +88,30 @@
   services.udisks2.enable = true;
   services.devmon.enable = true;
 
-  location = {
-    latitude = -19.92;
-    longitude = -43.94;
-  };
+  # location = {
+  #   latitude = -19.92;
+  #   longitude = -43.94;
+  # };
 
   services.redshift = {
     enable = true;
-
+    provider = "manual";
+    latitude = "-23.5505";
+    longitude = "-46.6333";
     temperature = {
       day = 5500;
-      night = 3700;
+      night = 2700;
+    };
+    brightness = {
+      day = "1";
+      night = "0.8";
     };
   };
+
+  # services.geoclue2 = {
+  #   enable = true;
+  #   appConfig.redshift.isAllowed = true;
+  # };
 
   services.tor = {
     enable = true;

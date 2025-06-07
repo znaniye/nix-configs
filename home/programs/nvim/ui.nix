@@ -29,9 +29,14 @@
         type = "lua";
         config = ''
           require('telescope').setup{
-            vim.api.nvim_set_keymap('n', '<Tab><Space>', ':Telescope find_files<CR>', { silent = true }),
-            vim.api.nvim_set_keymap('n', '<Tab><Space>g', ':Telescope live_grep<CR>', { silent = true })
+            vim.api.nvim_set_keymap('n', '<Tab><Space>f', ':Telescope find_files<CR>', { silent = true }),
+            vim.api.nvim_set_keymap('n', '<Tab><Space>g', ':Telescope live_grep<CR>', { silent = true }),
 
+            vim.keymap.set('n', '<Tab><Space>lg', function() require('telescope.builtin').live_grep { 
+                prompt_title = "Live Grep (literal)",
+                additional_args = function(opts) return { "--fixed-strings" }
+              end } 
+            end)
           }
         '';
       }

@@ -1,1 +1,0 @@
-[ ] - Check how i can open plugin files in neovim with telescope

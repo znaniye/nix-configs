@@ -25,7 +25,7 @@ in
     common.home.packages
     ++ [
       #mindustry
-      dotnetCorePackages.dotnet_9.sdk # For Godot-Mono VSCode-Extension CSharp
+      #dotnetCorePackages.dotnet_9.sdk # For Godot-Mono VSCode-Extension CSharp
       #itch
       alsa-utils
       ncdu

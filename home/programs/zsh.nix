@@ -42,6 +42,7 @@
       "fs" = "nix search self";
       "cat" = "${pkgs.bat}/bin/bat";
       "ls" = "${pkgs.eza}/bin/eza";
+      "loff" = "xrandr --output HDMI-1 --auto --output eDP-1 --off";
     };
   };
 }

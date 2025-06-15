@@ -42,7 +42,6 @@ in
       krita
       #aseprite
       alacritty
-      #code-cursor
       tor-browser
 
       #qbittorrent

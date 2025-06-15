@@ -62,6 +62,14 @@
         type = "lua";
         config = '''';
       }
+
+      {
+        plugin = conjure;
+        type = "lua";
+        config = ''
+
+        '';
+      }
     ];
   };
 }

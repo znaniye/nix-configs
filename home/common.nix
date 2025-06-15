@@ -27,6 +27,9 @@
     lua-language-server
     stylua
     love
+
+    janet
+    jpm
   ];
 
   programs.home-manager.enable = true;

@@ -1,6 +1,8 @@
 vim.cmd("colorscheme gruvbox")
 
-vim.g.mapleader = ","
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+vim.o.splitright = true
 vim.o.number = true
 vim.o.relativenumber = true
 

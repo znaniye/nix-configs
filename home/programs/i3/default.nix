@@ -27,10 +27,9 @@
         "XF86MonBrightnessUp" = "exec brightnessctl set 4%+";
         "${modifier}+Return" = "exec ${pkgs.alacritty}/bin/alacritty";
         "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -modi drun -show drun";
-        "${modifier}+Shift+d" = "exec ${pkgs.rofi}/bin/rofi -show window";
-        "${modifier}+b" = "exec ${pkgs.firefox}/bin/firefox";
         "${modifier}+Shift+x" = "exec systemctl suspend";
-        "${modifier}+Shift+p" = "exec flameshot gui";
+        "${modifier}+Shift+p" = "exec ${pkgs.flameshot}/bin/flameshot gui";
+        "${modifier}+b" = "exec $HOME/.jpm/bin/janet-netrepl";
       };
 
       startup = [

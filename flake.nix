@@ -11,10 +11,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
-    nixos-raspberrypi = {
-      url = "github:nvmd/nixos-raspberrypi/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
 
     #zwift.url = "github:netbrain/zwift";
 
@@ -27,13 +24,6 @@
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    disko = {
-      # the fork is needed for partition attributes support
-      url = "github:nvmd/disko/gpt-attrs";
-      # url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -43,7 +33,6 @@
       home-manager,
       nixos-wsl,
       nixos-raspberrypi,
-      disko,
       #zwift,
       ...
     }@inputs:
@@ -69,9 +58,27 @@
 
         xz = nixos-raspberrypi.lib.nixosSystemFull {
           system = "aarch64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = inputs;
           modules = [
-            ./hosts
+            #./hosts/rpi
+	    ({...}: {
+              imports = with nixos-raspberrypi.nixosModules; [
+                raspberry-pi-5.base
+                raspberry-pi-5.bluetooth
+              ];
+            })
+            ({ ... }: {
+              networking.hostName = "xz";
+              users.users.xz = {
+                initialPassword = "xz";
+                isNormalUser = true;
+                extraGroups = [
+                  "wheel"
+                ];
+              };
+
+              services.openssh.enable = true;
+            })
           ];
         };
 

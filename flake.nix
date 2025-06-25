@@ -67,7 +67,7 @@
           ];
         };
 
-        xz = nixpkgs.lib.nixosSystem {
+        xz = nixos-raspberrypi.lib.nixosSystemFull {
           system = "aarch64-linux";
           specialArgs = { inherit inputs; };
           modules = [

@@ -9,7 +9,7 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixpkgs-friendly/nixpkgs-friendly";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
 

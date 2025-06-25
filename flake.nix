@@ -69,14 +69,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             (
-              {
-                config,
-                pkgs,
-                lib,
-                nixos-raspberrypi,
-                disko,
-                ...
-              }:
+              { ... }:
               {
                 imports = with nixos-raspberrypi.nixosModules; [
                   # Hardware configuration

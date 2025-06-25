@@ -1,6 +1,17 @@
 {
+  nixConfig = {
+    extra-substituters = [
+      "https://nixos-raspberrypi.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixpkgs-friendly/nixpkgs-friendly";
+
+    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
 
     #zwift.url = "github:netbrain/zwift";
 
@@ -13,6 +24,13 @@
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    disko = {
+      # the fork is needed for partition attributes support
+      url = "github:nvmd/disko/gpt-attrs";
+      # url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixos-raspberrypi/nixpkgs";
+    };
   };
 
   outputs =
@@ -21,6 +39,8 @@
       nixpkgs,
       home-manager,
       nixos-wsl,
+      nixos-raspberrypi,
+      disko,
       #zwift,
       ...
     }@inputs:
@@ -41,6 +61,48 @@
                 extraSpecialArgs = { inherit inputs; };
               };
             }
+          ];
+        };
+
+        tortinha = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            (
+              {
+                config,
+                pkgs,
+                lib,
+                nixos-raspberrypi,
+                disko,
+                ...
+              }:
+              {
+                imports = with nixos-raspberrypi.nixosModules; [
+                  # Hardware configuration
+                  raspberry-pi-5.base
+                  raspberry-pi-5.display-vc4
+                  ./hosts/rpi/pi5-configtxt.nix
+                ];
+              }
+            )
+
+            (
+              { ... }:
+              {
+                networking.hostName = "tortinha";
+                users.users.nixos = {
+                  initialPassword = "xz";
+                  isNormalUser = true;
+                  extraGroups = [
+                    "wheel"
+                  ];
+                };
+
+                services.openssh.enable = true;
+              }
+            )
+
           ];
         };
 

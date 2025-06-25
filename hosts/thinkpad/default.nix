@@ -18,10 +18,10 @@
     };
 
     extraOptions = ''
-
       experimental-features = nix-command flakes
-
     '';
+
+    settings.trusted-users = [ "znaniye" ];
   };
 
   programs.steam = {

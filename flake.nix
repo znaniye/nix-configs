@@ -11,7 +11,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
+    nixos-raspberrypi = {
+      url = "github:nvmd/nixos-raspberrypi/main";
+      inpust.nixpkgs.follows = "nixpkgs";
+    };
 
     #zwift.url = "github:netbrain/zwift";
 
@@ -29,7 +32,7 @@
       # the fork is needed for partition attributes support
       url = "github:nvmd/disko/gpt-attrs";
       # url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixos-raspberrypi/nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

@@ -140,7 +140,6 @@
             { config, pkgs, ... }:
             {
               imports = [
-                ./modules/nice-looking-console.nix
                 users-config-stub
                 network-config
               ];

@@ -10,7 +10,7 @@
     ranger
     fd
     unzip
-    rar
+    #rar
     xclip
     fastfetch
     direnv

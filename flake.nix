@@ -13,8 +13,6 @@
 
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
 
-    #zwift.url = "github:netbrain/zwift";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +21,13 @@
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    disko = {
+      # the fork is needed for partition attributes support
+      url = "github:nvmd/disko/gpt-attrs";
+      # url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixos-raspberrypi/nixpkgs";
     };
   };
 
@@ -34,7 +39,6 @@
       nixos-wsl,
       nixos-raspberrypi,
       disko,
-      #zwift,
       ...
     }@inputs:
     {
@@ -43,7 +47,6 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
           modules = [
-            #zwift.nixosModules.zwift
             ./hosts/thinkpad
             home-manager.nixosModules.home-manager
             {
@@ -62,21 +65,48 @@
           specialArgs = inputs;
           modules = [
 
-	    ({ config, pkgs, lib, nixos-raspberrypi, disko, ... }: {
-            imports = with nixos-raspberrypi.nixosModules; [
-              # Hardware configuration
-              raspberry-pi-5.base
-              raspberry-pi-5.display-vc4
-              ./hosts/rpi/pi5-configtxt.nix
-            ];
-          })
+            (
+              {
+                config,
+                pkgs,
+                lib,
+                nixos-raspberrypi,
+                disko,
+                ...
+              }:
+              {
+                imports = with nixos-raspberrypi.nixosModules; [
+                  # Hardware configuration
+                  raspberry-pi-5.base
+                  raspberry-pi-5.display-vc4
+                  ./hosts/rpi/pi5-configtxt.nix
+                ];
+              }
+            )
 
-	    ./hosts/rpi
-	    ./hosts/rpi/hardware-configuration.nix
+            ./hosts/rpi
 
-	    #disko.nixosModules.disko
-	    #./hosts/rpi/disko-nvme-zfs.nix
-	  ];
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                users.nixos =
+                  { pkgs, ... }:
+                  {
+                    imports = [ ./home/programs/nvim ];
+                    home.packages = with pkgs; [ zsh ];
+
+                    home = {
+                      username = "nixos";
+                      homeDirectory = "/home/nixos";
+                    };
+                  };
+              };
+            }
+
+            disko.nixosModules.disko
+            ./hosts/rpi/disko-nvme-zfs.nix
+          ];
         };
 
         wsl = nixpkgs.lib.nixosSystem {

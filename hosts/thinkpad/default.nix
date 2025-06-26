@@ -1,9 +1,5 @@
 { pkgs, ... }:
-# let
-#   epsonFixed = pkgs.epson-escpr.overrideAttrs (oldAttrs: {
-#     NIX_CFLAGS_COMPILE = "-Wno-error=implicit-function-declaration";
-#   });
-# in
+
 {
   imports = [
     ./hardware-configuration.nix
@@ -29,8 +25,6 @@
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
   };
-
-  #programs.zwift.enable = true;
 
   boot = {
     loader = {

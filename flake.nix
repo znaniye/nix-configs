@@ -93,7 +93,10 @@
                 users.nixos =
                   { pkgs, ... }:
                   {
-                    imports = [ ./home/programs/nvim ];
+                    imports = [
+                      ./home/programs/nvim
+                      ./home/programs/common.nix
+                    ];
                     home.packages = with pkgs; [ zsh ];
 
                     home = {

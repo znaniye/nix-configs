@@ -30,7 +30,6 @@
     extraGroups = [
       "wheel"
     ];
-    defaultUserShell = pkgs.zsh;
   };
 
   services.openssh.enable = true;
@@ -38,5 +37,6 @@
   environment.systemPackages = with pkgs; [
     git
     neovim
+    fastfetch
   ];
 }

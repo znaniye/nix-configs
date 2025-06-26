@@ -17,6 +17,7 @@
     settings.trusted-users = [ "znaniye" ];
   };
 
+  nixpkgs.config.allowUnfree = true;
   networking = {
     hostName = "tortinha";
     hostId = "d96d3bc2";

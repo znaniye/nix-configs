@@ -24,12 +24,14 @@
     hostId = "d96d3bc2";
   };
 
-  users.users.nixos = {
-    initialPassword = "xz";
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-    ];
+  users.users = {
+    nixos = {
+      initialPassword = "xz";
+      isNormalUser = true;
+      extraGroups = [
+        "wheel"
+      ];
+    };
     defaultUserShell = pkgs.zsh;
   };
 

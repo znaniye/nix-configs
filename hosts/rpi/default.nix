@@ -18,6 +18,7 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+
   networking = {
     hostName = "tortinha";
     hostId = "d96d3bc2";
@@ -29,6 +30,7 @@
     extraGroups = [
       "wheel"
     ];
+    defaultUserShell = pkgs.zsh;
   };
 
   services.openssh.enable = true;

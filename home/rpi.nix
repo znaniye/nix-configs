@@ -3,8 +3,8 @@
   imports = [
     #./home/programs/nvim
     #./home/common.nix
-    ./zsh.nix
-    ./git.nix
+    ./programs/zsh.nix
+    ./programs/git.nix
   ];
 
   home.packages = with pkgs; [ gitea ];

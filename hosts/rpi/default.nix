@@ -38,5 +38,8 @@
     git
     neovim
     fastfetch
+    xclip
+    ripgrep
+    htop
   ];
 }

@@ -36,7 +36,6 @@
 
   environment.systemPackages = with pkgs; [
     git
-    neovim
     fastfetch
     xclip
     ripgrep

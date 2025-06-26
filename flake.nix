@@ -95,7 +95,7 @@
                   {
                     imports = [
                       ./home/programs/nvim
-                      ./home/programs/common.nix
+                      ./home/common.nix
                     ];
                     home.packages = with pkgs; [ zsh ];
 

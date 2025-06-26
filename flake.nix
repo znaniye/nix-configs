@@ -56,45 +56,12 @@
           ];
         };
 
-        xz = nixos-raspberrypi.lib.nixosSystemFull {
+        tortinha = nixos-raspberrypi.lib.nixosSystemFull {
           system = "aarch64-linux";
-          specialArgs = inputs;
+          specialArgs = { inherit inputs ;};
           modules = [
-            #./hosts/rpi
-	    ({...}: {
-              imports = with nixos-raspberrypi.nixosModules; [
-                raspberry-pi-5.base
-                raspberry-pi-5.bluetooth
-              ];
-            })
-            ({ ... }: {
-              networking.hostName = "xz";
-              users.users.xz = {
-                initialPassword = "xz";
-                isNormalUser = true;
-                extraGroups = [
-                  "wheel"
-                ];
-              };
-
-              services.openssh.enable = true;
-            })
-
-	    ({...}: {
-		fileSystems."/" = { 
-		  device = "/dev/disk/by-uuid/e6a46786-fef6-4081-94d3-bac12bcb3b2f";
-      		  fsType = "ext4";
-		  options = ["noatime"];
-    		};
-
-  		fileSystems."/boot/firmware" = { 
-		  device = "/dev/disk/by-uuid/12CE-A600";
-      		  fsType = "vfat";
-       		  options = [ "fmask=0022" "dmask=0022" "noatime" ];
-    		};
-	    })
-
-          ];
+	    ./hosts/rpi
+	  ];
         };
 
         wsl = nixpkgs.lib.nixosSystem {

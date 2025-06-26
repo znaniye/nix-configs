@@ -5,7 +5,7 @@ let
     # label = "FIRMWARE";
     priority = 1;
 
-    type = "0700"; # Microsoft basic data
+    type = "0700";  # Microsoft basic data
     attributes = [
       0 # Required Partition
     ];
@@ -27,7 +27,7 @@ let
   espPartition = lib.recursiveUpdate {
     # label = "ESP";
 
-    type = "EF00"; # EFI System Partition (ESP)
+    type = "EF00";  # EFI System Partition (ESP)
     attributes = [
       2 # Legacy BIOS Bootable, for U-Boot to find extlinux config
     ];
@@ -47,8 +47,7 @@ let
     };
   };
 
-in
-{
+in {
 
   boot.supportedFilesystems = [ "zfs" ];
   # networking.hostId is set somewhere else
@@ -83,7 +82,7 @@ in
 
         };
       };
-    }; # nvme0
+    };  #nvme0
 
     zpool = {
       rpool = {
@@ -92,7 +91,7 @@ in
         # zpool properties
         options = {
           ashift = "12";
-          autotrim = "on"; # see also services.zfs.trim.enable
+          autotrim = "on";  # see also services.zfs.trim.enable
         };
 
         # zfs properties
@@ -110,11 +109,9 @@ in
           canmount = "off";
         };
 
-        postCreateHook =
-          let
-            poolName = "rpool";
-          in
-          "zfs list -t snapshot -H -o name | grep -E '^${poolName}@blank$' || zfs snapshot ${poolName}@blank";
+        postCreateHook = let
+          poolName = "rpool";
+        in "zfs list -t snapshot -H -o name | grep -E '^${poolName}@blank$' || zfs snapshot ${poolName}@blank";
 
         datasets = {
 
@@ -127,9 +124,9 @@ in
             type = "zfs_fs";
             options = {
               reservation = "128M";
-              mountpoint = "legacy"; # to manage "with traditional tools"
+              mountpoint = "legacy";  # to manage "with traditional tools"
             };
-            mountpoint = "/nix"; # nixos configuration mountpoint
+            mountpoint = "/nix";  # nixos configuration mountpoint
           };
 
           # _system_ data

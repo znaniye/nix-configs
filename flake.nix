@@ -33,6 +33,7 @@
       home-manager,
       nixos-wsl,
       nixos-raspberrypi,
+      disko,
       #zwift,
       ...
     }@inputs:
@@ -58,9 +59,23 @@
 
         tortinha = nixos-raspberrypi.lib.nixosSystemFull {
           system = "aarch64-linux";
-          specialArgs = { inherit inputs ;};
+          specialArgs = inputs;
           modules = [
+
+	    ({ config, pkgs, lib, nixos-raspberrypi, disko, ... }: {
+            imports = with nixos-raspberrypi.nixosModules; [
+              # Hardware configuration
+              raspberry-pi-5.base
+              raspberry-pi-5.display-vc4
+              ./hosts/rpi/pi5-configtxt.nix
+            ];
+          })
+
 	    ./hosts/rpi
+	    ./hosts/rpi/hardware-configuration.nix
+
+	    #disko.nixosModules.disko
+	    #./hosts/rpi/disko-nvme-zfs.nix
 	  ];
         };
 

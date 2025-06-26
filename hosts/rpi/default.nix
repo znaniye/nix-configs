@@ -1,16 +1,27 @@
 {
-  nixos-raspberrypi,
+  pkgs,
   ...
 }:
 {
-  imports = with nixos-raspberrypi.nixosModules; [
-    raspberry-pi-5.base
-    raspberry-pi-5.bluetooth
-    ./pi5-configtxt.nix
-    ./hardware-configuration.nix
-  ];
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "daily";
+      options = "--delete-older-than 5d";
+    };
 
-  networking.hostName = "tortinha";
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+
+    settings.trusted-users = [ "znaniye" ];
+  };
+
+  networking = {
+    hostName = "tortinha";
+    hostId = "d96d3bc2";
+  };
+
   users.users.nixos = {
     initialPassword = "xz";
     isNormalUser = true;
@@ -20,4 +31,9 @@
   };
 
   services.openssh.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    git
+    neovim
+  ];
 }

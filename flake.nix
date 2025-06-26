@@ -79,6 +79,21 @@
 
               services.openssh.enable = true;
             })
+
+	    ({...}: {
+		fileSystems."/" = { 
+		  device = "/dev/disk/by-uuid/e6a46786-fef6-4081-94d3-bac12bcb3b2f";
+      		  fsType = "ext4";
+		  options = ["noatime"];
+    		};
+
+  		fileSystems."/boot/firmware" = { 
+		  device = "/dev/disk/by-uuid/12CE-A600";
+      		  fsType = "vfat";
+       		  options = [ "fmask=0022" "dmask=0022" "noatime" ];
+    		};
+	    })
+
           ];
         };
 

@@ -107,6 +107,8 @@
   #   appConfig.redshift.isAllowed = true;
   # };
 
+  services.tailscale.enable = true;
+
   services.tor = {
     enable = true;
     client = {
@@ -163,6 +165,7 @@
     tor
     cups-filters
     udiskie
+    tailscale
   ];
 
   system.stateVersion = "24.11";

@@ -7,7 +7,11 @@
     ./programs/git.nix
   ];
 
-  home.packages = with pkgs; [ gitea ];
+  home.packages = with pkgs; [
+    gitea
+    nil
+    nixfmt-rfc-style
+  ];
 
   home = {
     username = "nixos";

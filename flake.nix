@@ -64,28 +64,9 @@
           system = "aarch64-linux";
           specialArgs = inputs;
           modules = [
-
-            (
-              {
-                config,
-                pkgs,
-                lib,
-                nixos-raspberrypi,
-                disko,
-                ...
-              }:
-              {
-                imports = with nixos-raspberrypi.nixosModules; [
-                  # Hardware configuration
-                  raspberry-pi-5.base
-                  raspberry-pi-5.display-vc4
-                  ./hosts/rpi/pi5-configtxt.nix
-                ];
-              }
-            )
-
             ./hosts/rpi
 
+            disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -94,8 +75,6 @@
               };
             }
 
-            disko.nixosModules.disko
-            ./hosts/rpi/disko-nvme-zfs.nix
           ];
         };
 

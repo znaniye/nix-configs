@@ -1,8 +1,20 @@
 {
   pkgs,
+  nixos-raspberrypi,
   ...
 }:
 {
+
+  imports =
+    with nixos-raspberrypi.nixosModules;
+    [
+      # Hardware configuration
+      raspberry-pi-5.base
+      raspberry-pi-5.display-vc4
+      ./pi5-configtxt.nix
+    ]
+    ++ [ ./disko-nvme-zfs.nix ];
+
   nix = {
     gc = {
       automatic = true;
@@ -14,7 +26,7 @@
       experimental-features = nix-command flakes
     '';
 
-    settings.trusted-users = [ "znaniye" ];
+    settings.trusted-users = [ "nixos" ];
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -25,14 +37,17 @@
   };
 
   users.users.nixos = {
-    initialPassword = "xz";
     isNormalUser = true;
     extraGroups = [
       "wheel"
     ];
   };
 
-  services.openssh.enable = true;
+  services.getty.autologinUser = "nixos";
+
+  services.openssh = {
+    enable = true;
+  };
 
   environment.systemPackages = with pkgs; [
     git

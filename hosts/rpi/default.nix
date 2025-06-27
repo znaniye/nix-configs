@@ -31,6 +31,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  services.tailscale.enable = true;
+
   networking = {
     hostName = "tortinha";
     hostId = "d96d3bc2";
@@ -47,6 +49,7 @@
 
   services.openssh = {
     enable = true;
+    permitRootLogin = "yes";
   };
 
   environment.systemPackages = with pkgs; [
@@ -55,5 +58,6 @@
     xclip
     ripgrep
     htop
+    tailscale
   ];
 }

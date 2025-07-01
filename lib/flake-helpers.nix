@@ -13,7 +13,7 @@ let
         networking.hostName = lib.mkDefault hostname;
       }
     );
-  nixosSystem = nixpkgs.lib.nixosSystem;
+  nixosSystem = nixpkgs.lib.nixosSystem; # TODO: add rpi
 in
 {
 

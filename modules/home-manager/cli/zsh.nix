@@ -9,7 +9,7 @@
     default = config.home-manager.cli.enable;
   };
 
-  config = lib.mkIf config.home-manager.cli.git.enable {
+  config = lib.mkIf config.home-manager.cli.zsh.enable {
     programs.zsh = {
       enable = true;
       autosuggestion.enable = true;

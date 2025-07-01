@@ -10,7 +10,7 @@ let
   cfg = config.home-manager.wm;
 in
 {
-  imports = [ ];
+  imports = [ ./alacritty.nix ];
 
   options.home-manager.desktop = {
     enable = lib.mkEnableOption "desktop config" // {

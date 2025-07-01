@@ -20,6 +20,8 @@
     settings.trusted-users = [ "znaniye" ];
   };
 
+  #nixos.desktop.enable = true;
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -34,7 +36,6 @@
   };
 
   networking = {
-    hostName = "felix";
     networkmanager.enable = true;
   };
 
@@ -82,11 +83,6 @@
   services.udisks2.enable = true;
   services.devmon.enable = true;
 
-  # location = {
-  #   latitude = -19.92;
-  #   longitude = -43.94;
-  # };
-
   services.redshift = {
     enable = true;
     provider = "manual";
@@ -101,11 +97,6 @@
       night = "0.8";
     };
   };
-
-  # services.geoclue2 = {
-  #   enable = true;
-  #   appConfig.redshift.isAllowed = true;
-  # };
 
   services.tailscale.enable = true;
 
@@ -130,8 +121,6 @@
 
   security.rtkit.enable = true;
 
-  #services.pulseaudio.enable = true;
-
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -141,22 +130,6 @@
 
   programs.zsh.enable = true;
 
-  virtualisation.docker = {
-    enable = true;
-  };
-
-  users = {
-    users.znaniye = {
-      isNormalUser = true;
-      description = "znaniye";
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-        "docker"
-      ];
-    };
-    defaultUserShell = pkgs.zsh;
-  };
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [

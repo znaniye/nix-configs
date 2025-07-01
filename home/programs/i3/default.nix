@@ -57,7 +57,6 @@
     };
     extraConfig = ''
       default_border pixel 0
-      for_window [title="Game"] floating enable
     '';
   };
 }

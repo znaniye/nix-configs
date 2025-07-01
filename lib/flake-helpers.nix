@@ -26,9 +26,13 @@ in
       nixosConfigurations.${hostname} = nixosSystem {
         modules = [
           (setHostname hostname)
-          #self.outputs.nixosModules.default
+          self.outputs.nixosModules.default
           configuration
         ];
+
+        specialArgs = {
+          flake = self;
+        };
       };
     };
 

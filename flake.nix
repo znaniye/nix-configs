@@ -47,6 +47,7 @@
     libEx.recursiveMergeAttrs (
       [
         {
+          internal.sharedModules.default = import ./modules/shared;
           nixosModules.default = import ./modules/nixos;
           #homeModules.default = import ./modules/home-manager;
         }
@@ -56,7 +57,7 @@
         # NixOS config
         (libEx.mapDir (hostname: libEx.mkNixOSConfig { inherit hostname; }) ./hosts/nixos)
       #++
-      # Home-Manager configs
+      # Home-Manager standalone
       #((libEx.mapDir (hostname: libEx.mkHomeConfig { inherit hostname; }) ./hosts/home-manager))
     );
 }

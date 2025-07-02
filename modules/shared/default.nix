@@ -1,4 +1,7 @@
 { ... }:
 {
-  imports = [ ./meta.nix ];
+  imports = [
+    ./meta.nix
+    ./theme.nix
+  ];
 }

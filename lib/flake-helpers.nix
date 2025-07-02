@@ -1,7 +1,7 @@
 {
   self,
   nixpkgs,
-  home-manager,
+  nixos-raspberrypi,
   ...
 }:
 let
@@ -13,7 +13,9 @@ let
         networking.hostName = lib.mkDefault hostname;
       }
     );
-  nixosSystem = nixpkgs.lib.nixosSystem; # TODO: add rpi
+  nixosSystem =
+    hostname:
+    if hostname == "tortinha" then nixos-raspberrypi.lib.nixosSystemFull else nixpkgs.lib.nixosSystem;
 in
 {
 
@@ -23,7 +25,7 @@ in
       configuration ? ../hosts/nixos/${hostname},
     }:
     {
-      nixosConfigurations.${hostname} = nixosSystem {
+      nixosConfigurations.${hostname} = nixosSystem hostname {
         modules = [
           (setHostname hostname)
           self.outputs.nixosModules.default

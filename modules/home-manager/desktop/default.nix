@@ -23,6 +23,7 @@ in
       firefox
       discord
       telegram-desktop
+      flameshot
     ];
   };
 }

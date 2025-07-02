@@ -35,6 +35,24 @@
 
         theme = "half-life";
       };
+
+      shellAliases = {
+        "v" = "nvim";
+        "cdcfg" = "cd /etc/nixos/nixcfg2";
+        "cat" = "${pkgs.bat}/bin/bat";
+        "ls" = "${pkgs.eza}/bin/eza";
+
+        "rb" = "sudo nixos-rebuild switch";
+        "b" = "nix build";
+        "p" = "nix-shell --run zsh -p";
+        "s" = "nix shell";
+        "d" = "nix develop";
+        "ds" = "nix develop -c zsh";
+        "r" = "nix run";
+        "rpl" = "nix repl '<nixpkgs>'";
+        "f" = "nix search";
+        "fs" = "nix search self";
+      };
     };
   };
 }

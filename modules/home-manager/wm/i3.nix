@@ -55,7 +55,7 @@
             notification = false;
           }
           {
-            command = "${pkgs.feh}/bin/feh --bg-scale /etc/nixos/nixcfg2/home/programs/i3/a.jpg";
+            command = "${pkgs.feh}/bin/feh --bg-scale ${config.theme.wallpaper}";
             always = true;
             notification = false;
           }

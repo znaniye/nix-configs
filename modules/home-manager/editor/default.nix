@@ -10,7 +10,7 @@
 #in
 {
 
-  imports = [ ./nvim2 ];
+  imports = [ ./nvim ];
 
   options.home-manager.editor.enable = lib.mkEnableOption "editor config" // {
     default = osConfig.nixos.desktop.enable or false;

@@ -35,20 +35,6 @@
 
   services.blueman.enable = true;
 
-  # services.printing = {
-  #   enable = true;
-  #   drivers = [
-  #     pkgs.epson-escpr
-  #   ];
-  # };
-  #
-  # services.avahi = {
-  #   enable = true;
-  #   nssmdns4 = true; # IPv4
-  #   nssmdns6 = true; # IPv6
-  #   openFirewall = true;
-  # };
-
   # programs.thunar.enable = true;
   # services.gvfs.enable = true;
   # services.udisks2.enable = true;

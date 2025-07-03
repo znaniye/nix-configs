@@ -8,13 +8,15 @@
 
   imports = [
     # Hardware configuration
-    nixos-raspberrypi.nixosmodules.raspberry-pi-5.base
-    nixos-raspberrypi.nixosmodules.raspberry-pi-5.display-vc4
+    nixos-raspberrypi.nixosModules.raspberry-pi-5.base
+    nixos-raspberrypi.nixosModules.raspberry-pi-5.display-vc4
 
     ./pi5-configtxt.nix
     flake.inputs.disko.nixosModules.disko
     ./disko-nvme-zfs.nix
   ];
+
+  programs.zsh.enable = true;
 
   services.tailscale.enable = true;
 

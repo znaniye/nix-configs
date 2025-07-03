@@ -34,6 +34,7 @@ in
 
         specialArgs = {
           flake = self;
+          nixos-raspberrypi = self.inputs.nixos-raspberrypi;
         };
       };
     };

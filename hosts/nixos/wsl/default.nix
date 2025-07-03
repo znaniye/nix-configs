@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   inputs,
   ...
@@ -13,38 +12,14 @@
 
   wsl = {
     enable = true;
-    defaultUser = "nixos";
+    defaultUser = "${config.meta.username}";
     startMenuLaunchers = true;
-  };
-
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "daily";
-      options = "--delete-older-than 5d";
-    };
-
-    extraOptions = ''
-
-      experimental-features = nix-command flakes
-
-    '';
   };
 
   programs.zsh.enable = true;
 
   environment.systemPackages = with pkgs; [
   ];
-
-  users = {
-    users.nixos = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
-    };
-    defaultUserShell = pkgs.zsh;
-  };
-
-  nixpkgs.config.allowUnfree = true;
 
   system.stateVersion = "24.05";
 }

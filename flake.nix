@@ -9,7 +9,7 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
 
@@ -41,60 +41,23 @@
       disko,
       ...
     }@inputs:
-    {
-      nixosConfigurations = {
-        felix = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./hosts/thinkpad
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.znaniye = import ./home/thinkpad.nix;
-                extraSpecialArgs = { inherit inputs; };
-              };
-            }
-          ];
-        };
+    let
+      libEx = import ./lib inputs;
+    in
+    libEx.recursiveMergeAttrs (
+      [
+        {
+          internal.sharedModules.default = import ./modules/shared;
+          nixosModules.default = import ./modules/nixos;
+          #homeModules.default = import ./modules/home-manager;
+        }
 
-        tortinha = nixos-raspberrypi.lib.nixosSystemFull {
-          system = "aarch64-linux";
-          specialArgs = inputs;
-          modules = [
-            ./hosts/rpi
-
-            disko.nixosModules.disko
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                users.nixos = import ./home/rpi.nix;
-              };
-            }
-
-          ];
-        };
-
-        wsl = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
-            nixos-wsl.nixosModules.wsl
-            ./hosts/wsl
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.nixos = import ./home/wsl.nix;
-                extraSpecialArgs = { inherit inputs; };
-              };
-            }
-          ];
-        };
-      };
-    };
+      ]
+      ++
+        # NixOS config
+        (libEx.mapDir (hostname: libEx.mkNixOSConfig { inherit hostname; }) ./hosts/nixos)
+      #++
+      #TODO: Home-Manager standalone
+      #((libEx.mapDir (hostname: libEx.mkHomeConfig { inherit hostname; }) ./hosts/home-manager))
+    );
 }

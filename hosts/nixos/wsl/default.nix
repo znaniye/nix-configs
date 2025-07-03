@@ -1,13 +1,13 @@
 {
   config,
+  flake,
   pkgs,
-  inputs,
   ...
 }:
 
 {
   imports = [
-    inputs.nixos-wsl.nixosModules.wsl
+    flake.inputs.nixos-wsl.nixosModules.wsl
   ];
 
   wsl = {
@@ -21,5 +21,6 @@
   environment.systemPackages = with pkgs; [
   ];
 
+  nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "24.05";
 }

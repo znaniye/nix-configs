@@ -219,7 +219,7 @@
             dashboard.section.buttons.val = {
                 dashboard.button( "n", "󰈔 New file" , ":enew<CR>"),
                 dashboard.button( "e", " Explore codes", ":cd /home/${config.meta.username}/code | :Explore<CR>"),
-                dashboard.button( "c", "  Nix config flake" , ":cd /etc/nixos/nixcfg2 | :e flake.nix<CR>"),
+                dashboard.button( "c", "  Nix config flake" , ":e ~/nix-configs/flake.nix<CR>"),
                 dashboard.button( "q", "󰅙  Quit nvim", ":qa<CR>"),
             }
             alpha.setup(dashboard.opts)

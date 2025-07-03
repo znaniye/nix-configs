@@ -22,6 +22,7 @@ in
     home = {
       packages = with pkgs; [
         nixfmt-rfc-style
+        nix-output-monitor
         nil
         fastfetch
         unzip

@@ -38,7 +38,7 @@
 
       shellAliases = {
         "v" = "nvim";
-        "cdcfg" = "cd /etc/nixos/nixcfg2";
+        "cfg" = "cd /etc/nixos/nixcfg2";
         "cat" = "${pkgs.bat}/bin/bat";
         "ls" = "${pkgs.eza}/bin/eza";
 

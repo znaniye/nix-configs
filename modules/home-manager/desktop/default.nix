@@ -24,6 +24,10 @@ in
       discord
       telegram-desktop
       flameshot
+      xfce.thunar
+      foliate
+      dunst
+      zathura
     ];
   };
 }

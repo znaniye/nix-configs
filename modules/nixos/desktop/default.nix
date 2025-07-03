@@ -10,6 +10,7 @@
     ./tailscale.nix
     ./fonts.nix
     ./locale.nix
+    ./printer.nix
   ];
 
   options.nixos.desktop = {
@@ -22,14 +23,7 @@
 
     programs.zsh.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      #git
-      #vim
-      #tor
-      #cups-filters
-      #udiskie
-      #tailscale
-    ];
+    environment.systemPackages = with pkgs; [ ];
   };
 
 }

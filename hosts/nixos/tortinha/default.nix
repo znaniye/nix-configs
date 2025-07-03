@@ -1,51 +1,24 @@
 {
+  flake,
   pkgs,
   nixos-raspberrypi,
   ...
 }:
 {
 
-  imports =
-    with nixos-raspberrypi.nixosModules;
-    [
-      # Hardware configuration
-      raspberry-pi-5.base
-      raspberry-pi-5.display-vc4
-      ./pi5-configtxt.nix
-    ]
-    ++ [ ./disko-nvme-zfs.nix ];
+  imports = [
+    # Hardware configuration
+    nixos-raspberrypi.nixosmodules.raspberry-pi-5.base
+    nixos-raspberrypi.nixosmodules.raspberry-pi-5.display-vc4
 
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "daily";
-      options = "--delete-older-than 5d";
-    };
-
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-
-    settings.trusted-users = [ "nixos" ];
-  };
-
-  nixpkgs.config.allowUnfree = true;
+    ./pi5-configtxt.nix
+    flake.inputs.disko.nixosModules.disko
+    ./disko-nvme-zfs.nix
+  ];
 
   services.tailscale.enable = true;
 
-  networking = {
-    hostName = "tortinha";
-    hostId = "d96d3bc2";
-  };
-
-  users.users.nixos = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-    ];
-  };
-
-  services.getty.autologinUser = "nixos";
+  networking.hostId = "d96d3bc2";
 
   services.openssh = {
     enable = true;

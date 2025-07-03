@@ -48,7 +48,6 @@ in
         "video"
       ];
       shell = pkgs.zsh;
-      #password = "changeme";
     };
   };
 }

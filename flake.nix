@@ -57,7 +57,7 @@
         # NixOS config
         (libEx.mapDir (hostname: libEx.mkNixOSConfig { inherit hostname; }) ./hosts/nixos)
       #++
-      # Home-Manager standalone
+      #TODO: Home-Manager standalone
       #((libEx.mapDir (hostname: libEx.mkHomeConfig { inherit hostname; }) ./hosts/home-manager))
     );
 }

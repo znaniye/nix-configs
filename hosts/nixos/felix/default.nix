@@ -20,25 +20,12 @@
     };
   };
 
-  networking = {
-    networkmanager.enable = true;
-  };
-
   services.logind.lidSwitchExternalPower = "ignore";
-
-  #console.keyMap = "br-abnt2";
 
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = "no";
   };
-
-  services.blueman.enable = true;
-
-  # programs.thunar.enable = true;
-  # services.gvfs.enable = true;
-  # services.udisks2.enable = true;
-  # services.devmon.enable = true;
 
   services.redshift = {
     enable = true;
@@ -61,20 +48,6 @@
       enable = true;
     };
   };
-
-  hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-
-    bluetooth = {
-      enable = true;
-      package = pkgs.bluez;
-    };
-  };
-
-  #security.rtkit.enable = true;
 
   services.pipewire = {
     enable = true;

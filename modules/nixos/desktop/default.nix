@@ -11,6 +11,7 @@
     ./printer.nix
     ./tailscale.nix
     ./tlp.nix
+    ./wireless.nix
     ./xserver.nix
   ];
 

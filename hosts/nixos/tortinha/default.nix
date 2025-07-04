@@ -29,10 +29,6 @@
 
   environment.systemPackages = with pkgs; [
     git
-    fastfetch
-    xclip
-    ripgrep
-    htop
-    tailscale
+    neovim
   ];
 }

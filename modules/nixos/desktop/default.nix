@@ -6,11 +6,12 @@
 }:
 {
   imports = [
-    ./xserver.nix
-    ./tailscale.nix
     ./fonts.nix
     ./locale.nix
     ./printer.nix
+    ./tailscale.nix
+    ./tlp.nix
+    ./xserver.nix
   ];
 
   options.nixos.desktop = {

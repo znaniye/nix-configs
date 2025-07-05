@@ -28,6 +28,7 @@ in
       foliate
       dunst
       zathura
+      pavucontrol
     ];
   };
 }

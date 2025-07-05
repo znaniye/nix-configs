@@ -246,7 +246,7 @@ in
         "module/title" = {
           type = "internal/xwindow";
           format = "<label>";
-          format-foreground = secondary;
+          format-foreground = quaternary;
           label = "%title%";
           label-maxlen = 70;
         };
@@ -266,7 +266,7 @@ in
 
         "module/network" = {
           type = "internal/network";
-          interface = "wlp0s20f3";
+          interface = "wlan0";
 
           interval = "1.0";
 

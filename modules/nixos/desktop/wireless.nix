@@ -10,7 +10,7 @@
     default = config.nixos.desktop.enable;
   };
 
-  config = lib.mkIf config.nixos.laptop.enable {
+  config = lib.mkIf config.nixos.desktop.enable {
     networking = {
       # Use Network Manager
       networkmanager = {

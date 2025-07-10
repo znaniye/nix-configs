@@ -33,5 +33,10 @@ in
         xclip
       ];
     };
+
+    programs.direnv = {
+      enable = true;
+      enableZshIntegration = true;
+    };
   };
 }

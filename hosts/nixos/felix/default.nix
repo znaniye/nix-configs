@@ -7,6 +7,8 @@
 
   nixos.desktop.enable = true;
 
+  networking.firewall.enable = false;
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;

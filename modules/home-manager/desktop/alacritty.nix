@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 {
@@ -37,10 +36,6 @@
           size = 11;
         };
 
-        # terminal.shell = {
-        #   program = "${pkgs.zsh}/bin/zsh";
-        # };
-        #
         colors = {
           primary = {
             background = "0x1d2021";

@@ -54,10 +54,9 @@ in
     };
 
     nixpkgs.config.allowUnfree = true;
-    #TODO:
-    #nixpkgs = {
-    #  config = flake.outputs.internal.configs.nixpkgs;
-    #  overlays = [ flake.outputs.overlays.default ];
-    #};
+    nixpkgs.overlays = [
+      flake.inputs.emacs-overlay.overlays.default
+      flake.inputs.niri.overlays.niri
+    ];
   };
 }

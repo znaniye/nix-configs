@@ -13,6 +13,7 @@
     ./tlp.nix
     ./wireless.nix
     ./xserver.nix
+    ./wayland.nix
   ];
 
   options.nixos.desktop = {

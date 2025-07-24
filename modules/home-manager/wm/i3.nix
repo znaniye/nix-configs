@@ -2,12 +2,13 @@
   config,
   pkgs,
   lib,
+  osConfig,
   ...
 }:
 
 {
   options.home-manager.wm.i3.enable = lib.mkEnableOption "i3 config" // {
-    default = config.home-manager.wm.enable;
+    default = osConfig.nixos.desktop.xserver.enable;
   };
 
   config = lib.mkIf config.home-manager.wm.i3.enable {

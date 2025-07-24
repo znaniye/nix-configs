@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   osConfig,
   ...
@@ -13,6 +12,9 @@ in
     ./i3.nix
     ./picom.nix
     ./polybar.nix
+    ./gtk.nix
+    ./niri
+    ./waybar
   ];
 
   options.home-manager.wm = {

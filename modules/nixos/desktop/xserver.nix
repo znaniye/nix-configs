@@ -7,7 +7,7 @@
 
 {
   options.nixos.desktop.xserver.enable = lib.mkEnableOption "xserver config" // {
-    default = config.nixos.desktop.enable;
+    default = false; # config.nixos.desktop.enable;
   };
 
   config = lib.mkIf config.nixos.desktop.xserver.enable {

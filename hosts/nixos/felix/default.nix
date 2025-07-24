@@ -5,7 +5,12 @@
     ./hardware-configuration.nix
   ];
 
-  nixos.desktop.enable = true;
+  nixos = {
+    desktop = {
+      enable = true;
+      wayland.enable = true;
+    };
+  };
 
   networking.firewall.enable = false;
 

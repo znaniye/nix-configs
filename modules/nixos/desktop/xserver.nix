@@ -34,5 +34,7 @@
         };
       };
     };
+
+    environment.systemPackages = with pkgs; [ xclip ];
   };
 }

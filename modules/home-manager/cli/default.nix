@@ -31,7 +31,6 @@ in
         ranger
         ripgrep
         btop
-        xclip
       ];
     };
 

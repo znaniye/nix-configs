@@ -17,5 +17,8 @@
       enable = true;
       package = pkgs.niri-stable;
     };
+
+    environment.systemPackages = with pkgs; [ wl-clipboard ];
+
   };
 }

@@ -33,7 +33,7 @@
             family = "Iosevka Nerd Font";
             style = "Medium";
           };
-          size = 11;
+          size = 14;
         };
 
         colors = {

@@ -6,8 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -19,6 +23,7 @@ jobs:
       - run: nix build -L .#nixosConfigurations.felix.config.system.build.toplevel --accept-flake-config 
 
       - uses: stefanzweifel/git-auto-commit-action@v4
+
         with:
           commit_message: Bump flake.lock
           branch: master

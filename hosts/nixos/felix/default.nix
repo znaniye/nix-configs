@@ -50,13 +50,6 @@
     };
   };
 
-  services.tor = {
-    enable = true;
-    client = {
-      enable = true;
-    };
-  };
-
   services.pipewire = {
     enable = true;
     alsa.enable = true;

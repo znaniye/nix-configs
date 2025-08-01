@@ -14,6 +14,7 @@
     ./wireless.nix
     ./xserver.nix
     ./wayland.nix
+    ./privacy.nix
   ];
 
   options.nixos.desktop = {
@@ -26,7 +27,7 @@
 
     programs.zsh.enable = true;
 
-    environment.systemPackages = with pkgs; [ ];
+    environment.systemPackages = with pkgs; [ tor-browser ];
   };
 
 }

@@ -30,6 +30,7 @@
             "pulseaudio#mic"
             "backlight"
             #"niri/language"
+            "tray"
             "battery"
           ];
 

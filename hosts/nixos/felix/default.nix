@@ -8,6 +8,7 @@
   nixos = {
     desktop = {
       enable = true;
+      virtualization.enable = true;
       wayland.enable = true;
     };
   };
@@ -21,7 +22,6 @@
   };
 
   boot = {
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -35,20 +35,20 @@
     settings.PermitRootLogin = "no";
   };
 
-  services.redshift = {
-    enable = true;
-    provider = "manual";
-    latitude = "-23.5505";
-    longitude = "-46.6333";
-    temperature = {
-      day = 5500;
-      night = 2700;
-    };
-    brightness = {
-      day = "1";
-      night = "0.8";
-    };
-  };
+  # services.redshift = {
+  #   enable = true;
+  #   provider = "manual";
+  #   latitude = "-23.5505";
+  #   longitude = "-46.6333";
+  #   temperature = {
+  #     day = 5500;
+  #     night = 2700;
+  #   };
+  #   brightness = {
+  #     day = "1";
+  #     night = "0.8";
+  #   };
+  # };
 
   services.pipewire = {
     enable = true;

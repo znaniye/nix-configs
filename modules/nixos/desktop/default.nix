@@ -15,6 +15,7 @@
     ./xserver.nix
     ./wayland.nix
     ./privacy.nix
+    ./virtualization.nix
   ];
 
   options.nixos.desktop = {

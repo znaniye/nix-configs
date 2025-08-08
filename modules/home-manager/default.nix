@@ -9,6 +9,7 @@
     flake.outputs.internal.sharedModules.default
     ./cli
     ./desktop
+    ./dev
     ./editor
     ./wm
   ];

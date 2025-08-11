@@ -12,6 +12,8 @@
         userName = config.meta.username;
         userEmail = config.meta.email;
       };
+
+      gh.enable = true;
     };
   };
 }

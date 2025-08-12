@@ -7,7 +7,7 @@
 
 {
   options.nixos.desktop.xserver.enable = lib.mkEnableOption "xserver config" // {
-    default = false; # config.nixos.desktop.enable;
+    default = false;
   };
 
   config = lib.mkIf config.nixos.desktop.xserver.enable {
@@ -31,6 +31,21 @@
         windowManager.i3 = {
           enable = true;
           package = pkgs.i3-gaps;
+        };
+      };
+
+      redshift = {
+        enable = true;
+        provider = "manual";
+        latitude = "-23.5505";
+        longitude = "-46.6333";
+        temperature = {
+          day = 5500;
+          night = 2700;
+        };
+        brightness = {
+          day = "1";
+          night = "0.8";
         };
       };
     };

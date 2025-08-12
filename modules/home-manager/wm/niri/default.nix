@@ -69,6 +69,14 @@ in
 
       binds = defaultKeyBinds // { };
     };
+
+    services.gammastep = {
+      enable = true;
+      provider = "manual";
+      latitude = -19.9167;
+      longitude = -43.9345;
+    };
+
   };
 
 }

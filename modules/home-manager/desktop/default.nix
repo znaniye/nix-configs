@@ -23,13 +23,11 @@ in
       firefox
       discord
       telegram-desktop
-      flameshot
       xfce.thunar
       foliate
       dunst
       zathura
       pavucontrol
-      racket
       (openfreebuds.overrideAttrs (_: {
         postInstall = ''
           mkdir -p  $out/share/applications

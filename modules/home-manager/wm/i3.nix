@@ -12,6 +12,12 @@
   };
 
   config = lib.mkIf config.home-manager.wm.i3.enable {
+
+    home.packages = with pkgs; [
+      dunst
+      flameshot
+    ];
+
     xsession.windowManager.i3 = {
       enable = true;
       package = pkgs.i3-gaps;

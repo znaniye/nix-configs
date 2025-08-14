@@ -15,7 +15,6 @@
   "Mod+Shift+Slash".action.show-hotkey-overlay = { };
 
   # Suggested binds for running programs: terminal, app launcher, screen locker.
-  "Mod+T".action.spawn = "alacritty";
   "Mod+D".action.spawn = "fuzzel";
   "Super+Alt+L".action.spawn = "swaylock";
 

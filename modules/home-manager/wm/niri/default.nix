@@ -58,6 +58,7 @@ in
       };
 
       input = {
+        power-key-handling.enable = false;
         keyboard.xkb.layout = "br";
         touchpad = {
           tap = true;
@@ -67,7 +68,9 @@ in
         };
       };
 
-      binds = defaultKeyBinds // { };
+      binds = defaultKeyBinds // {
+        "Mod+Return".action.spawn = "alacritty";
+      };
     };
 
     services.gammastep = {

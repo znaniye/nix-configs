@@ -28,7 +28,7 @@ in
         fastfetch
         unzip
         tokei
-        ranger
+        yazi
         ripgrep
         btop
       ];

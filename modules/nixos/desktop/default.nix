@@ -16,6 +16,7 @@
     ./wayland.nix
     ./privacy.nix
     ./virtualization.nix
+    ./syncthing.nix
   ];
 
   options.nixos.desktop = {
@@ -30,5 +31,4 @@
 
     environment.systemPackages = with pkgs; [ tor-browser ];
   };
-
 }

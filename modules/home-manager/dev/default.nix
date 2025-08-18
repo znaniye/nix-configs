@@ -11,6 +11,7 @@
     ./lua.nix
     ./nix.nix
     ./python.nix
+    ./rust.nix
   ];
 
   options.home-manager.dev.enable = lib.mkEnableOption "dev config" // {

@@ -100,15 +100,9 @@
           '';
         }
         {
-          plugin = rust-tools-nvim;
+          plugin = rustaceanvim;
           type = "lua";
-          config = ''
-            local rust_tools = require('rust-tools')
-            if vim.fn.executable("rust-analyzer") == 1 then
-              rust_tools.setup{ tools = { autoSetHints = true } }
-            end
-            vim.api.nvim_set_hl(0, '@lsp.type.comment.rust', {})
-          '';
+          config = '''';
         }
         {
           plugin = nvim-cmp;

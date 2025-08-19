@@ -17,6 +17,7 @@
     ./privacy.nix
     ./virtualization.nix
     ./syncthing.nix
+    ./steam.nix
   ];
 
   options.nixos.desktop = {

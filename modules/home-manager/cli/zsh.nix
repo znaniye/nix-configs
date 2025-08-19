@@ -41,6 +41,7 @@
         "cfg" = "cd ~/nix-configs";
         "cat" = "${pkgs.bat}/bin/bat";
         "ls" = "${pkgs.eza}/bin/eza";
+        "tree" = "${pkgs.eza}/bin/eza --tree";
 
         "rb" = "sudo nixos-rebuild switch";
         "b" = "nix build";

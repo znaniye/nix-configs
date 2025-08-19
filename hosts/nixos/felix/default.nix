@@ -13,12 +13,6 @@
 
   networking.firewall.enable = false;
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
-
   boot = {
     loader = {
       systemd-boot.enable = true;

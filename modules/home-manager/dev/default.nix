@@ -12,6 +12,7 @@
     ./nix.nix
     ./python.nix
     ./rust.nix
+    ./zig.nix
   ];
 
   options.home-manager.dev.enable = lib.mkEnableOption "dev config" // {

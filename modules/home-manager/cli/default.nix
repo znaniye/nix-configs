@@ -22,15 +22,14 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = with pkgs; [
-        nixfmt-rfc-style
-        nix-output-monitor
-        nil
+
         fastfetch
         unzip
         tokei
         yazi
         ripgrep
         btop
+        ncdu
       ];
     };
   };

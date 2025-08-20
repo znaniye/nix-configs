@@ -29,9 +29,9 @@ in
       [
         nix-tree
         nix-update
-        nix-output-monitor
-        nixfmt-rfc-style
         nurl
+        nixfmt
+        nix-output-monitor
         nvd
         statix
       ]

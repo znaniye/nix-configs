@@ -29,6 +29,7 @@
       extraLuaConfig = builtins.readFile ./config.lua;
 
       plugins = with pkgs.vimPlugins; [
+        vim-obsession
         gruvbox-nvim
         vim-nix
         vim-go

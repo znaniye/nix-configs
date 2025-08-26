@@ -57,6 +57,10 @@ in
     nixpkgs.overlays = [
       flake.inputs.emacs-overlay.overlays.default
       flake.inputs.niri.overlays.niri
+      flake.inputs.zig.overlays.default
+      (final: prev: {
+        zls = flake.inputs.zls.packages.${prev.system}.default;
+      })
     ];
   };
 }

@@ -44,6 +44,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.nixpkgs-stable.follows = "nixpkgs";
     };
+
+    zig = {
+      url = "github:mitchellh/zig-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zls = {
+      url = "github:zigtools/zls/0.15.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+
+    };
   };
 
   outputs =

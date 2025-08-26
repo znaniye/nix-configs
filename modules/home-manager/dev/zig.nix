@@ -13,7 +13,7 @@
   config = lib.mkIf config.home-manager.dev.zig.enable {
     home = {
       packages = with pkgs; [
-        zig
+        zigpkgs."0.15.1"
         zls
       ];
     };

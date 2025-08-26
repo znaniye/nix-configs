@@ -18,11 +18,9 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       gamescope
-      mangohud
     ];
 
     programs = {
-
       gamescope = {
         args = [ "--rt" ];
         capSysNice = true;

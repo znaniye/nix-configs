@@ -16,7 +16,6 @@
     ./wayland.nix
     ./privacy.nix
     ./virtualization.nix
-    ./syncthing.nix
     ./steam.nix
   ];
 

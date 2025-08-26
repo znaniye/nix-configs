@@ -8,6 +8,7 @@
 }:
 let
   defaultKeyBinds = import ./defaultKeyBinds.nix;
+  hostBasedLayout = if osConfig.networking.hostName == "felix" then "br" else "us";
 in
 {
   imports = [ flake.inputs.niri.homeModules.niri ];
@@ -59,7 +60,7 @@ in
 
       input = {
         power-key-handling.enable = false;
-        keyboard.xkb.layout = "br";
+        keyboard.xkb.layout = hostBasedLayout;
         touchpad = {
           tap = true;
           dwt = true;

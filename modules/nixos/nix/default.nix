@@ -55,12 +55,10 @@ in
 
     nixpkgs.config.allowUnfree = true;
     nixpkgs.overlays = [
+      flake.outputs.overlays.default
       flake.inputs.emacs-overlay.overlays.default
       flake.inputs.niri.overlays.niri
       flake.inputs.zig.overlays.default
-      (final: prev: {
-        zls = flake.inputs.zls.packages.${prev.system}.default;
-      })
     ];
   };
 }

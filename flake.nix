@@ -75,6 +75,7 @@
         {
           internal.sharedModules.default = import ./modules/shared;
           nixosModules.default = import ./modules/nixos;
+          overlays.default = import ./overlays { inherit self; };
           #homeModules.default = import ./modules/home-manager;
         }
       ]

@@ -22,7 +22,7 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = with pkgs; [
-
+        magic-wormhole
         fastfetch
         unzip
         tokei

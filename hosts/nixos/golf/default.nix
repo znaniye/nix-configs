@@ -34,10 +34,7 @@
     pulse.enable = true;
   };
 
-  # deepcool-digital
-  udev.extraRules = ''
-    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3633", MODE="0666"
-  '';
+  services.hardware.deepcool-digital-linux.enable = true;
 
   system.stateVersion = "24.11";
 }

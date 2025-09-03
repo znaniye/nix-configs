@@ -41,7 +41,6 @@ in
       dunst
       zathura
       pavucontrol
-      deepcool-digital
       (openfreebuds.overrideAttrs (_: {
         postInstall = ''
           mkdir -p  $out/share/applications

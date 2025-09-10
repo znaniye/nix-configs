@@ -68,6 +68,11 @@
               }
 
               vim.api.nvim_set_keymap('n', "<leader>gp", ':Gitsigns preview_hunk_inline<CR>', {noremap = true})
+              vim.keymap.set('n', '<leader>grh', function()
+                local lnum = vim.fn.line('.')
+                require('gitsigns').reset_hunk({lnum, lnum})
+              end, { desc = 'Reset current line with gitsigns' })
+
             '';
         }
         {

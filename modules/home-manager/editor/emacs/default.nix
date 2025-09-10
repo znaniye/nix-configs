@@ -6,7 +6,7 @@
 }:
 {
   options.home-manager.editor.emacs.enable = lib.mkEnableOption "emacs config" // {
-    default = true;
+    default = false;
   };
 
   config = lib.mkIf config.home-manager.editor.emacs.enable {

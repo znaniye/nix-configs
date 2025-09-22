@@ -24,34 +24,40 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ ];
 
-    nix = {
-      gc = {
-        automatic = true;
-        persistent = true;
-        randomizedDelaySec = "15m";
-        dates = "3:15";
-        options = "--delete-older-than 7d";
-      };
-      # Optimise nix-store via service
-      optimise.automatic = true;
-      # Reduce disk usage
-      daemonIOSchedClass = "best-effort";
-      daemonIOSchedPriority = 7;
-      # Leave nix builds as a background task
-      daemonCPUSchedPolicy = "batch";
+    nix =
+      let
+        hostBasedJobs = if config.networking.hostName == "felix" then 1 else "auto";
+      in
+      {
 
-      extraOptions = ''
-        experimental-features = nix-command flakes
-      '';
+        gc = {
+          automatic = true;
+          persistent = true;
+          randomizedDelaySec = "15m";
+          dates = "3:15";
+          options = "--delete-older-than 7d";
+        };
+        # Optimise nix-store via service
+        optimise.automatic = true;
+        # Reduce disk usage
+        daemonIOSchedClass = "best-effort";
+        daemonIOSchedPriority = 7;
+        # Leave nix builds as a background task
+        daemonCPUSchedPolicy = "batch";
 
-      settings = {
-        trusted-users = [
-          "root"
-          "@wheel"
-        ];
-        auto-optimise-store = true;
+        extraOptions = ''
+          experimental-features = nix-command flakes
+        '';
+
+        settings = {
+          trusted-users = [
+            "root"
+            "@wheel"
+          ];
+          auto-optimise-store = true;
+          max-jobs = hostBasedJobs;
+        };
       };
-    };
 
     nixpkgs.config.allowUnfree = true;
     nixpkgs.overlays = [

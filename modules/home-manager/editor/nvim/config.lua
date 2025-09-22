@@ -64,20 +64,25 @@ add_lsp(lspconfig.clangd, { { noremap = false, silent = false } })
 add_lsp(lspconfig.ts_ls, {})
 add_lsp(lspconfig.gopls, {})
 
-add_lsp(lspconfig.lua_ls, {
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = { "vim" },
-            },
-            workspace = {
-                library = {
-                    "${3rd}/love2d/library",
-                },
-            },
-        },
-    },
-})
+-- add_lsp(lspconfig.lua_ls, {
+--     settings = {
+--         Lua = {
+--             runtime = {
+--                 version = 'LuaJIT',
+--             },
+--             diagnostics = {
+--                 globals = { 'vim' },
+--             },
+--             workspace = {
+--                 library = "${3rd}/love2d/library",
+--                 checkThirdParty = false,
+--             },
+--             telemetry = {
+--                 enable = false,
+--             },
+--         },
+--     },
+-- })
 
 add_lsp(lspconfig.erlangls, {})
 add_lsp(lspconfig.nil_ls, {})

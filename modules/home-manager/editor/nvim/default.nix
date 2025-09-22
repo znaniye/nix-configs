@@ -31,6 +31,7 @@
       plugins = with pkgs.vimPlugins; [
         vim-obsession
         gruvbox-nvim
+        lazydev-nvim
         vim-nix
         vim-go
         vim-elixir
@@ -41,7 +42,15 @@
         markdown-preview-nvim
         nvim-treesitter-textobjects
         nvim-treesitter.withAllGrammars
-
+        {
+          plugin = lazydev-nvim;
+          type = "lua";
+          config =
+            # lua
+            ''
+              require("lazydev").setup({})
+            '';
+        }
         {
           plugin = nvim-autopairs;
           type = "lua";

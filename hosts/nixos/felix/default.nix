@@ -1,6 +1,8 @@
+{ flake, ... }:
 {
   imports = [
     ./hardware-configuration.nix
+    flake.inputs.sops.nixosModules.sops
   ];
 
   nixos = {

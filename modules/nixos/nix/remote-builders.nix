@@ -4,11 +4,9 @@ let
   cfg = config.nixos.nix.remote-builders;
 in
 {
-  options.nixos.nix.remote-builders.enable =
-    lib.mkEnableOption "remote-builders config for nixpkgs"
-    // {
-      default = false;
-    };
+  options.nixos.nix.remote-builders.enable = lib.mkEnableOption "remote-builders config" // {
+    default = true;
+  };
 
   config = lib.mkIf cfg.enable {
     nix = {
@@ -17,9 +15,8 @@ in
           hostName = "golf";
           system = "x86_64-linux";
           protocol = "ssh-ng";
-          maxJobs = 16;
-          # base64 -w0 /etc/ssh/ssh_host_<type>_key.pub
-          publicHostKey = "";
+          sshUser = "nixremote";
+          sshKey = "/root/.ssh/nixremote.pub";
           supportedFeatures = [
             "nixos-test"
             "benchmark"

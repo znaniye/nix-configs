@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  libEx,
   pkgs,
   flake,
   ...
@@ -12,7 +11,7 @@ let
 in
 {
   imports = [
-    #./remote-builders.nix #TODO:
+    ./remote-builders.nix
   ];
 
   options.nixos.nix = {

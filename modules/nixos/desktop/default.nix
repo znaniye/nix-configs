@@ -1,4 +1,5 @@
 {
+  flake,
   config,
   lib,
   pkgs,
@@ -17,6 +18,7 @@
     ./privacy.nix
     ./virtualization.nix
     ./steam.nix
+    ./sops.nix
   ];
 
   options.nixos.desktop = {
@@ -26,9 +28,9 @@
   };
 
   config = lib.mkIf config.nixos.desktop.enable {
-
     programs.zsh.enable = true;
 
     environment.systemPackages = with pkgs; [ tor-browser ];
+
   };
 }

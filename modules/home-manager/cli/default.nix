@@ -30,6 +30,7 @@ in
         ripgrep
         btop
         ncdu
+        sops
       ];
     };
 

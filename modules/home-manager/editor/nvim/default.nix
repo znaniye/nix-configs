@@ -40,6 +40,7 @@
         cmp-buffer
         lspkind-nvim
         markdown-preview-nvim
+        nvim-dap
         nvim-treesitter-textobjects
         nvim-treesitter.withAllGrammars
         {

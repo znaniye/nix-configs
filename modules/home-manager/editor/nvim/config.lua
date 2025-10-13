@@ -22,6 +22,23 @@ vim.diagnostic.config({
     severity_sort = true,
 })
 
+local dap = require("dap")
+dap.adapters.godot = {
+	type = "server",
+	host = "127.0.0.1",
+	port = 6006,
+}
+
+dap.configurations.gdscript = {
+	{
+		type = "godot",
+		request = "launch",
+		name = "Launch scene",
+		project = "${workspaceFolder}",
+		launch_scene = true,
+	},
+}
+
 -- LSP
 local lspconfig = require("lspconfig")
 
@@ -88,3 +105,6 @@ add_lsp(lspconfig.erlangls, {})
 add_lsp(lspconfig.nil_ls, {})
 add_lsp(lspconfig.pyright, {})
 add_lsp(lspconfig.zls, {})
+lspconfig.gdscript.setup{ on_attach = on_attach }
+
+

@@ -38,6 +38,7 @@
 
       shellAliases = {
         "v" = "nvim";
+        "gv" = "nvim --listen /tmp/godot.pipe";
         "cfg" = "cd ~/nix-configs";
         "cat" = "${pkgs.bat}/bin/bat";
         "ls" = "${pkgs.eza}/bin/eza";
@@ -50,7 +51,7 @@
         "d" = "nix develop";
         "ds" = "nix develop -c zsh";
         "r" = "nix run";
-        "rpl" = "nix repl '<nixpkgs>'";
+        "rpl" = "nix repl --expr 'import <nixpkgs>{}'";
         "f" = "nix search";
         "fs" = "nix search self";
       };

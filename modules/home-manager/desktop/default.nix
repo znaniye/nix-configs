@@ -40,6 +40,7 @@ in
       foliate
       dunst
       zathura
+      godot
       pavucontrol
       (openfreebuds.overrideAttrs (_: {
         postInstall = ''

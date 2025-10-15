@@ -34,6 +34,7 @@ in
 
     home.packages = with pkgs; [
       firefox
+      spotify
       discord
       telegram-desktop
       xfce.thunar

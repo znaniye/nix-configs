@@ -31,7 +31,6 @@
       plugins = with pkgs.vimPlugins; [
         vim-obsession
         gruvbox-nvim
-        lazydev-nvim
         vim-nix
         vim-go
         vim-elixir
@@ -43,6 +42,15 @@
         nvim-dap
         nvim-treesitter-textobjects
         nvim-treesitter.withAllGrammars
+        {
+          plugin = lazygit-nvim;
+          type = "lua";
+          config =
+            # lua
+            ''
+              vim.api.nvim_set_keymap('n', "<leader>lg", ':LazyGit<CR>', {noremap = true})
+            '';
+        }
         {
           plugin = lazydev-nvim;
           type = "lua";

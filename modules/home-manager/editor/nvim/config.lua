@@ -39,71 +39,59 @@ dap.configurations.gdscript = {
 }
 
 -- LSP
-local lspconfig = require("lspconfig")
+vim.lsp.config.zls = {
+  cmd = { 'zls' },
+  root_markers = { 'build.zig', '.git' },
+  filetypes = { 'zig' },
+}
 
-function add_lsp(server, options)
-    local binary
+vim.lsp.config.ocamllsp = {
+  cmd = { "ocamllsp" },
+  filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
+  root_markers = { "*.opam", "esy.json", "package.json", ".git", "dune-project", "dune-workspace" }
+}
 
-    if options.on_attach == nil then
-        options.on_attach = on_attach
-    end
+vim.lsp.config.pyright = {
+    cmd = { "pyright-langserver", "--stdio" },
+    filetypes = { "python" },
+    root_markers = { "pyrightconfig.json", "pyproject.toml", "setup.py" },
+}
 
-    if options["cmd"] ~= nil then
-        binary = options["cmd"][1]
-    else
-        binary = server["document_config"]["default_config"]["cmd"][1]
-    end
+vim.lsp.config.nil_ls = {
+  cmd = { 'nil' },
+  filetypes = { 'nix' },
+  root_markers = { 'flake.nix', '.git' },
+}
 
-    if vim.fn.executable(binary) == 1 then
-        server.setup(options)
-    end
-end
+vim.lsp.config.gopls = {
+  cmd = { "gopls" },
+  filetypes = { "go", "gomod", "gowork", "gotmpl" },
+  root_markers = { "go.work", "go.mod", ".git" },
+}
 
-function on_attach(client, bufnr)
-    local function buf_set_keymap(...)
-        vim.api.nvim_buf_set_keymap(bufnr, ...)
-    end
-    local opts = { noremap = true, silent = true }
+vim.lsp.config.clangd = {
+  cmd = {
+    "clangd"
+  },
+  filetypes = {
+    "c",
+    "cpp",
+    "objc",
+    "objcpp",
+    "cuda",
+    "proto"
+  },
+}
 
-    if client.name == "clangd" then
-        client.server_capabilities.documentFormattingProvider = false
-    end
+vim.lsp.config.bash  = {
+	cmd = { "bash-language-server", "start" },
+	filetypes = { "sh", "bash", "zsh" },
+}
 
-    -- Keybindings LSP
-    buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-    buf_set_keymap("n", "<C-s>", '<cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>', opts)
-    buf_set_keymap("i", "<C-s>", '<Esc><cmd>lua vim.lsp.buf.format({ async = true }); vim.cmd("write")<CR>i', opts)
-end
+vim.lsp.config.gdscript = {
+	cmd = vim.lsp.rpc.connect("127.0.0.1", 6008),
+	root_markers = { "project.godot" },
+	filetypes = { "gdscript" },
+}
 
-add_lsp(lspconfig.ols, {})
-add_lsp(lspconfig.clangd, { { noremap = false, silent = false } })
-add_lsp(lspconfig.ts_ls, {})
-add_lsp(lspconfig.gopls, {})
-
--- add_lsp(lspconfig.lua_ls, {
---     settings = {
---         Lua = {
---             runtime = {
---                 version = 'LuaJIT',
---             },
---             diagnostics = {
---                 globals = { 'vim' },
---             },
---             workspace = {
---                 library = "${3rd}/love2d/library",
---                 checkThirdParty = false,
---             },
---             telemetry = {
---                 enable = false,
---             },
---         },
---     },
--- })
-
-add_lsp(lspconfig.erlangls, {})
-add_lsp(lspconfig.nil_ls, {})
-add_lsp(lspconfig.pyright, {})
-add_lsp(lspconfig.zls, {})
-lspconfig.gdscript.setup{ on_attach = on_attach }
-
-
+vim.lsp.enable({ "bash", "zls", "ocamllsp", "pyright", "nil_ls", "clangd", "gopls", "gdscript" })

@@ -112,11 +112,6 @@
           config = '''';
         }
         {
-          plugin = nvim-lspconfig;
-          type = "lua";
-          config = '''';
-        }
-        {
           plugin = elixir-tools-nvim;
           type = "lua";
           config = ''

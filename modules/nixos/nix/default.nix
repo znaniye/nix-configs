@@ -34,7 +34,7 @@ in
           persistent = true;
           randomizedDelaySec = "15m";
           dates = "3:15";
-          options = "--delete-older-than 7d";
+          options = "--delete-older-than 30d";
         };
         # Optimise nix-store via service
         optimise.automatic = true;

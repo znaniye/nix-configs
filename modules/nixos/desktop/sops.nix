@@ -18,6 +18,7 @@
     sops.age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";
 
     sops.secrets.tailscale-key = { };
+    sops.secrets.wireguard-private-key = { };
 
   };
 }

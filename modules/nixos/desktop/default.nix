@@ -19,6 +19,7 @@
     ./virtualization.nix
     ./steam.nix
     ./sops.nix
+    ./wireguard.nix
   ];
 
   options.nixos.desktop = {

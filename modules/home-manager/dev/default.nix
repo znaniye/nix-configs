@@ -10,6 +10,7 @@
     ./go.nix
     ./lua.nix
     ./nix.nix
+    ./ocaml.nix
     ./python.nix
     ./rust.nix
     ./zig.nix

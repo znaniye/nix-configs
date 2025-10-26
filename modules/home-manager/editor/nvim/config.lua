@@ -11,6 +11,7 @@ vim.o.expandtab = true
 
 vim.api.nvim_set_keymap("n", "<C-l>", ":bnext<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-h>", ":bprevious<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>bd", ":bd!<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-y>", ":ToggleTerm direction=float size=40<CR>", { noremap = true })
 
 vim.diagnostic.config({

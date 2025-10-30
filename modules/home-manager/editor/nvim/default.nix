@@ -40,6 +40,7 @@
         lspkind-nvim
         markdown-preview-nvim
         nvim-dap
+        nvim-sops
         nvim-treesitter-textobjects
         nvim-treesitter.withAllGrammars
         {

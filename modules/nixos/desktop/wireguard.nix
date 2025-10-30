@@ -34,6 +34,7 @@
             resolvectl domain wg0 "~intranet.freedom.ind.br"
             resolvectl dnssec wg0 false
           '';
+
         };
       };
     };

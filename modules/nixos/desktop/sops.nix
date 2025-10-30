@@ -19,6 +19,5 @@
 
     sops.secrets.tailscale-key = { };
     sops.secrets.wireguard-private-key = { };
-
   };
 }

@@ -15,6 +15,9 @@ in
 
   config = lib.mkIf osConfig.nixos.desktop.wayland.enable {
 
+    xdg.configFile."uwsm/env".source =
+      "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+
     programs.fuzzel.enable = true;
 
     programs.niri.settings = {

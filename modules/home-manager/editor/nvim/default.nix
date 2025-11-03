@@ -179,6 +179,7 @@
             require("toggleterm").setup{
               shell = 'zsh'
             }
+            vim.api.nvim_set_keymap("n", "<C-y>", ":ToggleTerm direction=float size=40<CR>", { noremap = true })
           '';
         }
         {

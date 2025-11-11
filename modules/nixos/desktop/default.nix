@@ -10,7 +10,7 @@
     ./fonts.nix
     ./locale.nix
     ./printer.nix
-    ./tailscale.nix
+    ./tailscale
     ./tlp.nix
     ./wireless.nix
     ./xserver.nix

@@ -17,7 +17,7 @@
   ];
 
   options.home-manager.dev.enable = lib.mkEnableOption "dev config" // {
-    default = true;
+    default = false;
   };
 
   config = lib.mkIf config.home-manager.dev.enable {

@@ -11,6 +11,7 @@
       virtualization.enable = true;
       wayland.enable = true;
     };
+    home-manager.dev.enable = true;
   };
 
   networking.firewall.enable = false;

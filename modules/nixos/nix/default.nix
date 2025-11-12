@@ -21,7 +21,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ ];
+    environment.systemPackages = with pkgs; [ nixos-rebuild-ng ];
 
     nix =
       let

@@ -5,6 +5,7 @@
   ...
 }:
 let
+  cfg = config.nixos.desktop.tailscale;
   updateScript = pkgs.writeShellApplication {
     name = "ts-update-script";
     runtimeInputs = with pkgs; [
@@ -88,44 +89,49 @@ in
     default = config.nixos.desktop.enable;
   };
 
-  config = lib.mkIf config.nixos.desktop.tailscale.enable {
+  config = lib.mkMerge [
 
-    services.tailscale = {
-      enable = true;
-      authKeyFile = config.sops.secrets.tailscale-key.path;
-      #useRoutingFeatures = if config.nixos.server.tailscale.enable then "both" else "client";
-    };
+    (lib.mkIf cfg.enable {
 
-    # Disable wait online as it's causing trouble at rebuild
-    # See: https://github.com/NixOS/nixpkgs/issues/180175
-    systemd.services.NetworkManager-wait-online.enable = false;
-
-    systemd.tmpfiles.rules = [
-      "d /var/lib/ts-auth-auto-update 0755 root root -"
-    ];
-
-    systemd.timers.ts-auth-auto-update =
-      let
-        date = builtins.fromJSON (builtins.readFile ./update.json);
-      in
-      {
-        description = "Run script 1 day before expiration.";
-        wantedBy = [ "timers.target" ];
-        timerConfig.OnCalendar = date.expires;
+      services.tailscale = {
+        enable = true;
+        authKeyFile = config.sops.secrets.tailscale-key.path;
+        #useRoutingFeatures = if config.nixos.server.tailscale.enable then "both" else "client";
       };
 
-    systemd.services.ts-auth-auto-update = {
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        WorkingDirectory = "/var/lib/ts-auth-auto-update";
-        Environment = [
-          "HOME=/home/${config.meta.username}"
-        ];
-        ExecStart = "${updateScript}/bin/ts-update-script";
+      # Disable wait online as it's causing trouble at rebuild
+      # See: https://github.com/NixOS/nixpkgs/issues/180175
+      systemd.services.NetworkManager-wait-online.enable = false;
+    })
+
+    (lib.mkIf (cfg.enable && config.networking.hostName == "tortinha") {
+      systemd.tmpfiles.rules = [
+        "d /var/lib/ts-auth-auto-update 0755 root root -"
+      ];
+
+      systemd.timers.ts-auth-auto-update =
+        let
+          date = builtins.fromJSON (builtins.readFile ./update.json);
+        in
+        {
+          description = "Run script 1 day before expiration.";
+          wantedBy = [ "timers.target" ];
+          timerConfig.OnCalendar = date.expires;
+        };
+
+      systemd.services.ts-auth-auto-update = {
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          WorkingDirectory = "/var/lib/ts-auth-auto-update";
+          Environment = [
+            "HOME=/home/${config.meta.username}"
+          ];
+          ExecStart = "${updateScript}/bin/ts-update-script";
+        };
       };
-    };
-  };
+    })
+  ];
 }

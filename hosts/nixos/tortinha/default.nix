@@ -46,6 +46,8 @@
     };
   };
 
+  programs.direnv.enable = true;
+
   services.openssh = {
     enable = true;
     permitRootLogin = "yes";

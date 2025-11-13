@@ -11,12 +11,28 @@ in
   config = lib.mkIf cfg.enable {
     nix = {
       buildMachines = [
+        # {
+        #   hostName = "golf";
+        #   system = "x86_64-linux";
+        #   protocol = "ssh-ng";
+        #   sshUser = "nixremote";
+        #   sshKey = "/root/.ssh/nixremote.pub";
+        #   supportedFeatures = [
+        #     "nixos-test"
+        #     "benchmark"
+        #     "big-parallel"
+        #     "kvm"
+        #   ];
+        # }
         {
-          hostName = "golf";
-          system = "x86_64-linux";
+          hostName = "cache.freedom.ind.br:60022";
           protocol = "ssh-ng";
-          sshUser = "nixremote";
-          sshKey = "/root/.ssh/nixremote.pub";
+          sshUser = "remote-builder";
+          sshKey = "/root/.ssh/id_ed25519";
+          systems = [
+            "x86_64-linux"
+            "aarch64-linux"
+          ];
           supportedFeatures = [
             "nixos-test"
             "benchmark"
@@ -24,6 +40,7 @@ in
             "kvm"
           ];
         }
+
       ];
 
       distributedBuilds = true;

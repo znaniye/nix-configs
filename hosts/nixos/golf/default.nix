@@ -9,7 +9,6 @@
       virtualization.enable = true;
       wayland.enable = true;
     };
-    home-manager.dev.enable = true;
   };
 
   networking.firewall.enable = false;
@@ -36,6 +35,8 @@
   };
 
   services.hardware.deepcool-digital-linux.enable = true;
+
+  programs.direnv.enable = true;
 
   system.stateVersion = "24.11";
 }

@@ -22,7 +22,18 @@
 
       gh = {
         enable = true;
-        settings.git_protocol = "ssh";
+        settings = {
+          git_protocol = "ssh";
+          # aliases =
+          # let
+          #   body = ''
+          #     git log origin/$(git rev-parse --abbrev-ref HEAD)..HEAD --pretty="### %s%n%n%b%n---" | sed '/^$/N;/^\n$/D
+          #   '';
+          # in
+          # {
+          #   prcb = "pr create --fill --body ${body}";
+          # };
+        };
       };
 
       zsh.initContent = lib.mkIf config.programs.gh.enable ''

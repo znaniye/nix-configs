@@ -44,12 +44,7 @@ in
       godot
       pavucontrol
       prismlauncher
-      (openfreebuds.overrideAttrs (_: {
-        postInstall = ''
-          mkdir -p  $out/share/applications
-          mv openfreebuds_qt/assets/pw.mmk.OpenFreebuds.desktop $out/share/applications
-        '';
-      }))
+      openfreebuds
     ];
   };
 }

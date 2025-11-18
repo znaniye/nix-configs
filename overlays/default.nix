@@ -2,6 +2,6 @@
 
 final: prev: {
 
-  zls = self.inputs.zls.packages.${prev.system}.default;
+  zls = self.inputs.zls.packages.${prev.stdenv.hostPlatform.system}.default;
 
 }

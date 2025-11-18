@@ -8,7 +8,15 @@
 }:
 let
   defaultKeyBinds = import ./defaultKeyBinds.nix;
-  hostBasedLayout = if osConfig.networking.hostName == "felix" then "br" else "us";
+  xkb = lib.mkMerge [
+    {
+      layout = "br";
+    }
+    (lib.mkIf (osConfig.networking.hostName != "felix") {
+      layout = lib.mkDefault "us";
+      variant = "altgr-intl";
+    })
+  ];
 in
 {
   imports = [ flake.inputs.niri.homeModules.niri ];
@@ -45,7 +53,7 @@ in
         {
           clip-to-geometry = true;
           geometry-corner-radius = {
-            top-left = 12.0;
+            top-left = 40.0;
             top-right = 12.0;
             bottom-left = 12.0;
             bottom-right = 12.0;
@@ -63,7 +71,7 @@ in
 
       input = {
         power-key-handling.enable = false;
-        keyboard.xkb.layout = hostBasedLayout;
+        keyboard = { inherit xkb; };
         touchpad = {
           tap = true;
           dwt = true;

@@ -53,6 +53,7 @@ in
             "root"
             "@wheel"
           ];
+          extra-platforms = [ "aarch64-linux" ];
           auto-optimise-store = true;
           max-jobs = hostBasedJobs;
         };

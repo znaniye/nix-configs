@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -38,5 +39,5 @@
 
   programs.direnv.enable = true;
 
-  system.stateVersion = "24.11";
+  system.stateVersion = config.system.nixos.release;
 }

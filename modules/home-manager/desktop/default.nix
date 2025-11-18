@@ -43,6 +43,7 @@ in
       zathura
       godot
       pavucontrol
+      prismlauncher
       (openfreebuds.overrideAttrs (_: {
         postInstall = ''
           mkdir -p  $out/share/applications

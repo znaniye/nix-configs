@@ -1,4 +1,4 @@
-{ flake, ... }:
+{ flake, config, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -36,5 +36,5 @@
     pulse.enable = true;
   };
 
-  system.stateVersion = "24.11";
+  system.stateVersion = config.system.nixos.release;
 }

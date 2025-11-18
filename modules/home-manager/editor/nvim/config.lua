@@ -8,9 +8,11 @@ vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
 
-vim.api.nvim_set_keymap("n", "<C-l>", ":bnext<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<C-h>", ":bprevious<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>bd", ":bd!<CR>", { noremap = true })
+vim.keymap.set("n", "<C-l>", ":bnext<CR>", { noremap = true })
+vim.keymap.set("n", "<C-h>", ":bprevious<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>bd", ":bd!<CR>", { noremap = true })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 
 vim.diagnostic.config({
     virtual_text = true,

@@ -50,7 +50,7 @@
           config =
             # lua
             ''
-              vim.api.nvim_set_keymap('n', "<leader>lg", ':LazyGit<CR>', {noremap = true})
+              vim.keymap.set('n', "<leader>lg", ':LazyGit<CR>', {noremap = true})
             '';
         }
         {
@@ -87,7 +87,7 @@
                 },
               }
 
-              vim.api.nvim_set_keymap('n', "<leader>gp", ':Gitsigns preview_hunk_inline<CR>', {noremap = true})
+              vim.keymap.set('n', "<leader>gp", ':Gitsigns preview_hunk_inline<CR>', {noremap = true})
               vim.keymap.set('n', '<leader>grh', function()
                 local lnum = vim.fn.line('.')
                 require('gitsigns').reset_hunk({lnum, lnum})
@@ -180,7 +180,7 @@
             require("toggleterm").setup{
               shell = 'zsh'
             }
-            vim.api.nvim_set_keymap("n", "<C-y>", ":ToggleTerm direction=float size=40<CR>", { noremap = true })
+            vim.keymap.set("n", "<C-y>", ":ToggleTerm direction=float size=40<CR>", { noremap = true })
           '';
         }
         {
@@ -195,8 +195,8 @@
           type = "lua";
           config = ''
             require('telescope').setup{
-              vim.api.nvim_set_keymap('n', '<Tab><Space>f', ':Telescope find_files<CR>', { silent = true }),
-              vim.api.nvim_set_keymap('n', '<Tab><Space>g', ':Telescope live_grep<CR>', { silent = true }),
+              vim.keymap.set('n', '<Tab><Space>f', ':Telescope find_files<CR>', { silent = true }),
+              vim.keymap.set('n', '<Tab><Space>g', ':Telescope live_grep<CR>', { silent = true }),
 
               vim.keymap.set('n', '<Tab><Space>lg', function() require('telescope.builtin').live_grep { 
                   prompt_title = "Live Grep (literal)",
@@ -262,7 +262,7 @@
                 update_root = true,
               },
 
-              vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>', { silent = true })
+              vim.keymap.set('n', '<C-b>', ':NvimTreeToggle<CR>', { silent = true })
             }
           '';
         }

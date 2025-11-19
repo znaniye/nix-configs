@@ -25,7 +25,7 @@
         enable = true;
         settings = {
           git_protocol = "ssh";
-          # aliases =
+          # aliases = #TODO:
           # let
           #   body = ''
           #     git log origin/$(git rev-parse --abbrev-ref HEAD)..HEAD --pretty="### %s%n%n%b%n---" | sed '/^$/N;/^\n$/D

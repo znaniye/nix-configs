@@ -53,8 +53,7 @@
         "ds" = "nix develop -c zsh";
         "r" = "nix run";
         "rpl" = "nix repl --expr 'import <nixpkgs>{}'";
-        "f" = "nix search";
-        "fs" = "nix search self";
+        "ns" = "${pkgs.nix-search-cli}/bin/nix-search";
       };
     };
   };

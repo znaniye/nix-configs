@@ -1,6 +1,7 @@
 {
   flake,
   config,
+  pkgs,
   lib,
   ...
 }:
@@ -18,6 +19,13 @@
           name = config.meta.username;
           email = config.meta.email;
         };
+        hooks.commit-msg = lib.getExe (
+          pkgs.writeShellScriptBin "commit-msg" ''
+            if ! grep -qi "^Signed-off-by:" "$1"; then
+              echo "Signed-off-by: Samuel <${config.meta.work-email}>" >> "$1"
+            fi
+          ''
+        );
       };
 
       gh = {

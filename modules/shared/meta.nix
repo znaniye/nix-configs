@@ -17,5 +17,10 @@
       type = lib.types.str;
       default = "zn4niye@proton.me";
     };
+    work-email = lib.mkOption {
+      description = "Work e-mail.";
+      type = lib.types.str;
+      default = "samuel@ossystems.com.br";
+    };
   };
 }

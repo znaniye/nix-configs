@@ -7,6 +7,7 @@ vim.o.number = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
+vim.opt.clipboard = "unnamedplus"
 
 vim.keymap.set("n", "<C-l>", ":bnext<CR>", { noremap = true })
 vim.keymap.set("n", "<C-h>", ":bprevious<CR>", { noremap = true })

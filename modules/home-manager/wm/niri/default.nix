@@ -14,7 +14,7 @@ let
     }
     (lib.mkIf (osConfig.networking.hostName != "felix") {
       layout = lib.mkDefault "us";
-      variant = "altgr-intl";
+      variant = "altgr-intl"; # FIX:
     })
   ];
 in
@@ -53,7 +53,7 @@ in
         {
           clip-to-geometry = true;
           geometry-corner-radius = {
-            top-left = 40.0;
+            top-left = 12.0;
             top-right = 12.0;
             bottom-left = 12.0;
             bottom-right = 12.0;

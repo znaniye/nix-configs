@@ -44,6 +44,7 @@
         nvim-treesitter-textobjects
         nvim-treesitter.withAllGrammars
         neogit
+        haskell-tools-nvim
         {
           plugin = lazygit-nvim;
           type = "lua";

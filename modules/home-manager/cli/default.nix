@@ -13,6 +13,7 @@ in
     ./git.nix
     ./tmux.nix
     ./zsh.nix
+    ./lazygit.nix
   ];
 
   options.home-manager.cli.enable = lib.mkEnableOption "cli config " // {
@@ -31,7 +32,6 @@ in
         btop
         ncdu
         sops
-        lazygit
       ];
     };
 

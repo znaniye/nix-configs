@@ -17,15 +17,8 @@
         enable = true;
         settings.user = {
           name = config.meta.username;
-          email = config.meta.email;
+          email = config.meta.work-email;
         };
-        hooks.commit-msg = lib.getExe (
-          pkgs.writeShellScriptBin "commit-msg" ''
-            if ! grep -qi "^Signed-off-by:" "$1"; then
-              echo "Signed-off-by: Samuel <${config.meta.work-email}>" >> "$1"
-            fi
-          ''
-        );
       };
 
       gh = {

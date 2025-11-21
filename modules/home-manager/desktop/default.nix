@@ -10,7 +10,10 @@ let
   cfg = config.home-manager.wm;
 in
 {
-  imports = [ ./alacritty.nix ];
+  imports = [
+    ./alacritty.nix
+    ./zellij.nix
+  ];
 
   options.home-manager.desktop = {
     enable = lib.mkEnableOption "desktop config" // {
@@ -45,6 +48,7 @@ in
       pavucontrol
       prismlauncher
       openfreebuds
+      zellij
     ];
   };
 }

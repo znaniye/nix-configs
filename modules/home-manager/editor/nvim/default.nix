@@ -173,17 +173,6 @@
             }
           '';
         }
-        #UI
-        {
-          plugin = toggleterm-nvim;
-          type = "lua";
-          config = ''
-            require("toggleterm").setup{
-              shell = 'zsh'
-            }
-            vim.keymap.set("n", "<C-y>", ":ToggleTerm direction=float size=40<CR>", { noremap = true })
-          '';
-        }
         {
           plugin = lualine-nvim;
           type = "lua";

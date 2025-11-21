@@ -16,7 +16,7 @@
       git = {
         enable = true;
         settings.user = {
-          name = config.meta.username;
+          name = config.meta.fullname;
           email = config.meta.work-email;
         };
       };

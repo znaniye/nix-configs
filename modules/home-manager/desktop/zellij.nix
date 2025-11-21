@@ -11,7 +11,7 @@
   config = lib.mkIf config.home-manager.desktop.zellij.enable {
     programs.zellij = {
       enable = true;
-      enableZshIntegration = false;
+      #enableZshIntegration = true;
       settings = {
         theme = "gruvbox-dark";
       };

@@ -58,7 +58,7 @@ let
                 }
               }
             },
-            "expirySeconds": 7776000
+            "expirySeconds": 2592000
           }'
       }
 

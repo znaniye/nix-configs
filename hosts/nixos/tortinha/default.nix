@@ -1,7 +1,6 @@
 {
   config,
   flake,
-  pkgs,
   lib,
   nixos-raspberrypi,
   modulesPath,
@@ -16,6 +15,7 @@
     nixos-raspberrypi.lib.inject-overlays
     nixos-raspberrypi.nixosModules.trusted-nix-caches
     flake.inputs.disko.nixosModules.disko
+    flake.inputs.comin.nixosModules.comin
     ./disko.nix
     (lib.mkAliasOptionModuleMD [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
   ];
@@ -28,8 +28,20 @@
     sops.enable = true;
     tailscale.enable = true;
   };
+  nixos.home.extraModules.home-manager.dev.enable = false;
 
   programs.zsh.enable = true;
+
+  services.comin = {
+    enable = true;
+    remotes = [
+      {
+        name = "origin";
+        url = "https://github.com/znaniye/nix-configs.git";
+        branches.main.name = "master";
+      }
+    ];
+  };
 
   hardware.raspberry-pi.config = {
     all = {
@@ -46,14 +58,10 @@
     };
   };
 
-  programs.direnv.enable = true;
-
   services.openssh = {
     enable = true;
     permitRootLogin = "yes";
   };
-
-  environment.systemPackages = with pkgs; [ git ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
   system.stateVersion = config.system.nixos.release;

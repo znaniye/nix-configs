@@ -41,8 +41,5 @@
   };
 
   services.hardware.deepcool-digital-linux.enable = true;
-
-  programs.direnv.enable = true;
-
   system.stateVersion = config.system.nixos.release;
 }

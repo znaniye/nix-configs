@@ -38,7 +38,7 @@
       {
         name = "origin";
         url = "https://github.com/znaniye/nix-configs.git";
-        branches.main.name = "master";
+        branches.testing.name = "master";
       }
     ];
   };

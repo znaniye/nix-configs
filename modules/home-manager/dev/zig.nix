@@ -7,13 +7,13 @@
 
 {
   options.home-manager.dev.zig.enable = lib.mkEnableOption "zig config" // {
-    default = config.home-manager.dev.enable;
+    default = false;
   };
 
   config = lib.mkIf config.home-manager.dev.zig.enable {
     home = {
       packages = with pkgs; [
-        zigpkgs."0.15.1"
+        zig
         zls
       ];
     };

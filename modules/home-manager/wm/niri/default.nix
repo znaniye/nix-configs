@@ -21,7 +21,11 @@ in
 {
   imports = [ flake.inputs.niri.homeModules.niri ];
 
-  config = lib.mkIf osConfig.nixos.desktop.wayland.enable {
+  options.home-manager.wm.niri.enable = lib.mkEnableOption "niri config" // {
+    default = osConfig.nixos.desktop.wayland.enable or false;
+  };
+
+  config = lib.mkIf config.home-manager.wm.niri.enable {
 
     xdg.configFile."uwsm/env".source =
       "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";

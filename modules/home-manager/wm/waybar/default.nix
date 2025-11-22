@@ -5,7 +5,12 @@
   ...
 }:
 {
-  config = lib.mkIf osConfig.nixos.desktop.wayland.enable {
+
+  options.home-manager.wm.waybar.enable = lib.mkEnableOption "waybar config" // {
+    default = osConfig.nixos.desktop.wayland.enable or false;
+  };
+
+  config = lib.mkIf config.home-manager.wm.waybar.enable {
     programs.waybar = {
       enable = true;
       systemd.enable = true;

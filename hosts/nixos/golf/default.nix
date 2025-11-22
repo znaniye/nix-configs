@@ -10,6 +10,11 @@
       virtualization.enable = true;
       wayland.enable = true;
     };
+    home.extraModules = {
+      home-manager.dev = {
+        haskell.enable = true;
+      };
+    };
   };
 
   networking.firewall.enable = false;

@@ -7,7 +7,7 @@
 
 {
   options.home-manager.dev.ocaml.enable = lib.mkEnableOption "ocaml config" // {
-    default = config.home-manager.dev.enable;
+    default = false;
   };
 
   config = lib.mkIf config.home-manager.dev.ocaml.enable {

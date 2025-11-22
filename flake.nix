@@ -77,17 +77,42 @@
     libEx.recursiveMergeAttrs (
       [
         {
-          internal.sharedModules.default = import ./modules/shared;
+          internal.sharedModules = {
+            default = import ./modules/shared;
+            helpers = import ./modules/shared/helpers;
+          };
           nixosModules.default = import ./modules/nixos;
           overlays.default = import ./overlays { inherit self; };
-          #homeModules.default = import ./modules/home-manager;
+          homeModules.default = import ./modules/home-manager;
         }
+
+        (libEx.eachDefaultSystem (
+          system:
+          let
+            pkgs = import nixpkgs {
+              inherit system;
+              overlays = [ self.overlays.default ];
+            };
+          in
+          {
+            devShells.default = pkgs.mkShell {
+              packages = with pkgs; [
+                vim
+                nil
+                nixfmt-rfc-style
+                ripgrep
+              ];
+            };
+            legacyPackages = pkgs;
+          }
+        ))
       ]
+
       ++
         # NixOS config
-        (libEx.mapDir (hostname: libEx.mkNixOSConfig { inherit hostname; }) ./hosts/nixos)
-      #++
-      #TODO: Home-Manager standalone
-      #((libEx.mapDir (hostname: libEx.mkHomeConfig { inherit hostname; }) ./hosts/home-manager))
+        (libEx.mapDir (hostName: libEx.mkNixOSConfig { inherit hostName; }) ./hosts/nixos)
+      ++
+        # Home-Manager standalone configs
+        ((libEx.mapDir (hostName: libEx.mkHomeConfig { inherit hostName; }) ./hosts/home-manager))
     );
 }

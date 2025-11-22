@@ -8,7 +8,7 @@
 
 {
   options.home-manager.wm.i3.enable = lib.mkEnableOption "i3 config" // {
-    default = osConfig.nixos.desktop.xserver.enable;
+    default = osConfig.nixos.desktop.xserver.enable or false;
   };
 
   config = lib.mkIf config.home-manager.wm.i3.enable {

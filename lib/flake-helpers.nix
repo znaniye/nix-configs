@@ -1,15 +1,16 @@
 {
   self,
   nixpkgs,
+  home-manager,
   ...
 }:
 let
   setHostname =
-    hostname:
+    hostName:
     (
       { lib, ... }:
       {
-        networking.hostName = lib.mkDefault hostname;
+        networking.hostName = lib.mkDefault hostName;
       }
     );
 in
@@ -17,13 +18,13 @@ in
 
   mkNixOSConfig =
     {
-      hostname,
-      configuration ? ../hosts/nixos/${hostname},
+      hostName,
+      configuration ? ../hosts/nixos/${hostName},
     }:
     {
-      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
         modules = [
-          (setHostname hostname)
+          (setHostname hostName)
           self.outputs.nixosModules.default
           configuration
         ];
@@ -35,4 +36,28 @@ in
       };
     };
 
+  mkHomeConfig =
+    {
+      hostName,
+      configuration ? ../hosts/home-manager/${hostName},
+      system ? import ../hosts/home-manager/${hostName}/system.nix,
+    }:
+    {
+      homeConfigurations.${hostName} = home-manager.lib.homeManagerConfiguration {
+        pkgs = self.outputs.legacyPackages.${system};
+        modules = [
+          self.outputs.homeModules.default
+          configuration
+        ];
+        extraSpecialArgs = {
+          flake = self;
+        };
+      };
+
+      apps.${system}."homeActivations/${hostName}" = {
+        type = "app";
+        program = "${self.outputs.homeConfigurations.${hostName}.activationPackage}/activate";
+        meta.description = "Home activation script for ${hostName}";
+      };
+    };
 }

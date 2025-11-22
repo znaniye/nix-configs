@@ -7,7 +7,7 @@
 
 {
   options.home-manager.dev.lua.enable = lib.mkEnableOption "Lua config" // {
-    default = config.home-manager.dev.enable;
+    default = false;
   };
 
   config = lib.mkIf config.home-manager.dev.lua.enable {

@@ -7,7 +7,7 @@
 
 {
   options.home-manager.dev.python.enable = lib.mkEnableOption "Python config" // {
-    default = config.home-manager.dev.enable;
+    default = false;
   };
 
   config = lib.mkIf config.home-manager.dev.python.enable {

@@ -11,7 +11,7 @@ let
 in
 {
   options.home-manager.dev.go.enable = lib.mkEnableOption "Go config" // {
-    default = config.home-manager.dev.enable;
+    default = false;
   };
 
   config = lib.mkIf config.home-manager.dev.go.enable {

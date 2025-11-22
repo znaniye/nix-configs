@@ -1,5 +1,4 @@
 {
-  config,
   flake,
   lib,
   ...
@@ -14,9 +13,18 @@
     ./wm
   ];
 
-  home = {
-    username = lib.mkOptionDefault config.meta.username;
-    homeDirectory = lib.mkOptionDefault "/home/${config.meta.username}";
-    stateVersion = lib.mkOptionDefault "25.05";
+  options.home-manager = {
+    hostName = lib.mkOption {
+      description = "The hostname of the machine.";
+      type = lib.types.str;
+      default = "generic";
+    };
+  };
+
+  config = {
+    home = {
+      username = lib.mkOptionDefault "znaniye";
+      homeDirectory = lib.mkOptionDefault "/home/znaniye";
+    };
   };
 }

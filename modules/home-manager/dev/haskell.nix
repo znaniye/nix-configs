@@ -6,11 +6,11 @@
 }:
 
 {
-  options.home-manager.dev.lua.enable = lib.mkEnableOption "haskell dev" // {
-    default = config.home-manager.dev.enable;
+  options.home-manager.dev.haskell.enable = lib.mkEnableOption "haskell dev" // {
+    default = false;
   };
 
-  config = lib.mkIf config.home-manager.dev.lua.enable {
+  config = lib.mkIf config.home-manager.dev.haskell.enable {
     home.packages = with pkgs; [
       ghc
     ];

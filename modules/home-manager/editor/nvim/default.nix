@@ -29,7 +29,6 @@
       extraLuaConfig = builtins.readFile ./config.lua;
 
       plugins = with pkgs.vimPlugins; [
-        vim-obsession
         gruvbox-nvim
         vim-nix
         vim-go
@@ -44,7 +43,6 @@
         nvim-sops
         nvim-treesitter-textobjects
         nvim-treesitter.withAllGrammars
-        neogit
         haskell-tools-nvim
         {
           plugin = lazygit-nvim;
@@ -96,11 +94,6 @@
               end, { desc = 'Reset current line with gitsigns' })
 
             '';
-        }
-        {
-          plugin = vim-fugitive;
-          type = "lua";
-          config = '''';
         }
         {
           plugin = comment-nvim;

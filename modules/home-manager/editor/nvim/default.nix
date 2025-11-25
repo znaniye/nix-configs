@@ -37,6 +37,7 @@
         vim-glsl
         cmp-nvim-lsp
         cmp-buffer
+        cmp-path
         lspkind-nvim
         markdown-preview-nvim
         nvim-dap
@@ -143,6 +144,7 @@
               sources = {
                 { name='buffer', option = { get_bufnrs = vim.api.nvim_list_bufs } },
                 { name='nvim_lsp' },
+                { name='path' },
               },
             }
           '';

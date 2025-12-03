@@ -15,9 +15,15 @@
     programs = {
       git = {
         enable = true;
-        settings.user = {
-          name = config.meta.fullname;
-          email = config.meta.work-email;
+        settings = {
+          user = {
+            name = config.meta.fullname;
+            email = config.meta.work-email;
+          };
+          fetch = {
+            prune = true;
+            pruneTags = true;
+          };
         };
       };
 

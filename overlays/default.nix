@@ -6,7 +6,7 @@ let
 in
 {
   inherit (self.inputs.emacs-overlay.packages.${system}) emacsWithPackagesFromUsePackage;
-  inherit (self.inputs.niri.packages.${system}) niri-stable;
+  inherit (self.inputs.niri.packages.${system}) niri-unstable;
 
   zls = self.inputs.zls.packages.${system}.default;
   zig = self.inputs.zig.packages.${system}."0.15.1";

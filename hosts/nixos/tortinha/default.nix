@@ -63,6 +63,22 @@
     permitRootLogin = "yes";
   };
 
+  services = {
+    pihole-web = {
+      enable = true;
+      ports = [
+        "80r"
+        "443s"
+      ];
+    };
+    pihole-ftl = {
+      enable = true;
+      settings = {
+        webserver.serve_all = true;
+      };
+    };
+  };
+
   nixpkgs.hostPlatform = "aarch64-linux";
   system.stateVersion = config.system.nixos.release;
 }

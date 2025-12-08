@@ -5,5 +5,6 @@
     ./nix
     ./desktop
     ./home.nix
+    ./server
   ];
 }

@@ -24,6 +24,7 @@
     (modulesPath + "/rename.nix")
   ];
 
+  nixos.server.enable = true;
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;
@@ -31,17 +32,6 @@
   nixos.home.extraModules.home-manager.dev.enable = false;
 
   programs.zsh.enable = true;
-
-  services.comin = {
-    enable = true;
-    remotes = [
-      {
-        name = "origin";
-        url = "https://github.com/znaniye/nix-configs.git";
-        branches.testing.name = "master";
-      }
-    ];
-  };
 
   hardware.raspberry-pi.config = {
     all = {
@@ -61,22 +51,6 @@
   services.openssh = {
     enable = true;
     permitRootLogin = "yes";
-  };
-
-  services = {
-    pihole-web = {
-      enable = true;
-      ports = [
-        "80r"
-        "443s"
-      ];
-    };
-    pihole-ftl = {
-      enable = true;
-      settings = {
-        webserver.serve_all = true;
-      };
-    };
   };
 
   nixpkgs.hostPlatform = "aarch64-linux";

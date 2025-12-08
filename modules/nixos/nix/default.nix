@@ -28,7 +28,7 @@ in
         hostBasedJobs = if config.networking.hostName == "felix" then 1 else "auto";
       in
       {
-
+        package = pkgs.nixVersions.latest;
         gc = {
           automatic = true;
           persistent = true;

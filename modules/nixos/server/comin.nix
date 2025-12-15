@@ -1,10 +1,12 @@
 {
   config,
   lib,
+  flake,
   ...
 }:
 
 {
+  imports = [ flake.inputs.comin.nixosModules.comin ];
 
   options.nixos.server.comin.enable = lib.mkEnableOption "comin config" // {
     default = config.nixos.server.enable;

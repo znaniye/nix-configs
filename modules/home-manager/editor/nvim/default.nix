@@ -34,6 +34,7 @@
         vim-go
         vim-elixir
         vim-glsl
+        vim-surround
         cmp-nvim-lsp
         cmp-buffer
         cmp-path

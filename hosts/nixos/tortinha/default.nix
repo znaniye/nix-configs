@@ -15,7 +15,6 @@
     nixos-raspberrypi.lib.inject-overlays
     nixos-raspberrypi.nixosModules.trusted-nix-caches
     flake.inputs.disko.nixosModules.disko
-    flake.inputs.comin.nixosModules.comin
     ./disko.nix
     (lib.mkAliasOptionModuleMD [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
   ];

@@ -18,6 +18,10 @@
 
     services.gitea = {
       enable = true;
+      settings.server = {
+        SSH_PORT = 2222;
+        START_SSH_SERVER = true;
+      };
     };
 
     systemd.timers.gitea-backup = {
@@ -31,15 +35,16 @@
         User = "gitea";
         Type = "oneshot";
         RemainAfterExit = true;
-        script = ''
-          mkdir -p /backup/gitea
-          ${pkgs.gitea}/bin/gitea dump \
-            --file /backup/gitea/gitea-$(date +%F).zip
-        '';
       };
+      script = ''
+        mkdir -p /backup/gitea
+        ${pkgs.gitea}/bin/gitea dump \
+          --file /backup/gitea/gitea-$(date +%F).zip
+      '';
     };
     networking.firewall.allowedTCPPorts = [
       3000
+      2222
     ];
   };
 }

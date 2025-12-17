@@ -13,6 +13,10 @@ let
         networking.hostName = lib.mkDefault hostName;
       }
     );
+  myAuthorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMbJhk5H0h7Oi79LSHLWfuffv6uFcuXtm77kewxrwQsD znaniye@golf"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEtYBH7S5Hp8vvp4atduS6i8KWb22iuXZMnAYhvDIkCP znaniye@felix"
+  ];
 in
 {
 
@@ -30,6 +34,7 @@ in
         ];
 
         specialArgs = {
+          inherit myAuthorizedKeys;
           flake = self;
           nixos-raspberrypi = self.inputs.nixos-raspberrypi;
         };

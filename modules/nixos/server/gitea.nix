@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  myAuthorizedKeys,
   ...
 }:
 
@@ -12,6 +13,9 @@
   };
 
   config = lib.mkIf config.nixos.server.gitea.enable {
+
+    users.users.gitea.openssh.authorizedKeys.keys = myAuthorizedKeys;
+
     services.gitea = {
       enable = true;
     };

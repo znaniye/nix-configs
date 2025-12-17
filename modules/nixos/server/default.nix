@@ -3,6 +3,7 @@
   imports = [
     ./pi-hole.nix
     ./comin.nix
+    ./gitea.nix
   ];
 
   options.nixos.server = {

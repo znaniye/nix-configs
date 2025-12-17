@@ -10,61 +10,53 @@
     default = config.nixos.desktop.enable;
   };
 
-  config = lib.mkMerge [
-    # Wifi RPi5
-    (lib.mkIf config.nixos.server.enable {
-      networking = {
-        networkmanager = {
-          enable = true;
-          ensureProfiles = {
-            environmentFiles = [ config.sops.secrets."wifi".path ];
-            profiles = {
-              home-wifi = {
-                connection.id = "home-wifi";
-                connection.type = "wifi";
-                wifi.ssid = "$HOME_WIFI_SSID";
-                wifi-security = {
-                  auth-alg = "open";
-                  key-mgmt = "wpa-psk";
-                  psk = "$HOME_WIFI_PASSWORD";
-                };
+  config = lib.mkIf config.nixos.desktop.wireless.enable {
+    networking = {
+      networkmanager = {
+        enable = true;
+        wifi.backend = "iwd";
+
+        ensureProfiles = {
+          environmentFiles = [ config.sops.secrets."wifi".path ];
+          profiles = {
+            home-wifi = {
+              connection.id = "home-wifi";
+              connection.type = "wifi";
+              wifi.ssid = "$HOME_WIFI_SSID";
+              wifi-security = {
+                auth-alg = "open";
+                key-mgmt = "wpa-psk";
+                psk = "$HOME_WIFI_PASSWORD";
               };
             };
           };
         };
       };
-    })
+    };
 
-    (lib.mkIf config.nixos.desktop.enable {
-      networking = {
-        networkmanager = {
-          enable = true;
-          wifi.backend = "iwd";
-        };
+    environment.systemPackages = with pkgs; [ iw ];
+
+    hardware.bluetooth.enable = true;
+
+    programs.nm-applet.enable = true;
+
+    systemd.user.services.nm-applet = {
+      serviceConfig = {
+        # Use exponential restart
+        RestartSteps = 5;
+        RestartMaxDelaySec = 10;
+        Restart = "on-failure";
       };
-      environment.systemPackages = with pkgs; [ iw ];
+    };
 
-      hardware.bluetooth.enable = true;
+    services = {
+      blueman.enable = true;
 
-      programs.nm-applet.enable = true;
-
-      systemd.user.services.nm-applet = {
-        serviceConfig = {
-          # Use exponential restart
-          RestartSteps = 5;
-          RestartMaxDelaySec = 10;
-          Restart = "on-failure";
-        };
+      resolved = {
+        enable = true;
+        dnssec = "false";
       };
+    };
+  };
 
-      services = {
-        blueman.enable = true;
-
-        resolved = {
-          enable = true;
-          dnssec = "false";
-        };
-      };
-    })
-  ];
 }

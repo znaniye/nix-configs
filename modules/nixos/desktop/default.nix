@@ -31,7 +31,10 @@
   config = lib.mkIf config.nixos.desktop.enable {
     programs.zsh.enable = true;
 
-    environment.systemPackages = with pkgs; [ tor-browser ];
+    environment.systemPackages = with pkgs; [
+      heroic
+      tor-browser
+    ];
 
   };
 }

@@ -8,15 +8,16 @@
 }:
 let
   defaultKeyBinds = import ./defaultKeyBinds.nix;
-  xkb = lib.mkMerge [
-    {
-      layout = "br";
-    }
-    (lib.mkIf (osConfig.networking.hostName != "felix") {
-      layout = lib.mkDefault "us";
-      variant = "altgr-intl"; # FIX:
-    })
-  ];
+  xkb =
+    if osConfig.networking.hostName != "felix" then
+      {
+        layout = "us";
+        variant = "altgr-intl";
+      }
+    else
+      {
+        layout = "br";
+      };
 in
 {
   imports = [ flake.inputs.niri.homeModules.niri ];

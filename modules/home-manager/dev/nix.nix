@@ -27,6 +27,7 @@ in
     home.packages =
       with pkgs;
       [
+        nixpkgs-review
         nix-tree
         nix-update
         nurl

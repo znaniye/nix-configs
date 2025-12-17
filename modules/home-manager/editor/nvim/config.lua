@@ -96,4 +96,21 @@ vim.lsp.config.gdscript = {
 	filetypes = { "gdscript" },
 }
 
-vim.lsp.enable({ "bash", "zls", "ocamllsp", "pyright", "nil_ls", "clangd", "gopls", "gdscript" })
+vim.lsp.config.lua_ls = {
+    settings = {
+        Lua = {
+            workspace = {
+                checkThirdParty = false,
+                telemetry = { enable = false },
+                library = {
+                    "${3rd}/love2d/library"
+                }
+            },
+            diagnostics = {
+                globals = { 'vim', 'P' }
+            }
+        }
+    }
+}
+
+vim.lsp.enable({ "bash", "zls", "ocamllsp", "pyright", "nil_ls", "clangd", "gopls", "gdscript", "lua_ls" })

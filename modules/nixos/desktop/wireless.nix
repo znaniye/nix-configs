@@ -14,10 +14,13 @@
     networking = {
       networkmanager = {
         enable = true;
-        wifi.backend = "iwd";
+        wifi = {
+          powersave = false;
+          backend = "iwd";
+        };
 
         ensureProfiles = {
-          environmentFiles = [ config.sops.secrets."wifi".path ];
+          environmentFiles = [ config.sops.secrets.wifi.path ];
           profiles = {
             home-wifi = {
               connection.id = "home-wifi";

@@ -54,6 +54,7 @@
         "r" = "nix run";
         "rpl" = "nix repl --expr 'import <nixpkgs>{}'";
         "ns" = "${pkgs.nix-search-cli}/bin/nix-search";
+        "tb" = "${pkgs.libressl}/bin/nc termbin.com 9999";
       };
     };
   };

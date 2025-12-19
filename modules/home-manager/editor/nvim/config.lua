@@ -23,80 +23,81 @@ vim.diagnostic.config({
     severity_sort = true,
 })
 
-local dap = require("dap")
-dap.adapters.godot = {
-	type = "server",
-	host = "127.0.0.1",
-	port = 6006,
+local dap                   = require("dap")
+dap.adapters.godot          = {
+    type = "server",
+    host = "127.0.0.1",
+    port = 6006,
 }
 
 dap.configurations.gdscript = {
-	{
-		type = "godot",
-		request = "launch",
-		name = "Launch scene",
-		project = "${workspaceFolder}",
-		launch_scene = true,
-	},
+    {
+        type = "godot",
+        request = "launch",
+        name = "Launch scene",
+        project = "${workspaceFolder}",
+        launch_scene = true,
+    },
 }
 
 -- LSP
-vim.lsp.config.zls = {
-  cmd = { 'zls' },
-  root_markers = { 'build.zig', '.git' },
-  filetypes = { 'zig' },
+vim.lsp.config.zls          = {
+    cmd = { 'zls' },
+    root_markers = { 'build.zig', '.git' },
+    filetypes = { 'zig' },
 }
 
-vim.lsp.config.ocamllsp = {
-  cmd = { "ocamllsp" },
-  filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
-  root_markers = { "*.opam", "esy.json", "package.json", ".git", "dune-project", "dune-workspace" }
+vim.lsp.config.ocamllsp     = {
+    cmd = { "ocamllsp" },
+    filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
+    root_markers = { "*.opam", "esy.json", "package.json", ".git", "dune-project", "dune-workspace" }
 }
 
-vim.lsp.config.pyright = {
+vim.lsp.config.pyright      = {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },
     root_markers = { "pyrightconfig.json", "pyproject.toml", "setup.py" },
 }
 
-vim.lsp.config.nil_ls = {
-  cmd = { 'nil' },
-  filetypes = { 'nix' },
-  root_markers = { 'flake.nix', '.git' },
+vim.lsp.config.nil_ls       = {
+    cmd = { 'nil' },
+    filetypes = { 'nix' },
+    root_markers = { 'flake.nix', '.git' },
 }
 
-vim.lsp.config.gopls = {
-  cmd = { "gopls" },
-  filetypes = { "go", "gomod", "gowork", "gotmpl" },
-  root_markers = { "go.work", "go.mod", ".git" },
+vim.lsp.config.gopls        = {
+    cmd = { "gopls" },
+    filetypes = { "go", "gomod", "gowork", "gotmpl" },
+    root_markers = { "go.work", "go.mod", ".git" },
 }
 
-vim.lsp.config.clangd = {
-  cmd = {
-    "clangd"
-  },
-  filetypes = {
-    "c",
-    "cpp",
-    "objc",
-    "objcpp",
-    "cuda",
-    "proto"
-  },
+vim.lsp.config.clangd       = {
+    cmd = {
+        "clangd"
+    },
+    filetypes = {
+        "c",
+        "cpp",
+        "objc",
+        "objcpp",
+        "cuda",
+        "proto"
+    },
 }
 
-vim.lsp.config.bash  = {
-	cmd = { "bash-language-server", "start" },
-	filetypes = { "sh", "bash", "zsh" },
+vim.lsp.config.bash         = {
+    cmd = { "bash-language-server", "start" },
+    filetypes = { "sh", "bash", "zsh" },
 }
 
-vim.lsp.config.gdscript = {
-	cmd = vim.lsp.rpc.connect("127.0.0.1", 6008),
-	root_markers = { "project.godot" },
-	filetypes = { "gdscript" },
+vim.lsp.config.gdscript     = {
+    cmd = vim.lsp.rpc.connect("127.0.0.1", 6008),
+    root_markers = { "project.godot" },
+    filetypes = { "gdscript" },
 }
 
-vim.lsp.config.lua_ls = {
+vim.lsp.config.lua_ls       = {
+    cmd = { "lua-language-server" },
     settings = {
         Lua = {
             workspace = {

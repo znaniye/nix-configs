@@ -98,6 +98,7 @@ vim.lsp.config.gdscript     = {
 
 vim.lsp.config.lua_ls       = {
     cmd = { "lua-language-server" },
+    filetypes = { "lua" },
     settings = {
         Lua = {
             workspace = {

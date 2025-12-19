@@ -12,7 +12,7 @@
     };
     home.extraModules = {
       home-manager.dev = {
-        haskell.enable = true;
+        lua.enable = true;
       };
     };
   };

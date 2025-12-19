@@ -52,10 +52,10 @@
       };
     };
 
+    #TODO: common module
     services = {
       blueman.enable = true;
-
-      resolved = {
+      resolved = lib.optionalAttrs (!config.nixos.server.pi-hole.enable) {
         enable = true;
         dnssec = "false";
       };

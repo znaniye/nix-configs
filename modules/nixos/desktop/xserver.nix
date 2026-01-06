@@ -28,10 +28,7 @@
           layout = "br";
         };
 
-        windowManager.i3 = {
-          enable = true;
-          package = pkgs.i3-gaps;
-        };
+        windowManager.i3.enable = true;
       };
 
       redshift = {

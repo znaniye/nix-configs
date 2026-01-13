@@ -1,4 +1,9 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -41,5 +46,17 @@
   };
 
   services.hardware.deepcool-digital-linux.enable = true;
+
+  services.flatpak.enable = true;
+
+  xdg.portal = {
+    enable = true;
+    config.common.default = "*";
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
+    ];
+  };
+
   system.stateVersion = config.system.nixos.release;
 }

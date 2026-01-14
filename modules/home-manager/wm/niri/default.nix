@@ -55,6 +55,17 @@ in
 
       prefer-no-csd = true;
       window-rules = [
+        # Godot
+        {
+          matches = [
+            {
+              app-id = "^game.*";
+            }
+          ];
+          open-floating = true;
+        }
+
+        # General
         {
           clip-to-geometry = true;
           geometry-corner-radius = {

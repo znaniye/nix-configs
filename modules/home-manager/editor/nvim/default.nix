@@ -248,8 +248,14 @@
                 update_root = true,
               },
 
-              vim.keymap.set('n', '<C-b>', ':NvimTreeToggle<CR>', { silent = true })
+              filters = {
+                custom = {
+                  "*.uid",
+                },
+              },
             }
+
+            vim.keymap.set('n', '<C-b>', ':NvimTreeToggle<CR>', { silent = true })
           '';
         }
         {

@@ -32,6 +32,7 @@ in
         btop
         ncdu
         sops
+        codex
       ];
     };
 

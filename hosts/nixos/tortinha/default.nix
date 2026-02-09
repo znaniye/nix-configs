@@ -27,7 +27,6 @@
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;
-    wireless.enable = true;
   };
   nixos.home.extraModules.home-manager.dev.enable = false;
 

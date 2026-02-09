@@ -26,6 +26,10 @@
       vimAlias = true;
       vimdiffAlias = true;
 
+      extraPackages = [
+        pkgs.stdenv.cc
+      ];
+
       extraLuaConfig = builtins.readFile ./config.lua;
 
       plugins = with pkgs.vimPlugins; [
@@ -165,7 +169,19 @@
           type = "lua";
           config = ''
             require("nvim-treesitter.configs").setup{
-              highlight = { enable = true };
+              highlight = { enable = true },
+              textobjects = {
+                select = {
+                  enable = true,
+                  lookahead = true,
+                  keymaps = {
+                    ["af"] = "@function.outer",
+                    ["if"] = "@function.inner",
+                    ["ac"] = "@class.outer",
+                    ["ic"] = "@class.inner",
+                  },
+                },
+              },
             }
           '';
         }

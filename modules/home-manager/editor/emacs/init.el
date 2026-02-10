@@ -58,10 +58,10 @@
             ;; Enable column number together with line numbers
             (column-number-mode t)))
 
-(use-package gruvbox-theme
+(use-package nord-theme
   :ensure t
   :demand t
-  :config (load-theme 'gruvbox-dark-hard t))
+  :config (load-theme 'nord t))
 
 
 (use-package doom-modeline

@@ -77,13 +77,13 @@ in
         }
       ];
 
-      layout = {
-        shadow.enable = true;
-        focus-ring = {
-          width = 2;
-          active.color = config.theme.gruvbox.colors.background.primary;
-        };
-      };
+	      layout = {
+	        shadow.enable = true;
+	        focus-ring = {
+	          width = 2;
+	          active.color = config.theme.nord.colors.background.primary;
+	        };
+	      };
 
       input = {
         power-key-handling.enable = false;

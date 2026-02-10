@@ -13,7 +13,7 @@
     programs.tmux = {
       enable = true;
       plugins = with pkgs.tmuxPlugins; [
-        gruvbox
+        nord
         resurrect
         continuum
       ];

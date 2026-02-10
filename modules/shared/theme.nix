@@ -7,83 +7,83 @@
       default = ./wallpaper.png;
     };
 
-    gruvbox = lib.mkOption {
+    nord = lib.mkOption {
       default = {
         scheme = {
           system = "base24";
-          name = "Gruvbox Dark";
-          author = "Tinted Theming (https://github.com/tinted-theming), morhetz (https://github.com/morhetz/gruvbox)";
+          name = "Nord";
+          author = "Arctic Ice Studio (https://www.nordtheme.com)";
           variant = "dark";
 
           # Base colors (backgrounds and text)
-          base00 = "282828"; # Main background
-          base01 = "3c3836"; # Secondary background
-          base02 = "504945"; # Input fields, elevated surfaces
-          base03 = "665c54"; # Borders, inactive elements
-          base04 = "928374"; # Secondary text
-          base05 = "ebdbb2"; # Primary text
-          base06 = "fbf1c7"; # High emphasis text
-          base07 = "f9f5d7"; # Brightest text
+          base00 = "2e3440"; # Main background (Nord0)
+          base01 = "3b4252"; # Secondary background (Nord1)
+          base02 = "434c5e"; # Input fields, elevated surfaces (Nord2)
+          base03 = "4c566a"; # Borders, inactive elements (Nord3)
+          base04 = "d8dee9"; # Secondary text (Nord4)
+          base05 = "e5e9f0"; # Primary text (Nord5)
+          base06 = "eceff4"; # High emphasis text (Nord6)
+          base07 = "eceff4"; # Brightest text (Nord6)
 
           # Semantic colors
-          base08 = "cc241d"; # Red - errors, deletion
-          base09 = "d65d0e"; # Orange - warnings
-          base0A = "d79921"; # Yellow - caution
-          base0B = "98971a"; # Green - success
-          base0C = "689d6a"; # Cyan - info
-          base0D = "458588"; # Blue - primary actions
-          base0E = "b16286"; # Purple - special features
-          base0F = "9d0006"; # Dark red - alternative
+          base08 = "bf616a"; # Red - errors, deletion (Nord11)
+          base09 = "d08770"; # Orange - warnings (Nord12)
+          base0A = "ebcb8b"; # Yellow - caution (Nord13)
+          base0B = "a3be8c"; # Green - success (Nord14)
+          base0C = "8fbcbb"; # Cyan - info (Nord7)
+          base0D = "88c0d0"; # Blue - primary actions (Nord8)
+          base0E = "b48ead"; # Purple - special features (Nord15)
+          base0F = "bf616a"; # Alternative accent (Nord11)
 
           # Extended Base24 colors
-          base10 = "2a2520"; # Darker background variant
-          base11 = "1d1d1d"; # Darkest background
-          base12 = "fb4934"; # Bright red
-          base13 = "fabd2f"; # Bright yellow
-          base14 = "b8bb26"; # Bright green
-          base15 = "8ec07c"; # Bright cyan
-          base16 = "83a598"; # Bright blue
-          base17 = "d3869b"; # Bright purple
+          base10 = "2e3440"; # Darker background variant (Nord0)
+          base11 = "2e3440"; # Darkest background (Nord0)
+          base12 = "bf616a"; # Bright red (Nord11)
+          base13 = "ebcb8b"; # Bright yellow (Nord13)
+          base14 = "a3be8c"; # Bright green (Nord14)
+          base15 = "8fbcbb"; # Bright cyan (Nord7)
+          base16 = "81a1c1"; # Bright blue (Nord9)
+          base17 = "b48ead"; # Bright purple (Nord15)
         };
 
         # Semantic aliases for easier usage
         colors = {
           background = {
-            primary = "282828"; # base00
-            secondary = "3c3836"; # base01
-            tertiary = "504945"; # base02
-            darker = "2a2520"; # base10
-            darkest = "1d1d1d"; # base11
+            primary = "2e3440"; # base00
+            secondary = "3b4252"; # base01
+            tertiary = "434c5e"; # base02
+            darker = "2e3440"; # base10
+            darkest = "2e3440"; # base11
           };
 
           foreground = {
-            primary = "ebdbb2"; # base05
-            secondary = "928374"; # base04
-            emphasis = "fbf1c7"; # base06
-            bright = "f9f5d7"; # base07
+            primary = "e5e9f0"; # base05
+            secondary = "d8dee9"; # base04
+            emphasis = "eceff4"; # base06
+            bright = "eceff4"; # base07
           };
 
           accent = {
-            red = "cc241d"; # base08
-            orange = "d65d0e"; # base09
-            yellow = "d79921"; # base0A
-            green = "98971a"; # base0B
-            cyan = "689d6a"; # base0C
-            blue = "458588"; # base0D
-            purple = "b16286"; # base0E
+            red = "bf616a"; # base08
+            orange = "d08770"; # base09
+            yellow = "ebcb8b"; # base0A
+            green = "a3be8c"; # base0B
+            cyan = "8fbcbb"; # base0C
+            blue = "88c0d0"; # base0D
+            purple = "b48ead"; # base0E
           };
 
           bright = {
-            red = "fb4934"; # base12
-            yellow = "fabd2f"; # base13
-            green = "b8bb26"; # base14
-            cyan = "8ec07c"; # base15
-            blue = "83a598"; # base16
-            purple = "d3869b"; # base17
+            red = "bf616a"; # base12
+            yellow = "ebcb8b"; # base13
+            green = "a3be8c"; # base14
+            cyan = "8fbcbb"; # base15
+            blue = "81a1c1"; # base16
+            purple = "b48ead"; # base17
           };
 
-          border = "665c54"; # base03
-          darkRed = "9d0006"; # base0F
+          border = "4c566a"; # base03
+          darkRed = "bf616a"; # base0F
         };
       };
     };

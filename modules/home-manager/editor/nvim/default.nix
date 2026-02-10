@@ -33,7 +33,7 @@
       extraLuaConfig = builtins.readFile ./config.lua;
 
       plugins = with pkgs.vimPlugins; [
-        gruvbox-nvim
+        nord-nvim
         vim-nix
         vim-go
         vim-elixir

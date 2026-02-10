@@ -15,8 +15,8 @@
     gtk = {
       enable = true;
       theme = {
-        package = pkgs.gruvbox-dark-gtk;
-        name = "gruvbox-dark";
+        package = pkgs.nordic;
+        name = "Nordic";
       };
       iconTheme = {
         package = pkgs.nordzy-icon-theme;

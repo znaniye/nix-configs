@@ -38,28 +38,28 @@
 
         colors = {
           primary = {
-            background = "0x1d2021";
-            foreground = "0xd4be98";
+            background = "0x${config.theme.nord.scheme.base00}";
+            foreground = "0x${config.theme.nord.scheme.base04}";
           };
           normal = {
-            black = "0x32302f";
-            red = "0xea6962";
-            green = "0xa9b665";
-            yellow = "0xd8a657";
-            blue = "0x7daea3";
-            magenta = "0xd3869b";
-            cyan = "0x89b482";
-            white = "0xd4be98";
+            black = "0x${config.theme.nord.scheme.base01}";
+            red = "0x${config.theme.nord.scheme.base08}";
+            green = "0x${config.theme.nord.scheme.base0B}";
+            yellow = "0x${config.theme.nord.scheme.base0A}";
+            blue = "0x${config.theme.nord.scheme.base16}";
+            magenta = "0x${config.theme.nord.scheme.base0E}";
+            cyan = "0x${config.theme.nord.scheme.base0D}";
+            white = "0x${config.theme.nord.scheme.base05}";
           };
           bright = {
-            black = "0x32302f";
-            red = "0xea6962";
-            green = "0xa9b665";
-            yellow = "0xd8a657";
-            blue = "0x7daea3";
-            magenta = "0xd3869b";
-            cyan = "0x89b482";
-            white = "0xd4be98";
+            black = "0x${config.theme.nord.scheme.base03}";
+            red = "0x${config.theme.nord.scheme.base08}";
+            green = "0x${config.theme.nord.scheme.base0B}";
+            yellow = "0x${config.theme.nord.scheme.base0A}";
+            blue = "0x${config.theme.nord.scheme.base16}";
+            magenta = "0x${config.theme.nord.scheme.base0E}";
+            cyan = "0x${config.theme.nord.scheme.base0C}";
+            white = "0x${config.theme.nord.scheme.base06}";
           };
         };
       };

@@ -12,6 +12,8 @@ in
     ./i3.nix
     ./picom.nix
     ./polybar.nix
+    ./dunst.nix
+    ./fuzzel.nix
     ./gtk.nix
     ./niri
     ./waybar

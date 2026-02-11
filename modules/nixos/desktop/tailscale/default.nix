@@ -106,7 +106,7 @@ in
 
     (lib.mkIf (cfg.enable && config.networking.hostName == "tortinha") {
       systemd.tmpfiles.rules = [
-        "d /var/lib/ts-auth-auto-update 0755 root root -"
+        "d /var/lib/ts-auth-auto-update 0700 root root -"
       ];
 
       systemd.timers.ts-auth-auto-update =
@@ -117,6 +117,7 @@ in
           description = "Run script 1 day before expiration.";
           wantedBy = [ "timers.target" ];
           timerConfig.OnCalendar = date.expires;
+          timerConfig.Persistent = true;
         };
 
       systemd.services.ts-auth-auto-update = {
@@ -125,6 +126,7 @@ in
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
+          TimeoutStartSec = "30min";
           WorkingDirectory = "/var/lib/ts-auth-auto-update";
           Environment = [
             "HOME=/home/${config.meta.username}"

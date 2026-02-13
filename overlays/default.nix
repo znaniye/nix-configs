@@ -19,4 +19,6 @@ in
     '';
   });
 
+  emit-api = self.inputs.worker.packages.${system}.emit-api;
+  #emit-web = self.inputs.worker.packages.${system}.emit-web;
 }

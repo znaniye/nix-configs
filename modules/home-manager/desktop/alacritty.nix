@@ -16,7 +16,7 @@
         window = {
           title = "Terminal";
 
-          opacity = 0.8;
+          opacity = 0.92;
 
           padding = {
             x = 5;

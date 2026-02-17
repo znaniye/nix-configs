@@ -15,6 +15,7 @@
     nixos-raspberrypi.lib.inject-overlays
     nixos-raspberrypi.nixosModules.trusted-nix-caches
     flake.inputs.disko.nixosModules.disko
+    flake.inputs.worker.nixosModules.emit
     ./disko.nix
     (lib.mkAliasOptionModuleMD [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
   ];
@@ -50,6 +51,21 @@
   services.openssh = {
     enable = true;
     permitRootLogin = "yes";
+  };
+
+  sops.secrets.emit-sql-con = { };
+  sops.secrets.emit-user = { };
+
+  sops.templates.emitEnvFile.content = ''
+    EMIT_SQL_CONNECTION=${config.sops.placeholder.emit-sql-con}
+    EMIT_USUARIO_NOME=${config.sops.placeholder.emit-user}
+    EMIT_PK_EMITENTE=1
+    EMIT_SEFAZ_TPAMB=2
+  '';
+
+  services.emit = {
+    enable = true;
+    envFile = "${config.sops.templates.emitEnvFile.path}";
   };
 
   nixpkgs.hostPlatform = "aarch64-linux";

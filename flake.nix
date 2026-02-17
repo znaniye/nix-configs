@@ -57,6 +57,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    worker = {
+      url = "git+ssh://git@github.com/znaniye/worker";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

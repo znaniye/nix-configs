@@ -18,6 +18,7 @@
     home.extraModules = {
       home-manager.dev = {
         lua.enable = true;
+        fsharp.enable = true;
       };
     };
   };

@@ -7,6 +7,7 @@
 
 {
   imports = [
+    ./fsharp.nix
     ./go.nix
     ./lua.nix
     ./nix.nix

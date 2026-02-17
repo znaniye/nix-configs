@@ -61,6 +61,7 @@
     EMIT_USUARIO_NOME=${config.sops.placeholder.emit-user}
     EMIT_PK_EMITENTE=1
     EMIT_SEFAZ_TPAMB=2
+    EMIT_SEFAZ_TLS_DEBUG=1
   '';
 
   services.emit = {

@@ -30,14 +30,10 @@
         pkgs.stdenv.cc
       ];
 
-      extraLuaConfig = builtins.readFile ./config.lua;
+      extraLuaConfig = lib.mkBefore (builtins.readFile ./config.lua);
 
       plugins = with pkgs.vimPlugins; [
         nord-nvim
-        vim-nix
-        vim-go
-        vim-elixir
-        vim-glsl
         vim-surround
         cmp-nvim-lsp
         cmp-buffer
@@ -47,9 +43,6 @@
         nvim-dap
         nvim-sops
         nvim-treesitter-textobjects
-        nvim-treesitter.withAllGrammars
-        haskell-tools-nvim
-        Ionide-vim
         {
           plugin = lazygit-nvim;
           type = "lua";
@@ -57,15 +50,6 @@
             # lua
             ''
               vim.keymap.set('n', "<leader>lg", ':LazyGit<CR>', {noremap = true})
-            '';
-        }
-        {
-          plugin = lazydev-nvim;
-          type = "lua";
-          config =
-            # lua
-            ''
-              require("lazydev").setup({})
             '';
         }
         {
@@ -115,18 +99,6 @@
           config = '''';
         }
         {
-          plugin = elixir-tools-nvim;
-          type = "lua";
-          config = ''
-            require("elixir").setup()
-          '';
-        }
-        {
-          plugin = rustaceanvim;
-          type = "lua";
-          config = '''';
-        }
-        {
           plugin = nvim-cmp;
           type = "lua";
           config = ''
@@ -153,10 +125,7 @@
           type = "lua";
           config = ''
             require("conform").setup({
-              formatters_by_ft = {
-                lua = { "stylua" },
-                nix = { "nixfmt" },
-              },
+              formatters_by_ft = vim.g.conform_formatters_by_ft or {},
               format_on_save = {
                 --these options will be passed to conform.format()
                 timeout_ms = 500,
@@ -166,7 +135,7 @@
           '';
         }
         {
-          plugin = nvim-treesitter;
+          plugin = nvim-treesitter.withAllGrammars;
           type = "lua";
           config = ''
             require("nvim-treesitter.configs").setup{

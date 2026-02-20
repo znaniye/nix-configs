@@ -24,5 +24,18 @@ in
       packages = with pkgs; [ gopls ];
       sessionPath = [ GOBIN ];
     };
+
+    programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
+      extraPackages = lib.mkAfter [ pkgs.gopls ];
+      plugins = lib.mkAfter (with pkgs.vimPlugins; [ vim-go ]);
+      extraLuaConfig = lib.mkAfter ''
+        vim.lsp.config.gopls = {
+          cmd = { "${pkgs.gopls}/bin/gopls" },
+          filetypes = { "go", "gomod", "gowork", "gotmpl" },
+          root_markers = { "go.work", "go.mod", ".git" },
+        }
+        vim.lsp.enable("gopls")
+      '';
+    };
   };
 }

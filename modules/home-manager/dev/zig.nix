@@ -17,5 +17,17 @@
         zls
       ];
     };
+
+    programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
+      extraPackages = lib.mkAfter [ pkgs.zls ];
+      extraLuaConfig = lib.mkAfter ''
+        vim.lsp.config.zls = {
+          cmd = { "${pkgs.zls}/bin/zls" },
+          root_markers = { "build.zig", ".git" },
+          filetypes = { "zig" },
+        }
+        vim.lsp.enable("zls")
+      '';
+    };
   };
 }

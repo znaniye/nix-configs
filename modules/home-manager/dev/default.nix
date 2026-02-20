@@ -7,15 +7,19 @@
 
 {
   imports = [
+    ./cc.nix
     ./dotnet.nix
+    ./elixir.nix
     ./go.nix
+    ./glsl.nix
+    ./godot.nix
+    ./haskell.nix
     ./lua.nix
     ./nix.nix
     ./ocaml.nix
     ./python.nix
     ./rust.nix
     ./zig.nix
-    ./haskell.nix
   ];
 
   options.home-manager.dev.enable = lib.mkEnableOption "dev config" // {
@@ -35,6 +39,17 @@
       direnv = {
         enable = true;
         enableZshIntegration = false;
+      };
+
+      neovim = lib.mkIf config.home-manager.editor.nvim.enable {
+        extraPackages = lib.mkAfter [ pkgs.bash-language-server ];
+        extraLuaConfig = lib.mkAfter ''
+          vim.lsp.config.bash = {
+            cmd = { "${pkgs.bash-language-server}/bin/bash-language-server", "start" },
+            filetypes = { "sh", "bash", "zsh" },
+          }
+          vim.lsp.enable("bash")
+        '';
       };
 
       tealdeer = {

@@ -7,7 +7,7 @@
 
 {
   imports = [
-    ./fsharp.nix
+    ./dotnet.nix
     ./go.nix
     ./lua.nix
     ./nix.nix

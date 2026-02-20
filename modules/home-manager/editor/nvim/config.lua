@@ -96,6 +96,11 @@ vim.lsp.config.gdscript     = {
     filetypes = { "gdscript" },
 }
 
+vim.lsp.config.csharp_ls    = {
+    cmd = { "csharp-ls" },
+    filetypes = { "cs" },
+}
+
 vim.lsp.config.lua_ls       = {
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
@@ -115,4 +120,4 @@ vim.lsp.config.lua_ls       = {
     }
 }
 
-vim.lsp.enable({ "bash", "zls", "ocamllsp", "pyright", "nil_ls", "clangd", "gopls", "gdscript", "lua_ls" })
+vim.lsp.enable({ "bash", "csharp_ls", "zls", "ocamllsp", "pyright", "nil_ls", "clangd", "gopls", "gdscript", "lua_ls" })

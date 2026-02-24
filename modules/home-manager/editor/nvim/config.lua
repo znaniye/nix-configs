@@ -1,4 +1,23 @@
+vim.opt.termguicolors = true
+
 vim.cmd("colorscheme nord")
+
+local function nord_float_highlights()
+    local float_bg = "#3B4252" -- nord1
+    local float_fg = "#D8DEE9" -- nord4
+    local border_fg = "#4C566A" -- nord3
+
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = float_bg, fg = float_fg })
+    vim.api.nvim_set_hl(0, "FloatBorder", { bg = float_bg, fg = border_fg })
+end
+
+local nord_float_highlights_group = vim.api.nvim_create_augroup("NordFloatHighlights", { clear = true })
+vim.api.nvim_create_autocmd("ColorScheme", {
+    group = nord_float_highlights_group,
+    callback = nord_float_highlights,
+})
+
+nord_float_highlights()
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","

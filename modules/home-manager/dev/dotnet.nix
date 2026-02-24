@@ -31,6 +31,7 @@
         vim.lsp.config.csharp_ls = {
           cmd = { "${pkgs.csharp-ls}/bin/csharp-ls" },
           filetypes = { "cs" },
+          root_markers = { ".git" },
         }
         vim.lsp.enable("csharp_ls")
       '';

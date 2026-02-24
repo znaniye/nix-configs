@@ -15,7 +15,7 @@
     nixos-raspberrypi.lib.inject-overlays
     nixos-raspberrypi.nixosModules.trusted-nix-caches
     flake.inputs.disko.nixosModules.disko
-    flake.inputs.worker.nixosModules.emit
+    flake.inputs.emit.nixosModules.emit
     ./disko.nix
     (lib.mkAliasOptionModuleMD [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
   ];
@@ -55,8 +55,11 @@
 
   sops.secrets.emit-sql-con = { };
   sops.secrets.emit-user = { };
+  sops.secrets.emit-pg-con = { };
 
   sops.templates.emitEnvFile.content = ''
+    EMIT_ENGINE=tipsoft
+    EMIT_PG_CONNECTION=${config.sops.placeholder.emit-pg-con}
     EMIT_SQL_CONNECTION=${config.sops.placeholder.emit-sql-con}
     EMIT_USUARIO_NOME=${config.sops.placeholder.emit-user}
     EMIT_PK_EMITENTE=1

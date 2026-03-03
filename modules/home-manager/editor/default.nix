@@ -8,6 +8,9 @@
 #let
 #  cfg = config.home-manager.editor;
 #in
+let
+  osCfg = if osConfig == null then { } else osConfig;
+in
 {
 
   imports = [
@@ -16,7 +19,7 @@
   ];
 
   options.home-manager.editor.enable = lib.mkEnableOption "editor config" // {
-    default = osConfig.nixos.desktop.enable or false;
+    default = lib.attrByPath [ "nixos" "desktop" "enable" ] false osCfg;
   };
 
   #config = lib.mkIf cfg.enable {

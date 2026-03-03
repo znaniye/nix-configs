@@ -6,9 +6,12 @@
   ...
 }:
 
+let
+  osCfg = if osConfig == null then { } else osConfig;
+in
 {
   options.home-manager.wm.i3.enable = lib.mkEnableOption "i3 config" // {
-    default = osConfig.nixos.desktop.xserver.enable or false;
+    default = lib.attrByPath [ "nixos" "desktop" "xserver" "enable" ] false osCfg;
   };
 
   config = lib.mkIf config.home-manager.wm.i3.enable {

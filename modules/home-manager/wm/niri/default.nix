@@ -8,8 +8,10 @@
 }:
 let
   defaultKeyBinds = import ./defaultKeyBinds.nix;
+  osCfg = if osConfig == null then { } else osConfig;
+  hostName = lib.attrByPath [ "networking" "hostName" ] null osCfg;
   xkb =
-    if osConfig.networking.hostName != "felix" then
+    if hostName != "felix" then
       {
         layout = "us";
         variant = "altgr-intl";
@@ -23,7 +25,7 @@ in
   imports = [ flake.inputs.niri.homeModules.niri ];
 
   options.home-manager.wm.niri.enable = lib.mkEnableOption "niri config" // {
-    default = osConfig.nixos.desktop.wayland.enable or false;
+    default = lib.attrByPath [ "nixos" "desktop" "wayland" "enable" ] false osCfg;
   };
 
   config = lib.mkIf config.home-manager.wm.niri.enable {

@@ -4,10 +4,13 @@
   osConfig,
   ...
 }:
+let
+  osCfg = if osConfig == null then { } else osConfig;
+in
 {
 
   options.home-manager.wm.waybar.enable = lib.mkEnableOption "waybar config" // {
-    default = osConfig.nixos.desktop.wayland.enable or false;
+    default = lib.attrByPath [ "nixos" "desktop" "wayland" "enable" ] false osCfg;
   };
 
   config = lib.mkIf config.home-manager.wm.waybar.enable {

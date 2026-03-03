@@ -6,10 +6,11 @@
 }:
 let
   cfg = config.home-manager.wm.dunst;
+  osCfg = if osConfig == null then { } else osConfig;
 in
 {
   options.home-manager.wm.dunst.enable = lib.mkEnableOption "dunst cfg" // {
-    default = osConfig.nixos.desktop.enable;
+    default = lib.attrByPath [ "nixos" "desktop" "enable" ] false osCfg;
   };
 
   config = lib.mkIf cfg.enable {

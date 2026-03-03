@@ -6,10 +6,11 @@
 }:
 let
   cfg = config.home-manager.wm.fuzzel;
+  osCfg = if osConfig == null then { } else osConfig;
 in
 {
   options.home-manager.wm.fuzzel.enable = lib.mkEnableOption "fuzzel config" // {
-    default = osConfig.nixos.desktop.wayland.enable;
+    default = lib.attrByPath [ "nixos" "desktop" "wayland" "enable" ] false osCfg;
   };
 
   config = lib.mkIf cfg.enable {

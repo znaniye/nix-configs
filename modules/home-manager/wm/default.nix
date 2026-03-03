@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.home-manager.wm;
+  osCfg = if osConfig == null then { } else osConfig;
 in
 {
   imports = [
@@ -21,7 +22,7 @@ in
 
   options.home-manager.wm = {
     enable = lib.mkEnableOption "desktop config" // {
-      default = osConfig.nixos.desktop.enable or false;
+      default = lib.attrByPath [ "nixos" "desktop" "enable" ] false osCfg;
     };
   };
 

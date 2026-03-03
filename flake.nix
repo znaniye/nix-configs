@@ -5,11 +5,6 @@
 
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
 
-    nix-hytale-server = {
-      url = "github:osipog/nix-hytale-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -58,7 +53,7 @@
     };
 
     emit = {
-      url = "git+ssh://git@github.com/znaniye/emit";
+      url = "git+ssh://git@github.com/znaniye/emit?ref=experiment/domain-application";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

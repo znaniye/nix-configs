@@ -1,6 +1,7 @@
 { lib, ... }:
 {
   imports = [
+    ./cloudflared.nix
     ./pi-hole.nix
     ./comin.nix
     ./gitea.nix

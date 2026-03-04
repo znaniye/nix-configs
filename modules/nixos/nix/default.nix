@@ -23,6 +23,16 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ nixos-rebuild-ng ];
 
+    sops = {
+      defaultSopsFile = ../../../secrets/var.yaml;
+      age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";
+      secrets.freedom-github-http-auth-token = {
+        owner = config.nixos.home.username;
+        mode = "0400";
+      };
+
+    };
+
     nix =
       let
         hostBasedJobs = if config.networking.hostName == "felix" then 1 else "auto";
@@ -46,6 +56,7 @@ in
 
         extraOptions = ''
           experimental-features = nix-command flakes
+          !include ${config.sops.secrets.freedom-github-http-auth-token.path}
         '';
 
         settings = {
@@ -59,9 +70,11 @@ in
         };
       };
 
-    nixpkgs.config.allowUnfree = true;
-    nixpkgs.overlays = [
-      flake.outputs.overlays.default
-    ];
+    nixpkgs = {
+      config.allowUnfree = true;
+      overlays = [
+        flake.outputs.overlays.default
+      ];
+    };
   };
 }

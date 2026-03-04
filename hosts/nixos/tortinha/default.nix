@@ -87,8 +87,13 @@
 
   services.emit = {
     enable = true;
-    api.envFile = "${config.sops.templates.apiEnvFile.path}";
-    api-shadow-worker.envFile = "${config.sops.templates.apiShadowWorkerEnvFile.path}";
+    api = {
+      envFile = "${config.sops.templates.apiEnvFile.path}";
+      shadowWorker = {
+        enable = true;
+        envFile = "${config.sops.templates.apiShadowWorkerEnvFile.path}";
+      };
+    };
   };
 
   nixpkgs.hostPlatform = "aarch64-linux";

@@ -33,7 +33,7 @@ in
         ncdu
         sops
         codex
-        gemini-cli
+        opencode
       ];
     };
 

@@ -138,21 +138,35 @@
           plugin = nvim-treesitter.withAllGrammars;
           type = "lua";
           config = ''
-            require("nvim-treesitter.configs").setup{
-              highlight = { enable = true },
-              textobjects = {
-                select = {
-                  enable = true,
-                  lookahead = true,
-                  keymaps = {
-                    ["af"] = "@function.outer",
-                    ["if"] = "@function.inner",
-                    ["ac"] = "@class.outer",
-                    ["ic"] = "@class.inner",
-                  },
-                },
+            local user_treesitter_group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true })
+            vim.api.nvim_create_autocmd("FileType", {
+              group = user_treesitter_group,
+              callback = function(args)
+                local ok = pcall(vim.treesitter.start, args.buf)
+                if ok then
+                  vim.bo[args.buf].syntax = ""
+                end
+              end,
+            })
+
+            require("nvim-treesitter-textobjects").setup {
+              select = {
+                lookahead = true,
               },
             }
+
+            vim.keymap.set({ "x", "o" }, "af", function()
+              require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+            end, { silent = true })
+            vim.keymap.set({ "x", "o" }, "if", function()
+              require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+            end, { silent = true })
+            vim.keymap.set({ "x", "o" }, "ac", function()
+              require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+            end, { silent = true })
+            vim.keymap.set({ "x", "o" }, "ic", function()
+              require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+            end, { silent = true })
           '';
         }
         {

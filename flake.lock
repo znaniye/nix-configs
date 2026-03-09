@@ -134,11 +134,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772804302,
-        "narHash": "sha256-YzJHnE1H3dJWTCpibjat+Pb9hvjnrckuwJ1CSyzZ7ro=",
+        "lastModified": 1773097340,
+        "narHash": "sha256-oH2Dtntml7T+UU2iq66cbxtpW4E3Mct761VTsAFp9+c=",
         "ref": "experiment/domain-application",
-        "rev": "35c5a68cda44c2a52fc04caa43749f8973b7ad33",
-        "revCount": 268,
+        "rev": "3f06a698e1974d9a0f12610839ab53d23f2f75e5",
+        "revCount": 271,
         "type": "git",
         "url": "ssh://git@github.com/znaniye/emit"
       },
@@ -527,11 +527,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1772773019,
-        "narHash": "sha256-E1bxHxNKfDoQUuvriG71+f+s/NT0qWkImXsYZNFFfCs=",
+        "lastModified": 1772963539,
+        "narHash": "sha256-9jVDGZnvCckTGdYT53d/EfznygLskyLQXYwJLKMPsZs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "aca4d95fce4914b3892661bcb80b8087293536c6",
+        "rev": "9dcb002ca1690658be4a04645215baea8b95f31d",
         "type": "github"
       },
       "original": {

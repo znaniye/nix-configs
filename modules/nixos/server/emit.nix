@@ -9,10 +9,20 @@ let
     "emit-prod" = {
       hostAddress = "10.231.10.1";
       localAddress = "10.231.10.2";
+      ambientApplication = "1";
+      engine = "native";
     };
-    "emit-dev" = {
+    "emit-staging" = {
       hostAddress = "10.231.10.3";
       localAddress = "10.231.10.4";
+      ambientApplication = "2";
+      engine = "native";
+    };
+    "emit-tipsoft" = {
+      hostAddress = "10.231.10.5";
+      localAddress = "10.231.10.6";
+      ambientApplication = "1";
+      engine = "tipsoft";
     };
   };
 
@@ -21,6 +31,8 @@ let
     {
       hostAddress,
       localAddress,
+      ambientApplication,
+      engine,
       ...
     }:
     {
@@ -51,46 +63,74 @@ let
               "emit-sql-con" = { };
               "emit-user" = { };
               "emit-pg-con" = { };
+              "emit_s3_access_key_id" = { };
+              "emit_s3_secret_access_key" = { };
               "emit-shadow-pg-con" = { };
               "emit-shadow-user-id" = { };
               "emit-discord-webhook" = { };
             };
-            templates = {
-              apiEnvFile.content = ''
-                EMIT_ENGINE=tipsoft
-                EMIT_SHADOW_ENABLED=true
-                EMIT_SQL_CONNECTION=${config.sops.placeholder."emit-sql-con"}
-                EMIT_USUARIO_NOME=${config.sops.placeholder."emit-user"}
-                EMIT_PK_EMITENTE=1
-                EMIT_SEFAZ_TPAMB=1
-                EMIT_SEFAZ_TLS_DEBUG=1
-                EMIT_SHADOW_NOTIFY_XML_DIFF=1
-                EMIT_DATA_DIR=/var/lib/emit-api
-              '';
-              apiShadowWorkerEnvFile.content = ''
-                EMIT_SHADOW_ENABLED=true
-                EMIT_SHADOW_PG_CONNECTION=${config.sops.placeholder."emit-shadow-pg-con"}
-                EMIT_SHADOW_USER_ID=${config.sops.placeholder."emit-shadow-user-id"}
-                EMIT_ENGINE=native
-                EMIT_SEFAZ_TPAMB=2
-                EMIT_SHADOW_S3_DISABLED=1
-                EMIT_SHADOW_NOTIFY_URL=${config.sops.placeholder."emit-discord-webhook"}
-                EMIT_SHADOW_NOTIFY_XML_DIFF=1
-                EMIT_DATA_DIR=/var/lib/emit-api
-              '';
-            };
+            templates =
+              let
+                commonEnv = ''
+                  EMIT_SEFAZ_TPAMB=${ambientApplication}
+                  EMIT_ENGINE=${engine}
+                  EMIT_SHADOW_NOTIFY_XML_DIFF=1
+                  EMIT_DATA_DIR=/var/lib/emit-api
+                '';
+                apiEnv =
+                  if engine == "native" then
+                    ''
+                      EMIT_PG_CONNECTION=Host=127.0.0.1;${config.sops.placeholder."emit-pg-con"}
+                      EMIT_S3_ENDPOINT=s3.us-east-005.backblazeb2.com
+                      EMIT_S3_REGION=us-east-005
+                      EMIT_S3_ACCESS_KEY_ID=${config.sops.placeholder."emit_s3_access_key_id"}
+                      EMIT_S3_SECRET_ACCESS_KEY=${config.sops.placeholder."emit_s3_secret_access_key"}
+                      EMIT_S3_PRIMARY_BUCKET=emit-app
+                      EMIT_S3_READ_BUCKETS=emit-app
+                      EMIT_S3_FORCE_PATH_STYLE=true
+                      EMIT_PUBLIC_URL=https://emit.znaniye.xyz
+                      EMIT_RESEND_API_KEY=re_e44Wz1rN_3uERuLbNPageKuL1yqhDEKyb
+                    ''
+                    + commonEnv
+                  else if engine == "tipsoft" then
+                    ''
+                      EMIT_SHADOW_ENABLED=true
+                      EMIT_SQL_CONNECTION=${config.sops.placeholder."emit-sql-con"}
+                      EMIT_USUARIO_NOME=${config.sops.placeholder."emit-user"}
+                      EMIT_PK_EMITENTE=1
+                    ''
+                    + commonEnv
+                  else
+                    (throw "${engine} does not exists.");
+              in
+              {
+                apiEnvFile.content = apiEnv;
+                apiShadowWorkerEnvFile.content = ''
+                  EMIT_SHADOW_ENABLED=true
+                  EMIT_SHADOW_PG_CONNECTION=${config.sops.placeholder."emit-shadow-pg-con"}
+                  EMIT_SHADOW_USER_ID=${config.sops.placeholder."emit-shadow-user-id"}
+                  EMIT_ENGINE=native
+                  EMIT_SEFAZ_TPAMB=2
+                  EMIT_SHADOW_S3_DISABLED=1
+                  EMIT_SHADOW_NOTIFY_URL=${config.sops.placeholder."emit-discord-webhook"}
+                  EMIT_SHADOW_NOTIFY_XML_DIFF=1
+                  EMIT_DATA_DIR=/var/lib/emit-api
+                '';
+              };
           };
 
           services.emit = {
             enable = true;
             api = {
               envFile = "${config.sops.templates.apiEnvFile.path}";
-              shadowWorker = {
+              shadowWorker = lib.mkIf (engine == "tipsoft") {
                 enable = true;
                 envFile = "${config.sops.templates.apiShadowWorkerEnvFile.path}";
               };
             };
           };
+
+          networking.firewall.allowPing = true;
         };
     };
 

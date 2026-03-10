@@ -92,6 +92,8 @@ let
               "emit-shadow-pg-con" = { };
               "emit-shadow-user-id" = { };
               "emit-discord-webhook" = { };
+              "emit-discord-signup-webhook-prod" = { };
+              "emit-discord-signup-webhook-staging" = { };
             };
             templates =
               let
@@ -101,6 +103,11 @@ let
                   EMIT_SHADOW_NOTIFY_XML_DIFF=1
                   EMIT_DATA_DIR=/var/lib/emit-api
                 '';
+                signupNotifyUrl =
+                  if name == "emit-staging" then
+                    config.sops.placeholder."emit-discord-signup-webhook-staging"
+                  else
+                    config.sops.placeholder."emit-discord-signup-webhook-prod";
                 apiEnv =
                   if engine == "native" then
                     ''
@@ -112,6 +119,7 @@ let
                       EMIT_S3_PRIMARY_BUCKET=emit-app
                       EMIT_S3_READ_BUCKETS=emit-app
                       EMIT_S3_FORCE_PATH_STYLE=true
+                      EMIT_SIGNUP_NOTIFY_URL=${signupNotifyUrl}
                       EMIT_PUBLIC_URL=https://emit.znaniye.xyz
                       EMIT_RESEND_API_KEY=re_e44Wz1rN_3uERuLbNPageKuL1yqhDEKyb
                     ''

@@ -32,6 +32,9 @@
             "emit.znaniye.xyz" = {
               service = "http://10.231.10.4:9999";
             };
+            "emit-api.znaniye.xyz" = {
+              service = "http://10.231.10.4:5055";
+            };
           };
           default = "http_status:404";
         };

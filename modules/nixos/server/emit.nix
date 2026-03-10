@@ -29,6 +29,13 @@ let
     };
   };
 
+  instanceHostPorts = lib.listToAttrs (
+    lib.imap0 (index: instanceName: {
+      name = instanceName;
+      value = 9898 + index;
+    }) (builtins.attrNames instances)
+  );
+
   mkContainer =
     name:
     {
@@ -54,7 +61,7 @@ let
       forwardPorts = [
         {
           protocol = "tcp";
-          hostPort = 9898;
+          hostPort = instanceHostPorts.${name};
           containerPort = 9999;
         }
       ];
@@ -152,7 +159,7 @@ let
             };
           };
 
-          networking.firewall.allowedTCPPorts = [ 9898 ];
+          networking.firewall.allowedTCPPorts = [ 9999 ];
           networking.firewall.allowPing = true;
         };
     };
@@ -169,6 +176,8 @@ in
 
     boot.enableContainers = true;
     virtualisation.containers.enable = true;
+
+    networking.firewall.allowedTCPPorts = builtins.attrValues instanceHostPorts;
 
     containers = mkContainers instances;
   };

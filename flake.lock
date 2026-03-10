@@ -134,11 +134,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773156238,
-        "narHash": "sha256-mQyioMK0Ho3j8p2z2S3M0To7jfGEdmiHjIqq2G9wBLQ=",
+        "lastModified": 1773160708,
+        "narHash": "sha256-VTOAn6x/nRhvGMOz/2qjPwiFKoN5vbqyLuF0nWsyD20=",
         "ref": "experiment/domain-application",
-        "rev": "c6efa4380b97b4e771300bf1f3e2fc7ff975c199",
-        "revCount": 277,
+        "rev": "5a780ecf0f5f4e0cd2edd0e31f46aca5826b1f7e",
+        "revCount": 278,
         "type": "git",
         "url": "ssh://git@github.com/znaniye/emit"
       },

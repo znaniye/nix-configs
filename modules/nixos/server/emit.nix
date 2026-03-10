@@ -184,6 +184,7 @@ in
 
     boot.enableContainers = true;
     virtualisation.containers.enable = true;
+    boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkDefault 1;
 
     networking.firewall.allowedTCPPorts = builtins.attrValues instanceHostPorts;
 

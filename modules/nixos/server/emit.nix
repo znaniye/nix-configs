@@ -11,14 +11,17 @@ let
       localAddress = "10.231.10.2";
       ambientApplication = "1";
       engine = "native";
+      apiBase = "https://emit-api.znaniye.xyz";
     };
     "emit-staging" = {
       hostAddress = "10.231.10.3";
       localAddress = "10.231.10.4";
       ambientApplication = "2";
       engine = "native";
+      apiBase = "https://emit-api-staging.znaniye.xyz";
     };
     "emit-tipsoft" = {
+      apiBase = "https://127.0.0.1:5055";
       hostAddress = "10.231.10.5";
       localAddress = "10.231.10.6";
       ambientApplication = "1";
@@ -29,6 +32,7 @@ let
   mkContainer =
     name:
     {
+      apiBase,
       hostAddress,
       localAddress,
       ambientApplication,
@@ -71,6 +75,11 @@ let
               "emit-sql-con" = { };
               "emit-user" = { };
               "emit-pg-con" = { };
+              "emit-pg-password" = {
+                owner = "postgres";
+                group = "postgres";
+                mode = "0400";
+              };
               "emit_s3_access_key_id" = { };
               "emit_s3_secret_access_key" = { };
               "emit-shadow-pg-con" = { };
@@ -129,12 +138,17 @@ let
 
           services.emit = {
             enable = true;
+            web.apiBase = apiBase;
             api = {
               envFile = "${config.sops.templates.apiEnvFile.path}";
               shadowWorker = lib.mkIf (engine == "tipsoft") {
                 enable = true;
                 envFile = "${config.sops.templates.apiShadowWorkerEnvFile.path}";
               };
+            };
+            database = {
+              passwordFile = config.sops.secrets.emit-pg-password.path;
+              shadowPasswordFile = config.sops.secrets.emit-pg-password.path;
             };
           };
 

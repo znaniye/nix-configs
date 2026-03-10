@@ -21,7 +21,7 @@ let
       apiBase = "https://emit-api-staging.znaniye.xyz";
     };
     "emit-tipsoft" = {
-      apiBase = "http://127.0.0.0:5055";
+      apiBase = "http://127.0.0.1:5055";
       hostAddress = "10.231.10.5";
       localAddress = "10.231.10.6";
       ambientApplication = "1";
@@ -33,6 +33,13 @@ let
     lib.imap0 (index: instanceName: {
       name = instanceName;
       value = 9898 + index;
+    }) (builtins.attrNames instances)
+  );
+
+  instanceHostPostgresPorts = lib.listToAttrs (
+    lib.imap0 (index: instanceName: {
+      name = instanceName;
+      value = 15432 + index;
     }) (builtins.attrNames instances)
   );
 
@@ -63,6 +70,11 @@ let
           protocol = "tcp";
           hostPort = instanceHostPorts.${name};
           containerPort = 9999;
+        }
+        {
+          protocol = "tcp";
+          hostPort = instanceHostPostgresPorts.${name};
+          containerPort = 5432;
         }
       ];
 
@@ -102,6 +114,9 @@ let
               "emit-discord-webhook" = { };
               "emit-discord-signup-webhook-prod" = { };
               "emit-discord-signup-webhook-staging" = { };
+              "emit-resend-api-key" = { };
+              "emit-stripe-secret-key" = { };
+              "emit-stripe-webhook-secret" = { };
             };
             templates =
               let
@@ -129,7 +144,10 @@ let
                       EMIT_S3_FORCE_PATH_STYLE=true
                       EMIT_SIGNUP_NOTIFY_URL=${signupNotifyUrl}
                       EMIT_PUBLIC_URL=https://emit.znaniye.xyz
-                      EMIT_RESEND_API_KEY=re_e44Wz1rN_3uERuLbNPageKuL1yqhDEKyb
+                      EMIT_RESEND_API_KEY=${config.sops.placeholder."emit-resend-api-key"}
+                      EMIT_RESEND_FROM="Emit <mail@emit.znaniye.xyz>"
+                      EMIT_STRIPE_SECRET_KEY=${config.sops.placeholder."emit-stripe-secret-key"}
+                      EMIT_STRIPE_WEBHOOK_SECRET=${config.sops.placeholder."emit-stripe-webhook-secret"}
                     ''
                     + commonEnv
                   else if engine == "tipsoft" then
@@ -162,7 +180,9 @@ let
           services.emit = {
             enable = true;
             web.apiBase = apiBase;
+            openFirewall = lib.mkIf (engine == "tipsoft") false;
             api = {
+              bind = lib.mkIf (engine == "tipsoft") "127.0.0.1";
               envFile = "${config.sops.templates.apiEnvFile.path}";
               shadowWorker = lib.mkIf (engine == "tipsoft") {
                 enable = true;
@@ -175,7 +195,25 @@ let
             };
           };
 
-          networking.firewall.allowedTCPPorts = [ 9999 ];
+          services.nginx.virtualHosts."emit-web".locations = lib.mkIf (engine == "tipsoft") {
+            "/api/" = {
+              proxyPass = "http://127.0.0.1:${toString config.services.emit.api.port}";
+              extraConfig = ''
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              '';
+            };
+
+            "= /runtime-config.js".extraConfig = ''
+              return 200 "window.__EMIT_CONFIG__ = { apiBase: \"$scheme://$http_host\" };";
+            '';
+          };
+
+          networking.firewall.allowedTCPPorts = [
+            9999
+            5432
+          ];
           networking.firewall.allowPing = true;
         };
     };
@@ -196,7 +234,8 @@ in
 
     networking = {
       firewall = {
-        allowedTCPPorts = builtins.attrValues instanceHostPorts;
+        allowedTCPPorts =
+          (builtins.attrValues instanceHostPorts) ++ (builtins.attrValues instanceHostPostgresPorts);
         trustedInterfaces = [ "ve-+" ];
       };
 

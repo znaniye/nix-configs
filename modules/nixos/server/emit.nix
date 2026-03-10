@@ -21,7 +21,7 @@ let
       apiBase = "https://emit-api-staging.znaniye.xyz";
     };
     "emit-tipsoft" = {
-      apiBase = "https://127.0.0.1:5055";
+      apiBase = "http://127.0.0.0:5055";
       hostAddress = "10.231.10.5";
       localAddress = "10.231.10.6";
       ambientApplication = "1";

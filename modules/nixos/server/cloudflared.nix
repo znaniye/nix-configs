@@ -29,6 +29,9 @@
             "gitea.znaniye.xyz" = {
               service = "http://localhost:3000";
             };
+            "emit.znaniye.xyz" = {
+              service = "http://10.231.10.4:9999";
+            };
           };
           default = "http_status:404";
         };

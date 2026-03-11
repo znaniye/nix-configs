@@ -47,6 +47,14 @@ let
         isReadOnly = true;
       };
 
+      forwardPorts = [
+        {
+          protocol = "tcp";
+          hostPort = 9898;
+          containerPort = 9999;
+        }
+      ];
+
       config =
         { config, ... }:
         {
@@ -130,6 +138,7 @@ let
             };
           };
 
+          networking.firewall.allowedTCPPorts = [ 9898 ];
           networking.firewall.allowPing = true;
         };
     };

@@ -59,5 +59,33 @@
     ];
   };
 
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_18;
+
+    enableTCPIP = true;
+
+    settings = {
+      listen_addresses = "*";
+      port = 5432;
+      password_encryption = "scram-sha-256";
+    };
+
+    ensureDatabases = [ "emit_app" ];
+    ensureUsers = [
+      {
+        name = "emit_app";
+        ensureDBOwnership = true;
+      }
+    ];
+
+    authentication = lib.mkOverride 10 (''
+      # TYPE  DATABASE  USER      ADDRESS           METHOD
+      local   all       all                         peer
+      host  emit_app  emit_app  127.0.0.1/32  scram-sha-256
+      host  emit_app  emit_app  ::1/128       scram-sha-256
+    '');
+  };
+
   system.stateVersion = config.system.nixos.release;
 }

@@ -74,6 +74,14 @@ let
             flake.inputs.emit.nixosModules.emit
           ];
 
+          networking = {
+            useHostResolvConf = lib.mkForce false;
+            nameservers = [
+              "1.1.1.1"
+              "8.8.8.8"
+            ];
+          };
+
           sops.defaultSopsFile = ../../../secrets/var.yaml;
           sops.age.keyFile = lib.mkForce "/run/age-keys.txt";
 
@@ -184,8 +192,20 @@ in
 
     boot.enableContainers = true;
     virtualisation.containers.enable = true;
+    boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkDefault 1;
 
-    networking.firewall.allowedTCPPorts = builtins.attrValues instanceHostPorts;
+    networking = {
+      firewall = {
+        allowedTCPPorts = builtins.attrValues instanceHostPorts;
+        trustedInterfaces = [ "ve-+" ];
+      };
+
+      nat = {
+        enable = true;
+        internalInterfaces = [ "ve-+" ];
+        externalInterface = "end0";
+      };
+    };
 
     containers = mkContainers instances;
   };

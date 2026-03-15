@@ -17,6 +17,7 @@
     ./lua.nix
     ./nix.nix
     ./ocaml.nix
+    ./opencode.nix
     ./python.nix
     ./rust.nix
     ./zig.nix

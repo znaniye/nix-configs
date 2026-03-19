@@ -2,6 +2,7 @@
 {
   imports = [
     ./cloudflared.nix
+    ./openssh.nix
     ./emit.nix
     ./pi-hole.nix
     ./comin.nix

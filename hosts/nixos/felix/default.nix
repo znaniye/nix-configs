@@ -29,10 +29,7 @@
 
   services.logind.lidSwitchExternalPower = "ignore";
 
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-  };
+  services.openssh.settings.PermitRootLogin = "no";
 
   services.pipewire = {
     enable = true;

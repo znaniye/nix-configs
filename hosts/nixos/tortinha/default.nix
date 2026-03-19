@@ -47,10 +47,7 @@
     };
   };
 
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "yes";
-  };
+  services.openssh.settings.PermitRootLogin = "yes";
 
   nixpkgs.hostPlatform = "aarch64-linux";
   system.stateVersion = config.system.nixos.release;

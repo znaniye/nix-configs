@@ -34,6 +34,7 @@ in
         sops
         codex
         opencode
+        claude-code
       ];
     };
 

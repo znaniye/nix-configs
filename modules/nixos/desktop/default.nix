@@ -9,6 +9,7 @@
   imports = [
     ./fonts.nix
     ./locale.nix
+    ./openssh.nix
     ./printer.nix
     ./tailscale
     ./tlp.nix

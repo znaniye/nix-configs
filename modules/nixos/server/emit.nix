@@ -110,8 +110,6 @@ let
               };
               "emit_s3_access_key_id" = { };
               "emit_s3_secret_access_key" = { };
-              "emit-shadow-pg-con" = { };
-              "emit-shadow-user-id" = { };
               "emit-discord-webhook" = { };
               "emit-discord-signup-webhook-prod" = { };
               "emit-discord-signup-webhook-staging" = { };
@@ -124,7 +122,6 @@ let
                 commonEnv = ''
                   EMIT_SEFAZ_TPAMB=${ambientApplication}
                   EMIT_ENGINE=${engine}
-                  EMIT_SHADOW_NOTIFY_XML_DIFF=1
                   EMIT_DATA_DIR=/var/lib/emit-api
                 '';
                 signupNotifyUrl =
@@ -154,7 +151,6 @@ let
                     + commonEnv
                   else if engine == "tipsoft" then
                     ''
-                      EMIT_SHADOW_ENABLED=true
                       EMIT_SQL_CONNECTION=${config.sops.placeholder."emit-sql-con"}
                       EMIT_USUARIO_NOME=${config.sops.placeholder."emit-user"}
                       EMIT_PK_EMITENTE=1
@@ -165,17 +161,6 @@ let
               in
               {
                 apiEnvFile.content = apiEnv;
-                apiShadowWorkerEnvFile.content = ''
-                  EMIT_SHADOW_ENABLED=true
-                  EMIT_SHADOW_PG_CONNECTION=${config.sops.placeholder."emit-shadow-pg-con"}
-                  EMIT_SHADOW_USER_ID=${config.sops.placeholder."emit-shadow-user-id"}
-                  EMIT_ENGINE=native
-                  EMIT_SEFAZ_TPAMB=2
-                  EMIT_SHADOW_S3_DISABLED=1
-                  EMIT_SHADOW_NOTIFY_URL=${config.sops.placeholder."emit-discord-webhook"}
-                  EMIT_SHADOW_NOTIFY_XML_DIFF=1
-                  EMIT_DATA_DIR=/var/lib/emit-api
-                '';
               };
           };
 
@@ -186,14 +171,9 @@ let
             api = {
               bind = lib.mkIf (engine == "tipsoft") "127.0.0.1";
               envFile = "${config.sops.templates.apiEnvFile.path}";
-              shadowWorker = lib.mkIf (engine == "tipsoft") {
-                enable = true;
-                envFile = "${config.sops.templates.apiShadowWorkerEnvFile.path}";
-              };
             };
             database = {
               passwordFile = config.sops.secrets.emit-pg-password.path;
-              shadowPasswordFile = config.sops.secrets.emit-pg-password.path;
             };
           };
 

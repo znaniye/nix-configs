@@ -50,6 +50,7 @@ in
       prismlauncher
       openfreebuds
       zellij
+      vlc
     ];
   };
 }

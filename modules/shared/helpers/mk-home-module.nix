@@ -38,6 +38,7 @@ in
     home-manager = {
       useUserPackages = true;
       useGlobalPkgs = true;
+      backupFileExtension = lib.mkDefault "backup";
       users.${cfg.username} = {
         inherit (config) meta theme;
         imports = [ flake.outputs.homeModules.default ] ++ cfg.extraModules;

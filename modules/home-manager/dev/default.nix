@@ -8,6 +8,7 @@
 {
   imports = [
     ./cc.nix
+    ./claude-code.nix
     ./dotnet.nix
     ./elixir.nix
     ./go.nix
@@ -17,7 +18,7 @@
     ./lua.nix
     ./nix.nix
     ./ocaml.nix
-    ./opencode.nix
+    ./opencode
     ./python.nix
     ./rust.nix
     ./zig.nix

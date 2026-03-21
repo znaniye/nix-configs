@@ -33,8 +33,6 @@ in
         ncdu
         sops
         codex
-        opencode
-        claude-code
       ];
     };
 

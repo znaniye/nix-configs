@@ -69,9 +69,38 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    xdg.configFile."opencode/opencode.json".text = builtins.toJSON {
-      "$schema" = "https://opencode.ai/config.json";
-      lsp = lspConfig;
+    sops.secrets.exa-api-key = { };
+    programs.opencode = {
+      enableMcpIntegration = true;
+      enable = true;
+      settings =
+        let
+          file = path: "{file:${path}}";
+        in
+        {
+          lsp = lspConfig;
+
+          mcp = {
+            gh_grep = {
+              type = "remote";
+              url = "https://mcp.grep.app";
+            };
+            exa = {
+              type = "remote";
+              url = "https://mcp.exa.ai/mcp?exaApiKey=${file config.sops.secrets.exa-api-key.path}";
+              enabled = true;
+            };
+            context7 = {
+              type = "remote";
+              url = "https://mcp.context7.com/mcp";
+            };
+            nixos = {
+              type = "local";
+              command = [ "${pkgs.mcp-nixos}/bin/mcp-nixos" ];
+              enabled = true;
+            };
+          };
+        };
     };
   };
 }

@@ -1,26 +1,6 @@
+{ ... }:
 {
-  config,
-  flake,
-  pkgs,
-  ...
-}:
-
-{
-  imports = [
-    flake.inputs.nixos-wsl.nixosModules.wsl
-  ];
-
-  wsl = {
-    enable = true;
-    defaultUser = "${config.meta.username}";
-    startMenuLaunchers = true;
-  };
-
-  programs.zsh.enable = true;
-
-  environment.systemPackages = with pkgs; [
-  ];
+  nixos.wsl.enable = true;
 
   nixpkgs.hostPlatform = "x86_64-linux";
-  system.stateVersion = config.system.nixos.release;
 }

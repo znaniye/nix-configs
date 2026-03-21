@@ -1,5 +1,4 @@
 {
-  config,
   flake,
   lib,
   nixos-raspberrypi,
@@ -30,8 +29,6 @@
   };
   nixos.home.extraModules.home-manager.dev.enable = false;
 
-  programs.zsh.enable = true;
-
   hardware.raspberry-pi.config = {
     all = {
       base-dt-params = {
@@ -47,8 +44,5 @@
     };
   };
 
-  services.openssh.settings.PermitRootLogin = "yes";
-
   nixpkgs.hostPlatform = "aarch64-linux";
-  system.stateVersion = config.system.nixos.release;
 }

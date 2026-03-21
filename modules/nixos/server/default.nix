@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 {
   imports = [
     ./cloudflared.nix
@@ -13,5 +13,9 @@
     enable = lib.mkEnableOption "servers common config" // {
       default = false;
     };
+  };
+
+  config = lib.mkIf config.nixos.server.enable {
+    programs.zsh.enable = true;
   };
 }

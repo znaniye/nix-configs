@@ -7,10 +7,14 @@
 }:
 {
   imports = [
+    ./flatpak.nix
     ./fonts.nix
+    ./logind.nix
     ./locale.nix
     ./openssh.nix
+    ./portal.nix
     ./printer.nix
+    ./sound.nix
     ./tailscale
     ./tlp.nix
     ./wireless.nix

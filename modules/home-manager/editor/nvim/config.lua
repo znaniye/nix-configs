@@ -31,6 +31,7 @@ vim.opt.clipboard = "unnamedplus"
 vim.keymap.set("n", "<C-l>", ":bnext<CR>", { noremap = true })
 vim.keymap.set("n", "<C-h>", ":bprevious<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>bd", ":bd!<CR>", { noremap = true })
+vim.keymap.set("n", "<Tab>mp", ":MarkdownPreview<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 

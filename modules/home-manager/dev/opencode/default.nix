@@ -11,6 +11,10 @@ let
   llvmPkgs = pkgs.llvmPackages_latest or pkgs.llvmPackages;
   clangTools = pkgs.clang-tools or llvmPkgs.clang-tools;
   llmAgentsPkgs = flake.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+  notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
+  opencodePlugins = import ./plugins {
+    inherit lib notificationSound pkgs;
+  };
 
   mkLspCommand = enabled: command: if enabled then { inherit command; } else { disabled = true; };
 
@@ -82,6 +86,8 @@ in
           file = path: "{file:${path}}";
         in
         {
+          plugin = opencodePlugins.entries;
+
           lsp = lspConfig;
 
           mcp = {

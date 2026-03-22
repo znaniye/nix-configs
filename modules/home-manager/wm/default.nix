@@ -10,13 +10,13 @@ let
 in
 {
   imports = [
-    ./i3.nix
-    ./picom.nix
-    ./polybar.nix
     ./dunst.nix
     ./fuzzel.nix
     ./gtk.nix
+    ./i3.nix
     ./niri
+    ./picom.nix
+    ./polybar.nix
     ./waybar
   ];
 

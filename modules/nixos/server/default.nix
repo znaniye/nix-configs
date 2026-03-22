@@ -2,11 +2,11 @@
 {
   imports = [
     ./cloudflared.nix
-    ./openssh.nix
-    ./emit.nix
-    ./pi-hole.nix
     ./comin.nix
+    ./emit.nix
     ./gitea.nix
+    ./openssh.nix
+    ./pi-hole.nix
   ];
 
   options.nixos.server = {

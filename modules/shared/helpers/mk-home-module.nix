@@ -1,9 +1,9 @@
 prefix:
 {
   config,
+  flake,
   lib,
   libEx,
-  flake,
   ...
 }:
 let

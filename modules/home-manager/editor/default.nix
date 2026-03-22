@@ -1,8 +1,8 @@
 {
   config,
   lib,
-  pkgs,
   osConfig,
+  pkgs,
   ...
 }:
 #let
@@ -14,8 +14,8 @@ in
 {
 
   imports = [
-    ./nvim
     ./emacs
+    ./nvim
   ];
 
   options.home-manager.editor.enable = lib.mkEnableOption "editor config" // {

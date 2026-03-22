@@ -1,6 +1,6 @@
 {
-  flake,
   config,
+  flake,
   lib,
   pkgs,
   ...
@@ -9,22 +9,22 @@
   imports = [
     ./flatpak.nix
     ./fonts.nix
-    ./logind.nix
     ./locale.nix
+    ./logind.nix
     ./openssh.nix
     ./portal.nix
     ./printer.nix
+    ./privacy.nix
+    ./sops.nix
     ./sound.nix
+    ./steam.nix
     ./tailscale
     ./tlp.nix
+    ./virtualization.nix
+    ./wayland.nix
+    ./wireguard.nix
     ./wireless.nix
     ./xserver.nix
-    ./wayland.nix
-    ./privacy.nix
-    ./virtualization.nix
-    ./steam.nix
-    ./sops.nix
-    ./wireguard.nix
   ];
 
   options.nixos.desktop = {

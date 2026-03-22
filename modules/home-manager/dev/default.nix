@@ -1,7 +1,7 @@
 {
   config,
-  pkgs,
   lib,
+  pkgs,
   ...
 }:
 
@@ -11,8 +11,8 @@
     ./claude-code.nix
     ./dotnet.nix
     ./elixir.nix
-    ./go.nix
     ./glsl.nix
+    ./go.nix
     ./godot.nix
     ./haskell.nix
     ./lua.nix

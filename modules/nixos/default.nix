@@ -1,20 +1,20 @@
 {
-  flake,
   config,
+  flake,
   lib,
   ...
 }:
 {
   imports = [
     ./boot
-    ./dev
-    ./networking
-    flake.outputs.internal.sharedModules.default
-    ./nix
     ./desktop
+    ./dev
     ./home.nix
+    ./networking
+    ./nix
     ./server
     ./wsl.nix
+    flake.outputs.internal.sharedModules.default
   ];
 
   config.system.stateVersion = lib.mkDefault config.system.nixos.release;

@@ -1,6 +1,6 @@
 {
-  flake,
   config,
+  flake,
   lib,
   ...
 }:
@@ -46,11 +46,11 @@ let
   mkContainer =
     name:
     {
+      ambientApplication,
       apiBase,
+      engine,
       hostAddress,
       localAddress,
-      ambientApplication,
-      engine,
       ...
     }:
     {
@@ -82,8 +82,8 @@ let
         { config, ... }:
         {
           imports = [
-            flake.inputs.sops.nixosModules.sops
             flake.inputs.emit.nixosModules.emit
+            flake.inputs.sops.nixosModules.sops
           ];
 
           networking = {

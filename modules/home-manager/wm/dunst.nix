@@ -1,7 +1,7 @@
 {
-  osConfig,
   config,
   lib,
+  osConfig,
   ...
 }:
 let

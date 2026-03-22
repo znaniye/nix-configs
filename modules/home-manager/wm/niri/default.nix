@@ -2,8 +2,8 @@
   config,
   flake,
   lib,
-  pkgs,
   osConfig,
+  pkgs,
   ...
 }:
 let

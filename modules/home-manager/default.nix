@@ -5,12 +5,12 @@
 }:
 {
   imports = [
-    flake.outputs.internal.sharedModules.default
     ./cli
     ./desktop
     ./dev
     ./editor
     ./wm
+    flake.outputs.internal.sharedModules.default
   ];
 
   options.home-manager = {

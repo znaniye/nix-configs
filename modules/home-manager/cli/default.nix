@@ -11,9 +11,9 @@ in
 
   imports = [
     ./git.nix
+    ./lazygit.nix
     ./tmux.nix
     ./zsh.nix
-    ./lazygit.nix
   ];
 
   options.home-manager.cli.enable = lib.mkEnableOption "cli config " // {

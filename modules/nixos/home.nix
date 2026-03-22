@@ -1,9 +1,9 @@
 {
   config,
-  lib,
   flake,
-  pkgs,
+  lib,
   myAuthorizedKeys,
+  pkgs,
   ...
 }:
 

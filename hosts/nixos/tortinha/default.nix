@@ -1,21 +1,21 @@
 {
   flake,
   lib,
-  nixos-raspberrypi,
   modulesPath,
+  nixos-raspberrypi,
   ...
 }:
 {
 
   imports = [
+    (lib.mkAliasOptionModuleMD [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
+    ./disko.nix
+    #nixos-raspberrypi.nixosModules.sd-image
+    flake.inputs.disko.nixosModules.disko
+    nixos-raspberrypi.lib.inject-overlays
     nixos-raspberrypi.nixosModules.raspberry-pi-5.base
     nixos-raspberrypi.nixosModules.raspberry-pi-5.display-vc4
-    #nixos-raspberrypi.nixosModules.sd-image
-    nixos-raspberrypi.lib.inject-overlays
     nixos-raspberrypi.nixosModules.trusted-nix-caches
-    flake.inputs.disko.nixosModules.disko
-    ./disko.nix
-    (lib.mkAliasOptionModuleMD [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
   ];
 
   disabledModules = [

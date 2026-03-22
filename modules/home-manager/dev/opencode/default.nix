@@ -26,13 +26,25 @@ let
 
     csharp = mkLspCommand cfg.dotnet.enable [ "${pkgs.csharp-ls}/bin/csharp-ls" ];
 
-    fsharp = mkLspCommand cfg.dotnet.enable [ "${pkgs.fsautocomplete}/bin/fsautocomplete" ];
-
     "elixir-ls" = mkLspCommand true [ "${pkgs.elixir-ls}/bin/elixir-ls" ];
+
+    fsharp = mkLspCommand cfg.dotnet.enable [ "${pkgs.fsautocomplete}/bin/fsautocomplete" ];
 
     gopls = mkLspCommand cfg.go.enable [ "${pkgs.gopls}/bin/gopls" ];
 
     "lua-ls" = mkLspCommand cfg.lua.enable [ "${pkgs.lua-language-server}/bin/lua-language-server" ];
+
+    marksman = {
+      command = [
+        "${pkgs.marksman}/bin/marksman"
+        "server"
+      ];
+      extensions = [
+        ".markdown"
+        ".md"
+        ".mdx"
+      ];
+    };
 
     nil = mkLspConfig (cfg.nix.enable && cfg.nix.languageServer == "nil") {
       command = [ "${pkgs.nil}/bin/nil" ];
@@ -53,26 +65,14 @@ let
     rust = mkLspCommand cfg.rust.enable [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
 
     zls = mkLspCommand cfg.zig.enable [ "${pkgs.zls}/bin/zls" ];
-
-    marksman = {
-      command = [
-        "${pkgs.marksman}/bin/marksman"
-        "server"
-      ];
-      extensions = [
-        ".markdown"
-        ".md"
-        ".mdx"
-      ];
-    };
   };
 in
 {
   config = lib.mkIf cfg.enable {
     sops.secrets.exa-api-key = { };
     programs.opencode = {
-      enableMcpIntegration = true;
       enable = true;
+      enableMcpIntegration = true;
       settings =
         let
           file = path: "{file:${path}}";
@@ -81,23 +81,23 @@ in
           lsp = lspConfig;
 
           mcp = {
-            gh_grep = {
-              type = "remote";
-              url = "https://mcp.grep.app";
-            };
-            exa = {
-              type = "remote";
-              url = "https://mcp.exa.ai/mcp?exaApiKey=${file config.sops.secrets.exa-api-key.path}";
-              enabled = true;
-            };
             context7 = {
               type = "remote";
               url = "https://mcp.context7.com/mcp";
             };
+            exa = {
+              enabled = true;
+              type = "remote";
+              url = "https://mcp.exa.ai/mcp?exaApiKey=${file config.sops.secrets.exa-api-key.path}";
+            };
+            gh_grep = {
+              type = "remote";
+              url = "https://mcp.grep.app";
+            };
             nixos = {
-              type = "local";
               command = [ "${pkgs.mcp-nixos}/bin/mcp-nixos" ];
               enabled = true;
+              type = "local";
             };
           };
         };

@@ -3,7 +3,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
+    nixos-raspberrypi = {
+      url = "github:nvmd/nixos-raspberrypi/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -28,6 +31,7 @@
     comin = {
       url = "github:nlewo/comin";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
     };
 
     emacs-overlay = {
@@ -60,6 +64,7 @@
     emit = {
       url = "git+ssh://git@github.com/znaniye/emit?ref=experiment/domain-application";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.blueprint.inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

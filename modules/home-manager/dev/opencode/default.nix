@@ -1,5 +1,6 @@
 {
   config,
+  flake,
   lib,
   pkgs,
   ...
@@ -9,6 +10,7 @@ let
   cfg = config.home-manager.dev;
   llvmPkgs = pkgs.llvmPackages_latest or pkgs.llvmPackages;
   clangTools = pkgs.clang-tools or llvmPkgs.clang-tools;
+  llmAgentsPkgs = flake.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
   mkLspCommand = enabled: command: if enabled then { inherit command; } else { disabled = true; };
 
@@ -69,6 +71,8 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
+    home.packages = [ llmAgentsPkgs.openspec ];
+
     sops.secrets.exa-api-key = { };
     programs.opencode = {
       enable = true;

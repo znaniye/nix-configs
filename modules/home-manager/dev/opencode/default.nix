@@ -102,6 +102,11 @@ in
               type = "remote";
               url = "https://mcp.exa.ai/mcp?exaApiKey=${file config.sops.secrets.exa-api-key.path}";
             };
+            playwright = {
+              command = [ "${pkgs.playwright-mcp}/bin/mcp-server-playwright" ];
+              enabled = false;
+              type = "local";
+            };
             gh_grep = {
               type = "remote";
               url = "https://mcp.grep.app";

@@ -7,6 +7,47 @@ const isIdleStatusEvent = (event) => event.type === "session.status" && event.pr
 
 const isIdleEvent = (event) => event.type === "session.idle"
 
+const isPermissionAskEvent = (event) => event.type === "permission.asked" || event.type === "permission.updated"
+
+const isPermissionReplyEvent = (event) => event.type === "permission.replied"
+
+const getPermissionRequestID = (event) => {
+  if (typeof event.properties?.id === "string") {
+    return event.properties.id
+  }
+
+  if (typeof event.properties?.requestID === "string") {
+    return event.properties.requestID
+  }
+
+  if (typeof event.properties?.permissionID === "string") {
+    return event.properties.permissionID
+  }
+
+  return null
+}
+
+const getPermissionNotificationBody = (event) => {
+  if (typeof event.properties?.title === "string" && event.properties.title.length > 0) {
+    return event.properties.title
+  }
+
+  const permission = typeof event.properties?.permission === "string" ? event.properties.permission : null
+  const patterns = Array.isArray(event.properties?.patterns)
+    ? event.properties.patterns.filter((pattern) => typeof pattern === "string")
+    : []
+
+  if (permission !== null && patterns.length > 0) {
+    return `Approval needed for ${permission}: ${patterns[0]}`
+  }
+
+  if (permission !== null) {
+    return `Approval needed for ${permission}`
+  }
+
+  return "Approval needed for pending tool request"
+}
+
 const getRuntimeDir = () => {
   if (process.env.XDG_RUNTIME_DIR) {
     return process.env.XDG_RUNTIME_DIR
@@ -35,6 +76,14 @@ const toErrorMessage = (error) => {
 }
 
 const getNotificationContent = (event) => {
+  if (isPermissionAskEvent(event)) {
+    return {
+      body: getPermissionNotificationBody(event),
+      urgency: "critical",
+      summary: "OpenCode",
+    }
+  }
+
   if (event.type === "session.error") {
     return {
       body: "Session failed",
@@ -52,6 +101,7 @@ const getNotificationContent = (event) => {
 
 export const NotificationPlugin = async ({ $ }) => {
   let lastIdleSessionID = null
+  const notifiedPermissionRequests = new Set()
 
   const playNotification = async () => {
     try {
@@ -92,6 +142,26 @@ export const NotificationPlugin = async ({ $ }) => {
 
   return {
     event: async ({ event }) => {
+      if (isPermissionReplyEvent(event)) {
+        const permissionRequestID = getPermissionRequestID(event)
+        if (permissionRequestID !== null) {
+          notifiedPermissionRequests.delete(permissionRequestID)
+        }
+        return
+      }
+
+      if (isPermissionAskEvent(event)) {
+        const permissionRequestID = getPermissionRequestID(event)
+        if (permissionRequestID !== null && notifiedPermissionRequests.has(permissionRequestID)) {
+          return
+        }
+        if (permissionRequestID !== null) {
+          notifiedPermissionRequests.add(permissionRequestID)
+        }
+        await notify(event)
+        return
+      }
+
       if (event.type === "session.error") {
         await notify(event)
         return

@@ -119,6 +119,10 @@ in
                   type = "command";
                   command = "${pkgs.pulseaudio}/bin/paplay ${notificationSound} 2>/dev/null || true";
                 }
+                {
+                  type = "command";
+                  command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Session needs your attention' 2>/dev/null || true";
+                }
               ];
             }
           ];
@@ -128,6 +132,10 @@ in
                 {
                   type = "command";
                   command = "${pkgs.pulseaudio}/bin/paplay ${notificationSound} 2>/dev/null || true";
+                }
+                {
+                  type = "command";
+                  command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Task finished' 2>/dev/null || true";
                 }
               ];
             }

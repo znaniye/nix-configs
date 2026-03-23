@@ -77,6 +77,10 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ llmAgentsPkgs.openspec ];
 
+    xdg.configFile = lib.mapAttrs' (
+      name: pluginPath: lib.nameValuePair "opencode/plugins/${name}.js" { source = pluginPath; }
+    ) opencodePlugins.files;
+
     sops.secrets.exa-api-key = { };
     programs.opencode = {
       enable = true;
@@ -86,8 +90,6 @@ in
           file = path: "{file:${path}}";
         in
         {
-          plugin = opencodePlugins.entries;
-
           lsp = lspConfig;
 
           mcp = {

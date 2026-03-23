@@ -24,7 +24,9 @@ let
       enabled = true;
       source = ./notification.js;
       substitutions = {
+        __DUNSTIFY_COMMAND__ = "${pkgs.dunst}/bin/dunstify";
         __NOTIFICATION_SOUND__ = notificationSound;
+        __NOTIFY_SEND_COMMAND__ = "${pkgs.libnotify}/bin/notify-send";
         __PAPLAY_COMMAND__ = "${pkgs.pulseaudio}/bin/paplay";
       };
     };
@@ -41,5 +43,6 @@ let
   ) enabledPlugins;
 in
 {
+  files = packagedPlugins;
   entries = lib.mapAttrsToList (_: pluginPath: "file://${pluginPath}") packagedPlugins;
 }

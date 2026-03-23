@@ -103,11 +103,7 @@ in
               url = "https://mcp.exa.ai/mcp?exaApiKey=${file config.sops.secrets.exa-api-key.path}";
             };
             playwright = {
-              command = [
-                "${pkgs.playwright-mcp}/bin/mcp-server-playwright"
-                "--browser"
-                "firefox"
-              ];
+              command = [ "${pkgs.playwright-mcp}/bin/mcp-server-playwright" ];
               enabled = false;
               type = "local";
             };

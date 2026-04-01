@@ -72,6 +72,15 @@ let
 
     zls = mkLspCommand cfg.zig.enable [ "${pkgs.zls}/bin/zls" ];
   };
+
+  giteaMcpWrapper = pkgs.writeShellScriptBin "gitea-mcp-wrapper" ''
+    #!/bin/bash
+    TOKEN=$(cat ${config.sops.secrets.gitea-mcp-token.path})
+    exec ${pkgs.gitea-mcp-server}/bin/gitea-mcp \
+      -host "http://192.168.68.111:3000" \
+      -token "$TOKEN" \
+      "$@"
+  '';
 in
 {
   config = lib.mkIf cfg.enable {
@@ -81,7 +90,11 @@ in
       name: pluginPath: lib.nameValuePair "opencode/plugins/${name}.js" { source = pluginPath; }
     ) opencodePlugins.files;
 
-    sops.secrets.exa-api-key = { };
+    sops.secrets = {
+      exa-api-key = { };
+      gitea-mcp-token = { };
+    };
+
     programs.opencode = {
       enable = true;
       enableMcpIntegration = true;
@@ -102,11 +115,6 @@ in
               type = "remote";
               url = "https://mcp.exa.ai/mcp?exaApiKey=${file config.sops.secrets.exa-api-key.path}";
             };
-            playwright = {
-              command = [ "${pkgs.playwright-mcp}/bin/mcp-server-playwright" ];
-              enabled = false;
-              type = "local";
-            };
             gh_grep = {
               type = "remote";
               url = "https://mcp.grep.app";
@@ -114,6 +122,11 @@ in
             nixos = {
               command = [ "${pkgs.mcp-nixos}/bin/mcp-nixos" ];
               enabled = true;
+              type = "local";
+            };
+            gitea-mcp = {
+              enabled = false;
+              command = [ "${giteaMcpWrapper}/bin/gitea-mcp-wrapper" ];
               type = "local";
             };
           };

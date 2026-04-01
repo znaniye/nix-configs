@@ -35,7 +35,7 @@ in
 
     nix =
       let
-        hostBasedJobs = if config.networking.hostName == "felix" then 1 else "auto";
+        hostBasedJobs = if config.networking.hostName == "golf" then 3 else 1;
       in
       {
         package = pkgs.nixVersions.latest;

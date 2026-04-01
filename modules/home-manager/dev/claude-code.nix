@@ -21,6 +21,7 @@ in
       enable = true;
       settings = {
         model = "opus";
+        skipDangerousModePermissionPrompt = true;
         alwaysThinkingEnabled = true;
         permissions = {
           allow = [
@@ -144,7 +145,16 @@ in
 
         # Plugin marketplace configuration
         extraKnownMarketplaces = {
+          ossystems = {
+            source = {
+              source = "github";
+              repo = "OSSystems/claude-code-plugin";
+            };
+          };
+        };
 
+        enabledPlugins = {
+          "ossystems-commit@ossystems" = true;
         };
       };
     };

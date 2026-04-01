@@ -1,12 +1,9 @@
 {
   config,
-  flake,
   lib,
-  pkgs,
   ...
 }:
 {
-  imports = [ flake.inputs.sops.homeManagerModule ];
   options.home-manager.cli.git.enable = lib.mkEnableOption "git config" // {
     default = config.home-manager.cli.enable;
   };
@@ -49,10 +46,6 @@
 
     };
 
-    sops = {
-      defaultSopsFile = ../../../secrets/var.yaml;
-      age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";
-      secrets.gh-token.path = "${config.xdg.configHome}/secrets/gh-token";
-    };
+    sops.secrets.gh-token.path = "${config.xdg.configHome}/secrets/gh-token";
   };
 }

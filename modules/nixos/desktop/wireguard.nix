@@ -30,7 +30,8 @@
           ];
 
           postSetup = ''
-            resolvectl dns    wg0 192.168.0.233
+            resolvectl dns    wg0 192.168.0.240
+            #resolvectl dns    wg0 192.168.0.233
             resolvectl domain wg0 "~intranet.freedom.ind.br"
             resolvectl dnssec wg0 false
           '';

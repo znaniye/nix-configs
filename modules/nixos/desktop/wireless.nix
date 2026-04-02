@@ -57,7 +57,7 @@
       blueman.enable = true;
       resolved = lib.optionalAttrs (!config.nixos.server.pi-hole.enable) {
         enable = true;
-        dnssec = "false";
+        settings.Resolve.DNSSEC = "false";
       };
     };
   };

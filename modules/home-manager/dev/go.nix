@@ -28,7 +28,7 @@ in
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
       extraPackages = lib.mkAfter [ pkgs.gopls ];
       plugins = lib.mkAfter (with pkgs.vimPlugins; [ vim-go ]);
-      extraLuaConfig = lib.mkAfter ''
+      initLua = lib.mkAfter ''
         vim.lsp.config.gopls = {
           cmd = { "${pkgs.gopls}/bin/gopls" },
           filetypes = { "go", "gomod", "gowork", "gotmpl" },

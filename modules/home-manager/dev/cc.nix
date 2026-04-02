@@ -21,7 +21,7 @@ in
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
       extraPackages = lib.mkAfter [ clangTools ];
-      extraLuaConfig = lib.mkAfter ''
+      initLua = lib.mkAfter ''
         vim.lsp.config.clangd = {
           cmd = { "${clangTools}/bin/clangd" },
           filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
@@ -40,4 +40,3 @@ in
     };
   };
 }
-

@@ -30,7 +30,7 @@
         pkgs.stdenv.cc
       ];
 
-      extraLuaConfig = lib.mkBefore (builtins.readFile ./config.lua);
+      initLua = lib.mkBefore (builtins.readFile ./config.lua);
 
       plugins = with pkgs.vimPlugins; [
         nord-nvim
@@ -96,7 +96,7 @@
         {
           plugin = vim-visual-multi;
           type = "lua";
-          config = '''';
+          config = "";
         }
         {
           plugin = nvim-cmp;

@@ -20,7 +20,7 @@
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
       extraPackages = lib.mkAfter [ pkgs.zls ];
-      extraLuaConfig = lib.mkAfter ''
+      initLua = lib.mkAfter ''
         vim.lsp.config.zls = {
           cmd = { "${pkgs.zls}/bin/zls" },
           root_markers = { "build.zig", ".git" },

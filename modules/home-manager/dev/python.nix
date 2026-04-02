@@ -20,7 +20,7 @@
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
       extraPackages = lib.mkAfter [ pkgs.pyright ];
-      extraLuaConfig = lib.mkAfter ''
+      initLua = lib.mkAfter ''
         vim.lsp.config.pyright = {
           cmd = { "${pkgs.pyright}/bin/pyright-langserver", "--stdio" },
           filetypes = { "python" },

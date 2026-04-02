@@ -23,7 +23,7 @@
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
       extraPackages = lib.mkAfter [ pkgs.ocamlPackages.ocaml-lsp ];
-      extraLuaConfig = lib.mkAfter ''
+      initLua = lib.mkAfter ''
         vim.lsp.config.ocamllsp = {
           cmd = { "${pkgs.ocamlPackages.ocaml-lsp}/bin/ocamllsp" },
           filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },

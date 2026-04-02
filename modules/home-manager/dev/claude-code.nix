@@ -1,7 +1,7 @@
 {
   config,
-  inputs,
   lib,
+  osConfig ? null,
   pkgs,
   ...
 }:
@@ -13,8 +13,8 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [ jq ];
 
-    nixpkgs = {
-      config.allowUnfreePredicate = pkg: builtins.elem (inputs.nixpkgs.lib.getName pkg) [ "claude" ];
+    nixpkgs = lib.mkIf (osConfig == null) {
+      config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [ "claude" ];
     };
 
     programs.claude-code = {

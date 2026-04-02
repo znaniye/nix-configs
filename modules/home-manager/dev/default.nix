@@ -45,7 +45,7 @@
 
       neovim = lib.mkIf config.home-manager.editor.nvim.enable {
         extraPackages = lib.mkAfter [ pkgs.bash-language-server ];
-        extraLuaConfig = lib.mkAfter ''
+        initLua = lib.mkAfter ''
           vim.lsp.config.bash = {
             cmd = { "${pkgs.bash-language-server}/bin/bash-language-server", "start" },
             filetypes = { "sh", "bash", "zsh" },

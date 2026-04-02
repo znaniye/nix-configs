@@ -79,12 +79,38 @@ let
       ];
 
       config =
-        { config, ... }:
+        {
+          config,
+          pkgs,
+          ...
+        }:
+        let
+          emitSystem = pkgs.stdenv.hostPlatform.system;
+          emitPath = flake.inputs.emit;
+          emitPkgs = import flake.inputs.nixpkgs { system = emitSystem; };
+          emitPerSystem = {
+            bun2nix.default = flake.inputs.bun2nix.packages.${emitSystem}.default;
+          };
+          emitModule = (import (emitPath + "/nix/modules/nixos/emit.nix")) {
+            flake = {
+              packages.${emitSystem} = {
+                emit-api = import (emitPath + "/nix/packages/emit-api/default.nix") { pkgs = emitPkgs; };
+                emit-web = import (emitPath + "/nix/packages/emit-web/default.nix") {
+                  pkgs = emitPkgs;
+                  perSystem = emitPerSystem;
+                };
+              };
+            };
+            inputs = { };
+          };
+        in
         {
           imports = [
-            flake.inputs.emit.nixosModules.emit
+            emitModule
             flake.inputs.sops.nixosModules.sops
           ];
+
+          system.stateVersion = lib.mkDefault config.system.nixos.release;
 
           networking = {
             useHostResolvConf = lib.mkForce false;

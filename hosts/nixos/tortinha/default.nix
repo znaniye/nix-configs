@@ -2,20 +2,29 @@
   flake,
   lib,
   modulesPath,
-  nixos-raspberrypi,
   ...
 }:
+let
+  rpiPath = flake.inputs.nixos-raspberrypi.outPath;
+in
 {
 
   imports = [
-    (lib.mkAliasOptionModuleMD [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
+    (lib.mkAliasOptionModule [ "environment" "checkConfigurationOptions" ] [ "_module" "check" ])
     ./disko.nix
     #nixos-raspberrypi.nixosModules.sd-image
     flake.inputs.disko.nixosModules.disko
-    nixos-raspberrypi.lib.inject-overlays
-    nixos-raspberrypi.nixosModules.raspberry-pi-5.base
-    nixos-raspberrypi.nixosModules.raspberry-pi-5.display-vc4
-    nixos-raspberrypi.nixosModules.trusted-nix-caches
+    (rpiPath + "/modules/raspberry-pi-5")
+    (rpiPath + "/modules/display-vc4.nix")
+    (rpiPath + "/modules/trusted-nix-caches.nix")
+  ];
+
+  nixpkgs.overlays = [
+    (import (rpiPath + "/overlays/bootloader.nix"))
+    (import (rpiPath + "/overlays/vendor-kernel.nix"))
+    (import (rpiPath + "/overlays/vendor-firmware.nix"))
+    (import (rpiPath + "/overlays/linux-and-firmware.nix"))
+    (import (rpiPath + "/overlays/vendor-pkgs.nix"))
   ];
 
   disabledModules = [
@@ -28,6 +37,8 @@
     tailscale.enable = true;
   };
   nixos.home.extraModules.home-manager.dev.enable = false;
+
+  boot.loader.raspberry-pi.bootloader = "kernel";
 
   hardware.raspberry-pi.config = {
     all = {

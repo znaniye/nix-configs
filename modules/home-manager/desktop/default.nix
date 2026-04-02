@@ -41,7 +41,7 @@ in
       spotify
       discord
       telegram-desktop
-      xfce.thunar
+      thunar
       foliate
       dunst
       zathura

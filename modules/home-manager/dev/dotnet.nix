@@ -27,7 +27,7 @@
 
       plugins = lib.mkAfter (with pkgs.vimPlugins; [ Ionide-vim ]);
 
-      extraLuaConfig = lib.mkAfter ''
+      initLua = lib.mkAfter ''
         vim.lsp.config.csharp_ls = {
           cmd = { "${pkgs.csharp-ls}/bin/csharp-ls" },
           filetypes = { "cs" },

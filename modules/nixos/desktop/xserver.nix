@@ -11,6 +11,12 @@
   };
 
   config = lib.mkIf config.nixos.desktop.xserver.enable {
+    location = {
+      provider = "manual";
+      latitude = -23.5505;
+      longitude = -46.6333;
+    };
+
     services = {
       displayManager = {
         defaultSession = "none+i3";
@@ -33,9 +39,6 @@
 
       redshift = {
         enable = true;
-        provider = "manual";
-        latitude = "-23.5505";
-        longitude = "-46.6333";
         temperature = {
           day = 5500;
           night = 2700;

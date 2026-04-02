@@ -16,7 +16,7 @@
     ];
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraLuaConfig = lib.mkAfter ''
+      initLua = lib.mkAfter ''
         local dap = require("dap")
         dap.adapters.godot = {
           type = "server",

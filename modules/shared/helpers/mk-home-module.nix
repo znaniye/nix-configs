@@ -3,7 +3,6 @@ prefix:
   config,
   flake,
   lib,
-  libEx,
   ...
 }:
 let
@@ -46,7 +45,7 @@ in
           inherit (config.networking) hostName;
         };
       };
-      extraSpecialArgs = { inherit flake libEx; };
+      extraSpecialArgs = { inherit flake; };
     };
   };
 }

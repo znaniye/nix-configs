@@ -5,6 +5,40 @@
   ...
 }:
 let
+  rpiPath = self.inputs.nixos-raspberrypi.outPath;
+  rpiOverlays = {
+    bootloader = import (rpiPath + "/overlays/bootloader.nix");
+    vendor-kernel = import (rpiPath + "/overlays/vendor-kernel.nix");
+    vendor-firmware = import (rpiPath + "/overlays/vendor-firmware.nix");
+    kernel-and-firmware = import (rpiPath + "/overlays/linux-and-firmware.nix");
+    vendor-pkgs = import (rpiPath + "/overlays/vendor-pkgs.nix");
+    jemalloc-page-size-16k = import (rpiPath + "/overlays/jemalloc-page-size-16k.nix");
+  };
+
+  rpiPkgsAarch64 = import nixpkgs {
+    system = "aarch64-linux";
+    overlays = [
+      rpiOverlays.bootloader
+      rpiOverlays.vendor-kernel
+      rpiOverlays.vendor-firmware
+      rpiOverlays.kernel-and-firmware
+      rpiOverlays.vendor-pkgs
+    ];
+  };
+
+  nixosRaspberryPi = {
+    overlays = rpiOverlays;
+    packages.aarch64-linux = {
+      inherit (rpiPkgsAarch64)
+        raspberrypifw
+        linuxPackages_rpi5
+        linuxPackages_rpi4
+        linuxPackages_rpi3
+        linuxPackages_rpi02
+        ;
+    };
+  };
+
   setHostname =
     hostName:
     (
@@ -36,7 +70,7 @@ in
         specialArgs = {
           inherit myAuthorizedKeys;
           flake = self;
-          nixos-raspberrypi = self.inputs.nixos-raspberrypi;
+          "nixos-raspberrypi" = nixosRaspberryPi;
         };
       };
     };
@@ -49,7 +83,11 @@ in
     }:
     {
       homeConfigurations.${hostName} = home-manager.lib.homeManagerConfiguration {
-        pkgs = self.outputs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ self.outputs.overlays.default ];
+          config.allowUnfree = true;
+        };
         modules = [
           self.outputs.homeModules.default
           configuration

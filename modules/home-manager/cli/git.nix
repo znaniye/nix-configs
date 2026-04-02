@@ -12,6 +12,7 @@
     programs = {
       git = {
         enable = true;
+        signing.format = "openpgp";
         settings = {
           user = {
             name = config.meta.fullname;

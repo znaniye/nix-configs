@@ -19,7 +19,7 @@
         {
           name = "origin";
           url = "https://github.com/znaniye/nix-configs.git";
-          branches.testing.name = "master";
+          branches.main.name = "master";
         }
       ];
     };

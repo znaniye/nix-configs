@@ -1,11 +1,17 @@
 {
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    systems.url = "github:nix-systems/default-linux";
+
+    blueprint = {
+      url = "github:numtide/blueprint";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+    };
+
     nixos-raspberrypi = {
       url = "github:nvmd/nixos-raspberrypi/main";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -48,7 +54,6 @@
     zls = {
       url = "github:zigtools/zls/0.15.0";
       inputs.nixpkgs.follows = "nixpkgs";
-
     };
 
     llm-agents = {
@@ -61,66 +66,63 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    bun2nix = {
+      url = "github:nix-community/bun2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+    };
+
     emit = {
       url = "git+ssh://git@github.com/znaniye/emit?ref=experiment/domain-application";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.blueprint.inputs.nixpkgs.follows = "nixpkgs";
+      flake = false;
     };
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      nixos-wsl,
-      nixos-raspberrypi,
-      disko,
-      ...
-    }@inputs:
+    inputs@{ self, ... }:
     let
-      libEx = import ./lib inputs;
+      lib = inputs.nixpkgs.lib;
+      homeLinuxSystem = import ./hosts/home-manager/home-linux/system.nix;
+      bp = inputs.blueprint {
+        inherit inputs;
+        prefix = "nix";
+        systems = [
+          "aarch64-linux"
+          "x86_64-linux"
+        ];
+        nixpkgs.overlays = [ self.overlays.default ];
+      };
+      homeLinuxConfig = inputs.home-manager.lib.homeManagerConfiguration {
+        pkgs = import inputs.nixpkgs {
+          system = homeLinuxSystem;
+          overlays = [ self.overlays.default ];
+          config.allowUnfree = true;
+        };
+        modules = [
+          self.homeModules.default
+          ./hosts/home-manager/home-linux/default.nix
+        ];
+        extraSpecialArgs = {
+          flake = self;
+        };
+      };
     in
-    libEx.recursiveMergeAttrs (
-      [
-        {
-          internal.sharedModules = {
-            default = import ./modules/shared;
-            helpers = import ./modules/shared/helpers;
-          };
-          nixosModules.default = import ./modules/nixos;
-          overlays.default = import ./overlays { inherit self; };
-          homeModules.default = import ./modules/home-manager;
-        }
+    lib.recursiveUpdate bp {
+      overlays.default = import ./overlays { inherit self; };
 
-        (libEx.eachDefaultSystem (
-          system:
-          let
-            pkgs = import nixpkgs {
-              inherit system;
-              overlays = [ self.overlays.default ];
-            };
-          in
-          {
-            devShells.default = pkgs.mkShell {
-              packages = with pkgs; [
-                vim
-                nil
-                nixfmt-rfc-style
-                ripgrep
-              ];
-            };
-            legacyPackages = pkgs;
-          }
-        ))
-      ]
-      ++
-        # NixOS config
-        (libEx.mapDir (hostName: libEx.mkNixOSConfig { inherit hostName; }) ./hosts/nixos)
-      ++
-        # Home-Manager standalone configs
-        ((libEx.mapDir (hostName: libEx.mkHomeConfig { inherit hostName; }) ./hosts/home-manager))
-    );
+      internal.sharedModules = {
+        default = import ./modules/shared;
+        helpers = import ./modules/shared/helpers;
+      };
+
+      homeConfigurations.home-linux = homeLinuxConfig;
+
+      apps.x86_64-linux."homeActivations/home-linux" = {
+        type = "app";
+        program = "${homeLinuxConfig.activationPackage}/activate";
+        meta.description = "Home activation script for home-linux";
+      };
+    };
 
   nixConfig = {
     extra-substituters = [

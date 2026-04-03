@@ -1,0 +1,93 @@
+name: Bump flake.lock
+
+# Requires the Actions secret PAT_TOKEN with the same value as gitea-pat-token in SOPS.
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: native
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure Git auth for private Gitea repos
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          git config --global \
+            http."http://192.168.68.111:3000/".extraHeader \
+            "Authorization: token $PAT_TOKEN"
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            accept-flake-config = true
+            extra-platforms = aarch64-linux
+
+      - uses: thiagokokada/free-disk-space@main
+        with:
+          opt: true
+          tool-cache: true
+          usrlocal: true
+          usrmisc: true
+
+      - name: Update flake.lock
+        run: |
+          git config user.name "${{ gitea.actor }}"
+          git config user.email "${{ gitea.actor }}@users.noreply.local"
+          nix flake update --commit-lock-file
+
+      - name: Register binfmt (cross-compilation)
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+      - name: Build golf && tortinha
+        run: |
+          nix build -L .#nixosConfigurations.golf.config.system.build.toplevel
+          nix build -L .#nixosConfigurations.tortinha.config.system.build.toplevel
+
+      - name: Push branch
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          git fetch origin master
+
+          if [ -z "$(git rev-list --max-count=1 origin/master..HEAD)" ]; then
+            echo "No flake.lock changes to push"
+            exit 0
+          fi
+
+          git -c "http.extraHeader=Authorization: token $PAT_TOKEN" \
+            push --force-with-lease origin HEAD:flake-updates
+
+      - name: Create pull request
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$(git rev-list --max-count=1 origin/master..HEAD)" ]; then
+            echo "No flake.lock changes, skipping PR creation"
+            exit 0
+          fi
+
+          run_url="http://192.168.68.111:3000/${{ gitea.repository }}/actions/runs/${{ gitea.run_id }}"
+          payload="{\"title\":\"Update flake.lock\",\"head\":\"flake-updates\",\"base\":\"master\",\"body\":\"Run report: $run_url\"}"
+
+          curl --silent --show-error --fail \
+            -X POST \
+            -H "Authorization: token $PAT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$payload" \
+            "http://192.168.68.111:3000/api/v1/repos/${{ gitea.repository }}/pulls" \
+            || echo "Pull request already exists"

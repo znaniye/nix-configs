@@ -30,6 +30,18 @@ in
         owner = config.nixos.home.username;
         mode = "0400";
       };
+      secrets.gitea-pat-token = {
+        owner = "root";
+        mode = "0400";
+      };
+      templates.nix-daemon-gitea-auth = {
+        owner = "root";
+        mode = "0400";
+        content = ''
+          [http "http://192.168.68.111:3000/"]
+            extraHeader = Authorization: token ${config.sops.placeholder.gitea-pat-token}
+        '';
+      };
 
     };
 
@@ -69,6 +81,10 @@ in
           max-jobs = hostBasedJobs;
         };
       };
+
+    systemd.services.nix-daemon.environment = {
+      GIT_CONFIG_GLOBAL = config.sops.templates.nix-daemon-gitea-auth.path;
+    };
 
     nixpkgs = {
       config.allowUnfree = true;

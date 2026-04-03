@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
@@ -14,7 +13,12 @@ in
     home.packages = with pkgs; [ jq ];
 
     nixpkgs = {
-      config.allowUnfreePredicate = pkg: builtins.elem (inputs.nixpkgs.lib.getName pkg) [ "claude" ];
+      config.allowUnfreePredicate =
+        pkg:
+        builtins.elem (pkgs.lib.getName pkg) [
+          "claude-code"
+          "claude"
+        ];
     };
 
     programs.claude-code = {

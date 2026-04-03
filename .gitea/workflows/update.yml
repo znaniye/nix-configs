@@ -32,9 +32,8 @@ jobs:
           git config user.email "${{ gitea.actor }}@users.noreply.local"
           nix flake update --commit-lock-file
 
-      - name: Build golf && tortinha
+      - name: Build golf
         run: |
-          nix build -L .#nixosConfigurations.golf.config.system.build.toplevel
           nix build -L .#nixosConfigurations.tortinha.config.system.build.toplevel
 
       - name: Push branch

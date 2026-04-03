@@ -13,10 +13,10 @@ in
 
   openfreebuds = prev.openfreebuds.overrideAttrs (_: {
     pythonRelaxDeps = true;
-    postInstall = ''
-      mkdir -p  $out/share/applications
-      mv openfreebuds_qt/assets/pw.mmk.OpenFreebuds.desktop $out/share/applications
-    '';
+    # postInstall = ''
+    #   mkdir -p  $out/share/applications
+    #   mv openfreebuds_qt/assets/pw.mmk.OpenFreebuds.desktop $out/share/applications
+    # '';
   });
 
 }

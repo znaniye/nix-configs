@@ -16,6 +16,7 @@ in
   imports = [
     ./emacs
     ./nvim
+    ./vscode.nix
   ];
 
   options.home-manager.editor.enable = lib.mkEnableOption "editor config" // {

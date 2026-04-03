@@ -15,23 +15,32 @@ let
       openssh
       curl
       git
-      gh
     ];
     text = ''
       set -euo pipefail
-      GITHUB_TOKEN=$(cat ${config.sops.secrets.gh-token.path})
-      export GITHUB_TOKEN
+
+      GITEA_HOST="http://192.168.68.111:3000"
+      REPOSITORY="znaniye/nix-configs"
+      GITEA_TOKEN=$(cat ${config.sops.secrets.gitea-pat-token.path})
+      AUTH_HEADER="Authorization: token $GITEA_TOKEN"
+
+      gitAuth() {
+        git -c "http.extraHeader=$AUTH_HEADER" "$@"
+      }
 
       if [ ! -d nix-configs ]; then
-        git clone https://github.com/znaniye/nix-configs.git
+        gitAuth clone "$GITEA_HOST/$REPOSITORY.git"
       fi
 
       cd nix-configs
-      git fetch origin master
+      git remote set-url origin "$GITEA_HOST/$REPOSITORY.git"
+      gitAuth fetch origin master
       git checkout master
-      git pull --rebase
+      gitAuth pull --rebase origin master
       git branch -D ts-update-pr 2>/dev/null || true
       git switch -C ts-update-pr
+      git config user.name "tailscale-bot"
+      git config user.email "tailscale-bot@localhost"
 
       file="secrets/var.yaml"
 
@@ -41,10 +50,10 @@ let
         client_id=$(cat ${config.sops.secrets.ts-client-id.path})
         client_secret=$(cat ${config.sops.secrets.ts-client-secret.path})
 
-        tskey_api=$(curl -s -d "client_id=$client_id" -d "client_secret=$client_secret" \
+        tskey_api=$(curl --silent --show-error --fail -d "client_id=$client_id" -d "client_secret=$client_secret" \
           "https://api.tailscale.com/api/v2/oauth/token" | jq -r .access_token)
 
-        curl -s -X POST "https://api.tailscale.com/api/v2/tailnet/TMU2RwhAUm11CNTRL/keys" \
+        curl --silent --show-error --fail -X POST "https://api.tailscale.com/api/v2/tailnet/TMU2RwhAUm11CNTRL/keys" \
           -H "Authorization: Bearer $tskey_api" \
           -H "Content-Type: application/json" \
           -d '{
@@ -64,22 +73,49 @@ let
 
       auth_response=$(createAuthKey)
 
-      expires_at=$(echo "$auth_response" | jq -r .expires)
+      expires_at=$(echo "$auth_response" | jq -er .expires)
       expire_oncalendar=$(date -d "''${expires_at} -1 day" "+%Y-%m-%d %H:%M:%S UTC")
       cat > modules/nixos/desktop/tailscale/update.json <<EOF
       {"expires": "$expire_oncalendar"}
       EOF
 
-      new_key=$(echo "$auth_response" | jq -r .key)
+      new_key=$(echo "$auth_response" | jq -er .key)
       export new_key
       sops -d -i "$file"
       yq -i '.tailscale-key = env(new_key)' $file
       sops -e -i "$file"
 
-      git add -u
-      git commit -m "bump ts auth key"
-      git push --force-with-lease origin ts-update-pr
-      gh pr create --fill || echo "branch exists"
+      git add modules/nixos/desktop/tailscale/update.json "$file"
+
+      if git diff --cached --quiet; then
+        echo "No tailscale key update to commit"
+        exit 0
+      fi
+
+      git commit -m "chore(tailscale): rotate auth key"
+      gitAuth push --force-with-lease origin ts-update-pr
+
+      existing_pr=$(curl --silent --show-error --fail -H "$AUTH_HEADER" \
+        "$GITEA_HOST/api/v1/repos/$REPOSITORY/pulls?state=open" \
+        | jq -r 'map(select(.head.ref == "ts-update-pr" and .base.ref == "master")) | .[0].number // ""')
+
+      if [ -n "$existing_pr" ]; then
+        echo "Pull request #$existing_pr already open"
+        exit 0
+      fi
+
+      pr_payload=$(jq -n \
+        --arg title "chore(tailscale): rotate auth key" \
+        --arg head "ts-update-pr" \
+        --arg base "master" \
+        --arg body "Automated tailscale auth key rotation." \
+        '{ title: $title, head: $head, base: $base, body: $body }')
+
+      curl --silent --show-error --fail -X POST \
+        -H "$AUTH_HEADER" \
+        -H "Content-Type: application/json" \
+        -d "$pr_payload" \
+        "$GITEA_HOST/api/v1/repos/$REPOSITORY/pulls"
     '';
   };
 

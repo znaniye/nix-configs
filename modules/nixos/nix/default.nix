@@ -38,7 +38,7 @@ in
         owner = "root";
         mode = "0400";
         content = ''
-          [http "http://192.168.68.111:3000/"]
+          [http "https://gitea.znaniye.xyz/"]
             extraHeader = Authorization: token ${config.sops.placeholder.gitea-pat-token}
         '';
       };

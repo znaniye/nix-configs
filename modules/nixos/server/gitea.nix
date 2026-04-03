@@ -65,6 +65,11 @@ in
           START_SSH_SERVER = true;
         };
 
+        service = {
+          DISABLE_REGISTRATION = true;
+          SHOW_REGISTRATION_BUTTON = false;
+        };
+
         actions.ENABLED = true;
       };
     };

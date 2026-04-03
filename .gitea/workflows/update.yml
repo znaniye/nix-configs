@@ -23,31 +23,14 @@ jobs:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git config --global \
-            http."http://192.168.68.111:3000/".extraHeader \
+            http."https://gitea.znaniye.xyz/".extraHeader \
             "Authorization: token $PAT_TOKEN"
-
-      - uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            accept-flake-config = true
-            extra-platforms = aarch64-linux
-
-      - uses: thiagokokada/free-disk-space@main
-        with:
-          opt: true
-          tool-cache: true
-          usrlocal: true
-          usrmisc: true
 
       - name: Update flake.lock
         run: |
           git config user.name "${{ gitea.actor }}"
           git config user.email "${{ gitea.actor }}@users.noreply.local"
           nix flake update --commit-lock-file
-
-      - name: Register binfmt (cross-compilation)
-        run: |
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Build golf && tortinha
         run: |
@@ -81,7 +64,7 @@ jobs:
             exit 0
           fi
 
-          run_url="http://192.168.68.111:3000/${{ gitea.repository }}/actions/runs/${{ gitea.run_id }}"
+          run_url="https://gitea.znaniye.xyz/${{ gitea.repository }}/actions/runs/${{ gitea.run_id }}"
           payload="{\"title\":\"Update flake.lock\",\"head\":\"flake-updates\",\"base\":\"master\",\"body\":\"Run report: $run_url\"}"
 
           curl --silent --show-error --fail \
@@ -89,5 +72,5 @@ jobs:
             -H "Authorization: token $PAT_TOKEN" \
             -H "Content-Type: application/json" \
             -d "$payload" \
-            "http://192.168.68.111:3000/api/v1/repos/${{ gitea.repository }}/pulls" \
+            "https://gitea.znaniye.xyz/api/v1/repos/${{ gitea.repository }}/pulls" \
             || echo "Pull request already exists"

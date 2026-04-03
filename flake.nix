@@ -62,7 +62,7 @@
     };
 
     emit = {
-      url = "git+ssh://git@github.com/znaniye/emit?ref=experiment/domain-application";
+      url = "git+http://192.168.68.111:3000/znaniye/emit.git?ref=experiment/domain-application";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.blueprint.inputs.nixpkgs.follows = "nixpkgs";
     };

@@ -24,11 +24,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1769353768,
-        "narHash": "sha256-zI+7cbMI4wMIR57jMjDSEsVb3grapTnURDxxJPYFIW0=",
+        "lastModified": 1771437256,
+        "narHash": "sha256-bLqwib+rtyBRRVBWhMuBXPCL/OThfokA+j6+uH7jDGU=",
         "owner": "numtide",
         "repo": "blueprint",
-        "rev": "c7da5c70ad1c9b60b6f5d4f674fbe205d48d8f6c",
+        "rev": "06ee7190dc2620ea98af9eb225aa9627b68b0e33",
         "type": "github"
       },
       "original": {
@@ -195,18 +195,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1775085052,
-        "narHash": "sha256-H2Hr/6lnA0gYUiJXGDY/jX2gIXzpwWi5Su/ZapyQGRY=",
+        "lastModified": 1775158134,
+        "narHash": "sha256-YiS8Z3rToPhM6UPJYXrUquMn8OOtF6qsP87AN8Xo0WM=",
         "ref": "experiment/domain-application",
-        "rev": "d1683c984685a1440c6cff5be5e90c81dba6866c",
-        "revCount": 341,
+        "rev": "8dd30d7cf9998ccaa47ad947e03b6b2065ac17c6",
+        "revCount": 344,
         "type": "git",
-        "url": "ssh://git@github.com/znaniye/emit"
+        "url": "http://192.168.68.111:3000/znaniye/emit.git"
       },
       "original": {
         "ref": "experiment/domain-application",
         "type": "git",
-        "url": "ssh://git@github.com/znaniye/emit"
+        "url": "http://192.168.68.111:3000/znaniye/emit.git"
       }
     },
     "flake-compat": {

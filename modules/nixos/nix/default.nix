@@ -23,6 +23,15 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ nixos-rebuild-ng ];
 
+    programs.git = {
+      enable = true;
+      config = {
+        credential."https://gitea.znaniye.xyz".helper = ''
+          !f() { if [ "$1" = get ] && [ -r ${config.sops.secrets.gitea-pat-token.path} ]; then echo username=${config.nixos.home.username}; printf 'password='; cat ${config.sops.secrets.gitea-pat-token.path}; fi; }; f
+        '';
+      };
+    };
+
     sops = {
       defaultSopsFile = ../../../secrets/var.yaml;
       age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";

@@ -26,9 +26,8 @@ in
     programs.git = {
       enable = true;
       config = {
-        credential."https://gitea.znaniye.xyz".helper = ''
-          !f() { if [ "$1" = get ] && [ -r ${config.sops.secrets.gitea-pat-token.path} ]; then echo username=${config.nixos.home.username}; printf 'password='; cat ${config.sops.secrets.gitea-pat-token.path}; fi; }; f
-        '';
+        credential."https://gitea.znaniye.xyz".helper =
+          "!f() { if [ \"$1\" = get ] && [ -r ${config.sops.secrets.gitea-pat-token-user.path} ]; then echo username=${config.nixos.home.username}; printf 'password='; cat ${config.sops.secrets.gitea-pat-token-user.path}; fi; }; f";
       };
     };
 
@@ -43,13 +42,10 @@ in
         owner = "root";
         mode = "0400";
       };
-      templates.nix-daemon-gitea-auth = {
-        owner = "root";
+      secrets.gitea-pat-token-user = {
+        key = "gitea-pat-token";
+        owner = config.nixos.home.username;
         mode = "0400";
-        content = ''
-          [http "https://gitea.znaniye.xyz/"]
-            extraHeader = Authorization: token ${config.sops.placeholder.gitea-pat-token}
-        '';
       };
 
     };
@@ -90,10 +86,6 @@ in
           max-jobs = hostBasedJobs;
         };
       };
-
-    systemd.services.nix-daemon.environment = {
-      GIT_CONFIG_GLOBAL = config.sops.templates.nix-daemon-gitea-auth.path;
-    };
 
     nixpkgs = {
       config.allowUnfree = true;

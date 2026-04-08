@@ -45,7 +45,7 @@
         "ls" = "${pkgs.eza}/bin/eza";
         "tree" = "${pkgs.eza}/bin/eza --tree";
 
-        "rb" = "sudo nixos-rebuild switch";
+        "rb" = "sudo nixos-rebuild switch --accept-flake-config";
         "b" = "nix build";
         "p" = "nix-shell --run zsh -p";
         "s" = "nix shell";

@@ -21,7 +21,6 @@
     sops.secrets.ts-client-id = { };
     sops.secrets.ts-client-secret = { };
     sops.secrets.gh-token = { };
-    sops.secrets.wireguard-private-key = { };
     sops.secrets.wifi = { };
   };
 }

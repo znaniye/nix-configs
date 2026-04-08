@@ -10,6 +10,10 @@
       virtualization.enable = true;
       wayland.enable = true;
       flatpak.enable = true;
+      wireguard = {
+        address = "192.168.240.8/32";
+        privateKeySecretName = "wireguard-private-key-golf";
+      };
     };
 
     dev.postgres = {

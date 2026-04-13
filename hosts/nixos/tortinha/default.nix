@@ -29,6 +29,22 @@
   };
   nixos.home.extraModules.home-manager.dev.enable = false;
 
+  networking.interfaces.end0 = {
+    useDHCP = false;
+    ipv4.addresses = [
+      {
+        address = "192.168.68.111";
+        prefixLength = 24;
+      }
+    ];
+  };
+
+  networking.defaultGateway = "192.168.68.1";
+  networking.nameservers = [
+    "192.168.68.1"
+    "1.1.1.1"
+  ];
+
   hardware.raspberry-pi.config = {
     all = {
       base-dt-params = {

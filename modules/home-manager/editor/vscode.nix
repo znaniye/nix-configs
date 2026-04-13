@@ -6,14 +6,57 @@
 }:
 let
   cfg = config.home-manager.editor.vscode;
+  anthropicBaseUrl = "http://192.168.150.11:4444";
 
-  pencilExtension = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+  claudeCodeExtension = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+    mktplcRef = {
+      name = "claude-code";
+      publisher = "anthropic";
+      version = "2.1.92";
+      hash = "sha256-f+6xXZVb5sYrmrH7eoon6/QoQaTnBuTnb+YnvszqyKA=";
+    };
+  };
+
+  pencilExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     mktplcRef = {
       name = "pencildev";
       publisher = "highagency";
       version = "0.6.38";
+      hash = "sha256-SpmKjxBttOdMCrPCxvXp93ZnS+UAd0vRxAOx0BSKIuc=";
     };
-    sha256 = "sha256-SpmKjxBttOdMCrPCxvXp93ZnS+UAd0vRxAOx0BSKIuc=";
+  };
+
+  pencilExtension = pencilExtensionBase.overrideAttrs (oldAttrs: {
+    postFixup = (oldAttrs.postFixup or "") + ''
+      mcpBinary="$out/share/vscode/extensions/highagency.pencildev/out/mcp-server-linux-x64"
+      if [ -f "$mcpBinary" ]; then
+        mv "$mcpBinary" "$mcpBinary.real"
+        cat > "$mcpBinary" <<EOF
+      #!${pkgs.bash}/bin/bash
+      exec ${pkgs.stdenv.cc.bintools.dynamicLinker} --library-path ${
+        pkgs.lib.makeLibraryPath [ pkgs.glibc ]
+      } "$mcpBinary.real" "\$@"
+      EOF
+        chmod +x "$mcpBinary"
+      fi
+    '';
+  });
+
+  vscodiumWithAnthropicEnv = pkgs.symlinkJoin {
+    pname = "vscodium";
+    version = pkgs.vscodium.version;
+    paths = [ pkgs.vscodium ];
+    postBuild = ''
+      rm -f "$out/bin/codium"
+      cat > "$out/bin/codium" <<'EOF'
+      #!${pkgs.bash}/bin/bash
+      if [ -f "${config.sops.secrets.anthropic-auth-token.path}" ]; then
+        export ANTHROPIC_AUTH_TOKEN="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.anthropic-auth-token.path})"
+      fi
+      exec ${pkgs.vscodium}/bin/codium "$@"
+      EOF
+      chmod +x "$out/bin/codium"
+    '';
   };
 in
 {
@@ -22,9 +65,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets.anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
+
     programs.vscode = {
       enable = true;
-      package = pkgs.vscodium;
+      package = vscodiumWithAnthropicEnv;
       mutableExtensionsDir = false;
 
       profiles.default = {
@@ -36,9 +81,21 @@ in
             jnoortheen.nix-ide
             vscodevim.vim
           ])
-          ++ [ pencilExtension ];
+          ++ [
+            claudeCodeExtension
+            pencilExtension
+          ];
 
         userSettings = {
+          "claudeCode.environmentVariables" = [
+            {
+              name = "ANTHROPIC_BASE_URL";
+              value = anthropicBaseUrl;
+            }
+          ];
+          "claudeCode.allowDangerouslySkipPermissions" = true;
+          "claudeCode.initialPermissionMode" = "bypassPermissions";
+
           "workbench.colorTheme" = "Nord";
           "workbench.editor.openSideBySideDirection" = "right";
 

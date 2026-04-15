@@ -23,6 +23,13 @@
   ];
 
   nixos.server.enable = true;
+  nixos.server.gitea = {
+    runner.shared.enable = true;
+    actionsSecrets.repositoryNames = [
+      "nix-configs"
+      "emit"
+    ];
+  };
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;

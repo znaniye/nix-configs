@@ -48,7 +48,13 @@ jobs:
 
       - name: Build golf
         run: |
-          nix --accept-flake-config --option builders '' build -L .#nixosConfigurations.golf.config.system.build.toplevel
+          current_system="$(nix eval --impure --raw --expr builtins.currentSystem)"
+
+          if [ "$current_system" = "x86_64-linux" ]; then
+            nix --accept-flake-config --option builders '' build -L .#nixosConfigurations.golf.config.system.build.toplevel
+          else
+            nix --accept-flake-config eval --raw .#nixosConfigurations.golf.config.system.build.toplevel.drvPath >/dev/null
+          fi
 
       - name: Push branch
         env:

@@ -48,7 +48,7 @@ jobs:
 
       - name: Build golf
         run: |
-          nix --accept-flake-config build -L .#nixosConfigurations.golf.config.system.build.toplevel
+          nix --accept-flake-config --option builders '' build -L .#nixosConfigurations.golf.config.system.build.toplevel
 
       - name: Push branch
         env:

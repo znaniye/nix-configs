@@ -50,6 +50,12 @@ in
         description = "SOPS key name used for the runner registration token.";
       };
 
+      codexAuthSecretName = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = "Optional SOPS key name containing a Codex auth.json payload to materialize in each runner HOME.";
+      };
+
       labels = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ "native:host" ];
@@ -121,12 +127,21 @@ in
       }
     ];
 
-    sops.secrets = lib.mkIf (cfg.runner.enable && cfg.runner.autoTokenFromSops) {
-      ${cfg.runner.tokenSecretName} = {
-        owner = "root";
-        mode = "0400";
-      };
-    };
+    sops.secrets = lib.mkMerge [
+      (lib.mkIf (cfg.runner.enable && cfg.runner.autoTokenFromSops) {
+        ${cfg.runner.tokenSecretName} = {
+          owner = "root";
+          mode = "0400";
+        };
+      })
+      (lib.mkIf (cfg.runner.enable && cfg.runner.codexAuthSecretName != null) {
+        ${cfg.runner.codexAuthSecretName} = {
+          owner = "root";
+          mode = "0400";
+          sopsFile = ../../../secrets/codex-auth.json;
+        };
+      })
+    ];
 
     sops.templates = lib.mkIf (cfg.runner.enable && cfg.runner.autoTokenFromSops) {
       gitea-runner-env = {
@@ -236,6 +251,16 @@ in
           SHOW_REGISTRATION_BUTTON = false;
         };
 
+        attachment = {
+          ENABLED = true;
+          ALLOWED_TYPES = "*/*";
+        };
+
+        "repository.upload" = {
+          ENABLED = true;
+          ALLOWED_TYPES = "*/*";
+        };
+
         actions.ENABLED = true;
       };
     };
@@ -266,17 +291,56 @@ in
         };
       };
 
-    systemd.services.gitea-runner-shared = lib.mkIf cfg.runner.shared.enable {
-      after = [
-        "gitea.service"
-        "gitea-runner-shared-token.service"
-      ];
-      requires = [
-        "gitea.service"
-        "gitea-runner-shared-token.service"
-      ];
-      wants = [ "gitea-runner-shared-token.service" ];
-    };
+    systemd.services.gitea-runner-local =
+      lib.mkIf (cfg.runner.enable && cfg.runner.codexAuthSecretName != null)
+        {
+          environment = {
+            XDG_CACHE_HOME = "/var/lib/gitea-runner/local/.cache";
+            XDG_CONFIG_HOME = "/var/lib/gitea-runner/local/.config";
+          };
+          serviceConfig.LoadCredential = [
+            "codex-auth.json:${config.sops.secrets."${cfg.runner.codexAuthSecretName}".path}"
+          ];
+          serviceConfig.ExecStartPre = lib.mkAfter [
+            (pkgs.writeShellScript "gitea-runner-local-install-codex-auth" ''
+              install -d -m 0700 "$HOME/.codex" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+              if [ -f "$CREDENTIALS_DIRECTORY/codex-auth.json" ]; then
+                install -m 0600 "$CREDENTIALS_DIRECTORY/codex-auth.json" "$HOME/.codex/auth.json"
+              fi
+            '')
+          ];
+        };
+
+    systemd.services.gitea-runner-shared = lib.mkMerge [
+      (lib.mkIf (cfg.runner.shared.enable && cfg.runner.codexAuthSecretName != null) {
+        environment = {
+          XDG_CACHE_HOME = "/var/lib/gitea-runner/shared/.cache";
+          XDG_CONFIG_HOME = "/var/lib/gitea-runner/shared/.config";
+        };
+        serviceConfig.LoadCredential = [
+          "codex-auth.json:${config.sops.secrets."${cfg.runner.codexAuthSecretName}".path}"
+        ];
+        serviceConfig.ExecStartPre = lib.mkAfter [
+          (pkgs.writeShellScript "gitea-runner-shared-install-codex-auth" ''
+            install -d -m 0700 "$HOME/.codex" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+            if [ -f "$CREDENTIALS_DIRECTORY/codex-auth.json" ]; then
+              install -m 0600 "$CREDENTIALS_DIRECTORY/codex-auth.json" "$HOME/.codex/auth.json"
+            fi
+          '')
+        ];
+      })
+      (lib.mkIf cfg.runner.shared.enable {
+        after = [
+          "gitea.service"
+          "gitea-runner-shared-token.service"
+        ];
+        requires = [
+          "gitea.service"
+          "gitea-runner-shared-token.service"
+        ];
+        wants = [ "gitea-runner-shared-token.service" ];
+      })
+    ];
 
     systemd.timers.gitea-backup = {
       description = "Run gitea backup every day.";

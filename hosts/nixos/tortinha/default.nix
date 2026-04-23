@@ -35,7 +35,10 @@
     sops.enable = true;
     tailscale.enable = true;
   };
-  nixos.home.extraModules.home-manager.dev.enable = false;
+  nixos.home.extraModules = {
+    home-manager.dev.enable = false;
+    home-manager.cli.codex.enable = false;
+  };
 
   networking.interfaces.end0 = {
     useDHCP = false;

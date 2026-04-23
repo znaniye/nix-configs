@@ -8,7 +8,7 @@ let
   cfg = config.home-manager.editor.vscode;
   anthropicBaseUrl = "http://192.168.150.11:4444";
 
-  claudeCodeExtension = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+  claudeCodeExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     mktplcRef = {
       name = "claude-code";
       publisher = "anthropic";
@@ -16,6 +16,19 @@ let
       hash = "sha256-f+6xXZVb5sYrmrH7eoon6/QoQaTnBuTnb+YnvszqyKA=";
     };
   };
+
+  claudeCodeExtension = claudeCodeExtensionBase.overrideAttrs (oldAttrs: {
+    postFixup = (oldAttrs.postFixup or "") + ''
+      extensionClaude="$out/share/vscode/extensions/anthropic.claude-code/resources/native-binary/claude"
+      if [ -f "$extensionClaude" ]; then
+        printf '%s\n' \
+          '#!${pkgs.bash}/bin/bash' \
+          'exec ${pkgs.claude-code}/bin/claude "$@"' \
+          > "$extensionClaude"
+        chmod +x "$extensionClaude"
+      fi
+    '';
+  });
 
   pencilExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     mktplcRef = {

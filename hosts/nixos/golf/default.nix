@@ -27,6 +27,7 @@
       home-manager.dev = {
         lua.enable = true;
         dotnet.enable = true;
+        python.enable = true;
       };
     };
   };

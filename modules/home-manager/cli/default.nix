@@ -10,6 +10,7 @@ in
 {
 
   imports = [
+    ./codex.nix
     ./git.nix
     ./lazygit.nix
     ./tmux.nix
@@ -32,7 +33,6 @@ in
         btop
         ncdu
         sops
-        codex
       ];
     };
 

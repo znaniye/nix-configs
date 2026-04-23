@@ -24,7 +24,7 @@
 
   nixos.server.enable = true;
   nixos.server.gitea = {
-    runner.codexAuthSecretName = "codex-auth-json";
+    runner.opencodeAuthSecretName = "opencode-auth-json";
     runner.shared.enable = true;
     actionsSecrets.repositoryNames = [
       "nix-configs"

@@ -7,6 +7,53 @@
 }:
 let
   cfg = config.nixos.server.gitea;
+
+  pencilMcpBinaryName =
+    if pkgs.stdenv.hostPlatform.isAarch64
+    then "mcp-server-linux-arm64"
+    else "mcp-server-linux-x64";
+
+  pencilExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+    mktplcRef = {
+      name = "pencildev";
+      publisher = "highagency";
+      version = "0.6.38";
+      hash = "sha256-SpmKjxBttOdMCrPCxvXp93ZnS+UAd0vRxAOx0BSKIuc=";
+    };
+  };
+
+  pencilExtension = pencilExtensionBase.overrideAttrs (oldAttrs: {
+    postFixup = (oldAttrs.postFixup or "") + ''
+      mcpBinary="$out/share/vscode/extensions/highagency.pencildev/out/${pencilMcpBinaryName}"
+      if [ -f "$mcpBinary" ]; then
+        mv "$mcpBinary" "$mcpBinary.real"
+        cat > "$mcpBinary" <<EOF
+      #!${pkgs.bash}/bin/bash
+      exec ${pkgs.stdenv.cc.bintools.dynamicLinker} --library-path ${
+        pkgs.lib.makeLibraryPath [ pkgs.glibc ]
+      } "$mcpBinary.real" "\$@"
+      EOF
+        chmod +x "$mcpBinary"
+      fi
+    '';
+  });
+
+  pencilMcpPath = "${pencilExtension}/share/vscode/extensions/highagency.pencildev/out/${pencilMcpBinaryName}";
+
+  runnerOpencodeConfig = pkgs.writeText "runner-opencode.json" (builtins.toJSON {
+    "$schema" = "https://opencode.ai/config.json";
+    mcp = {
+      pencil = {
+        enabled = true;
+        type = "local";
+        command = [
+          pencilMcpPath
+          "--app"
+          "vscodium"
+        ];
+      };
+    };
+  });
 in
 
 {
@@ -50,10 +97,10 @@ in
         description = "SOPS key name used for the runner registration token.";
       };
 
-      codexAuthSecretName = lib.mkOption {
+      opencodeAuthSecretName = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
-        description = "Optional SOPS key name containing a Codex auth.json payload to materialize in each runner HOME.";
+        description = "Optional SOPS key name containing an OpenCode auth.json payload to materialize in each runner data directory.";
       };
 
       labels = lib.mkOption {
@@ -134,11 +181,11 @@ in
           mode = "0400";
         };
       })
-      (lib.mkIf (cfg.runner.enable && cfg.runner.codexAuthSecretName != null) {
-        ${cfg.runner.codexAuthSecretName} = {
+      (lib.mkIf (cfg.runner.enable && cfg.runner.opencodeAuthSecretName != null) {
+        ${cfg.runner.opencodeAuthSecretName} = {
           owner = "root";
           mode = "0400";
-          sopsFile = ../../../secrets/codex-auth.json;
+          sopsFile = ../../../secrets/opencode-auth.json;
         };
       })
     ];
@@ -277,7 +324,10 @@ in
             else
               cfg.runner.tokenFile;
           labels = cfg.runner.labels;
-          hostPackages = lib.mkOptionDefault [ pkgs.nix ];
+          hostPackages = lib.mkOptionDefault [
+            pkgs.nix
+            pkgs.opencode
+          ];
         };
       }
       // lib.optionalAttrs cfg.runner.shared.enable {
@@ -287,44 +337,51 @@ in
           url = cfg.runner.url;
           tokenFile = cfg.runner.shared.tokenEnvPath;
           labels = cfg.runner.labels;
-          hostPackages = lib.mkOptionDefault [ pkgs.nix ];
+          hostPackages = lib.mkOptionDefault [
+            pkgs.nix
+            pkgs.opencode
+          ];
         };
       };
 
     systemd.services.gitea-runner-local =
-      lib.mkIf (cfg.runner.enable && cfg.runner.codexAuthSecretName != null)
+      lib.mkIf (cfg.runner.enable && cfg.runner.opencodeAuthSecretName != null)
         {
           environment = {
             XDG_CACHE_HOME = "/var/lib/gitea-runner/local/.cache";
             XDG_CONFIG_HOME = "/var/lib/gitea-runner/local/.config";
+            XDG_DATA_HOME = "/var/lib/gitea-runner/local/.local/share";
           };
           serviceConfig.LoadCredential = [
-            "codex-auth.json:${config.sops.secrets."${cfg.runner.codexAuthSecretName}".path}"
+            "opencode-auth.json:${config.sops.secrets."${cfg.runner.opencodeAuthSecretName}".path}"
           ];
           serviceConfig.ExecStartPre = lib.mkAfter [
-            (pkgs.writeShellScript "gitea-runner-local-install-codex-auth" ''
-              install -d -m 0700 "$HOME/.codex" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-              if [ -f "$CREDENTIALS_DIRECTORY/codex-auth.json" ]; then
-                install -m 0600 "$CREDENTIALS_DIRECTORY/codex-auth.json" "$HOME/.codex/auth.json"
+            (pkgs.writeShellScript "gitea-runner-local-install-opencode" ''
+              install -d -m 0700 "$XDG_CONFIG_HOME/opencode" "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
+              install -m 0600 ${runnerOpencodeConfig} "$XDG_CONFIG_HOME/opencode/opencode.json"
+              if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
+                install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
               fi
             '')
           ];
         };
 
     systemd.services.gitea-runner-shared = lib.mkMerge [
-      (lib.mkIf (cfg.runner.shared.enable && cfg.runner.codexAuthSecretName != null) {
+      (lib.mkIf (cfg.runner.shared.enable && cfg.runner.opencodeAuthSecretName != null) {
         environment = {
           XDG_CACHE_HOME = "/var/lib/gitea-runner/shared/.cache";
           XDG_CONFIG_HOME = "/var/lib/gitea-runner/shared/.config";
+          XDG_DATA_HOME = "/var/lib/gitea-runner/shared/.local/share";
         };
         serviceConfig.LoadCredential = [
-          "codex-auth.json:${config.sops.secrets."${cfg.runner.codexAuthSecretName}".path}"
+          "opencode-auth.json:${config.sops.secrets."${cfg.runner.opencodeAuthSecretName}".path}"
         ];
         serviceConfig.ExecStartPre = lib.mkAfter [
-          (pkgs.writeShellScript "gitea-runner-shared-install-codex-auth" ''
-            install -d -m 0700 "$HOME/.codex" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-            if [ -f "$CREDENTIALS_DIRECTORY/codex-auth.json" ]; then
-              install -m 0600 "$CREDENTIALS_DIRECTORY/codex-auth.json" "$HOME/.codex/auth.json"
+          (pkgs.writeShellScript "gitea-runner-shared-install-opencode" ''
+            install -d -m 0700 "$XDG_CONFIG_HOME/opencode" "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
+            install -m 0600 ${runnerOpencodeConfig} "$XDG_CONFIG_HOME/opencode/opencode.json"
+            if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
+              install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
             fi
           '')
         ];

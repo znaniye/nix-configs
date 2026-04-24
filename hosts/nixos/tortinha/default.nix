@@ -40,11 +40,12 @@
     home-manager.cli.codex.enable = false;
   };
 
+  networking.dhcpcd.denyInterfaces = [ "end0" ];
   networking.interfaces.end0 = {
     useDHCP = false;
     ipv4.addresses = [
       {
-        address = "192.168.68.114";
+        address = "192.168.68.111";
         prefixLength = 24;
       }
     ];

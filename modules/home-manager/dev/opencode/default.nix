@@ -78,7 +78,7 @@ let
     #!/bin/bash
     TOKEN=$(cat ${config.sops.secrets.gitea-pat-token.path})
     exec ${pkgs.gitea-mcp-server}/bin/gitea-mcp \
-      -host "http://192.168.68.114:3000" \
+      -host "http://192.168.68.111:3000" \
       -token "$TOKEN" \
       "$@"
   '';

@@ -18,7 +18,7 @@
       remotes = [
         {
           name = "origin";
-          url = "http://192.168.68.114:3000/znaniye/nix-configs.git";
+          url = "http://192.168.68.111:3000/znaniye/nix-configs.git";
           auth = {
             username = "znaniye";
             access_token_path = config.sops.secrets.gitea-pat-token.path;

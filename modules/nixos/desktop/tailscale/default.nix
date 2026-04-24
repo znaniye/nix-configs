@@ -19,7 +19,7 @@ let
     text = ''
       set -euo pipefail
 
-      GITEA_HOST="http://192.168.68.111:3000"
+      GITEA_HOST="http://192.168.68.114:3000"
       REPOSITORY="znaniye/nix-configs"
       GITEA_TOKEN=$(cat ${config.sops.secrets.gitea-pat-token.path})
       AUTH_HEADER="Authorization: token $GITEA_TOKEN"

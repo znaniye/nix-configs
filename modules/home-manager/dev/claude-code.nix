@@ -7,6 +7,25 @@
 let
   cfg = config.home-manager.dev;
   notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
+  anthropicBaseUrl = "http://192.168.150.11:4444";
+
+  claudeCodeWithEnv = pkgs.symlinkJoin {
+    name = "claude-code";
+    paths = [ pkgs.claude-code ];
+    postBuild = ''
+      rm -f "$out/bin/claude"
+      cat > "$out/bin/claude" <<'EOF'
+      #!${pkgs.bash}/bin/bash
+      export PATH="${pkgs.nodejs}/bin:$PATH"
+      export ANTHROPIC_BASE_URL="${anthropicBaseUrl}"
+      if [ -f "${config.sops.secrets.anthropic-auth-token.path}" ]; then
+        export ANTHROPIC_AUTH_TOKEN="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.anthropic-auth-token.path})"
+      fi
+      exec ${pkgs.claude-code}/bin/claude "$@"
+      EOF
+      chmod +x "$out/bin/claude"
+    '';
+  };
 in
 {
   config = lib.mkIf cfg.enable {
@@ -21,8 +40,11 @@ in
         ];
     };
 
+    sops.secrets.anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
+
     programs.claude-code = {
       enable = true;
+      package = claudeCodeWithEnv;
       settings = {
         model = "opus";
         skipDangerousModePermissionPrompt = true;

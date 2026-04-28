@@ -67,9 +67,7 @@ let
 in
 {
   options.home-manager.cli.codex = {
-    enable = lib.mkEnableOption "Codex CLI config" // {
-      default = config.home-manager.cli.enable;
-    };
+    enable = lib.mkEnableOption "Codex CLI config";
 
     model = lib.mkOption {
       type = lib.types.str;

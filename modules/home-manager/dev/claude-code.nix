@@ -177,10 +177,17 @@ in
               repo = "OSSystems/claude-code-plugin";
             };
           };
+          caveman = {
+            source = {
+              source = "github";
+              repo = "JuliusBrussee/caveman";
+            };
+          };
         };
 
         enabledPlugins = {
           "ossystems-commit@ossystems" = true;
+          "caveman@caveman" = true;
         };
       };
     };

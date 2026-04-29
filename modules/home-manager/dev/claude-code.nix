@@ -5,31 +5,74 @@
   ...
 }:
 let
-  cfg = config.home-manager.dev;
+  cfg = config.home-manager.dev.claude-code;
   notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
-  anthropicBaseUrl = "http://192.168.150.11:4444";
+
+  giteaMcpWrapper = pkgs.writeShellScriptBin "gitea-mcp-wrapper" ''
+    #!/bin/bash
+    TOKEN=$(cat ${config.sops.secrets.gitea-pat-token.path})
+    exec ${pkgs.gitea-mcp-server}/bin/gitea-mcp \
+      -host "${cfg.giteaMcp.host}" \
+      -token "$TOKEN" \
+      "$@"
+  '';
 
   claudeCodeWithEnv = pkgs.symlinkJoin {
     name = "claude-code";
     paths = [ pkgs.claude-code ];
     postBuild = ''
       rm -f "$out/bin/claude"
-      cat > "$out/bin/claude" <<'EOF'
+      cat > "$out/bin/claude" <<EOF
       #!${pkgs.bash}/bin/bash
-      export PATH="${pkgs.nodejs}/bin:$PATH"
-      export ANTHROPIC_BASE_URL="${anthropicBaseUrl}"
+      export PATH="${pkgs.nodejs}/bin:\$PATH"
+      export ANTHROPIC_BASE_URL="${cfg.anthropicBaseUrl}"
+      export AGENT_BROWSER_EXECUTABLE_PATH="${pkgs.chromium}/bin/chromium"
       if [ -f "${config.sops.secrets.anthropic-auth-token.path}" ]; then
-        export ANTHROPIC_AUTH_TOKEN="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.anthropic-auth-token.path})"
+        export ANTHROPIC_AUTH_TOKEN="\$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.anthropic-auth-token.path})"
       fi
-      exec ${pkgs.claude-code}/bin/claude "$@"
+      exec ${pkgs.claude-code}/bin/claude "\$@"
       EOF
       chmod +x "$out/bin/claude"
     '';
   };
 in
 {
+  options.home-manager.dev.claude-code = {
+    enable = lib.mkEnableOption "Claude Code config" // {
+      default = config.home-manager.dev.enable;
+    };
+
+    model = lib.mkOption {
+      type = lib.types.str;
+      default = "opus";
+      description = "Default Claude Code model.";
+    };
+
+    anthropicBaseUrl = lib.mkOption {
+      type = lib.types.str;
+      default = "http://192.168.150.11:4444";
+      description = "Base URL for the Anthropic API.";
+    };
+
+    giteaMcp = {
+      enable = lib.mkEnableOption "Gitea MCP server integration" // {
+        default = true;
+      };
+
+      host = lib.mkOption {
+        type = lib.types.str;
+        default = "http://192.168.68.111:3000";
+        description = "Gitea host URL used by the MCP server.";
+      };
+    };
+  };
+
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [ jq ];
+    home.packages = with pkgs; [
+      jq
+      agent-browser
+      chromium
+    ];
 
     nixpkgs = {
       config.allowUnfreePredicate =
@@ -40,13 +83,24 @@ in
         ];
     };
 
-    sops.secrets.anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
+    sops.secrets = {
+      anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
+    }
+    // lib.optionalAttrs cfg.giteaMcp.enable {
+      gitea-pat-token = { };
+    };
 
     programs.claude-code = {
       enable = true;
       package = claudeCodeWithEnv;
+      mcpServers = lib.optionalAttrs cfg.giteaMcp.enable {
+        gitea-mcp = {
+          type = "stdio";
+          command = "${giteaMcpWrapper}/bin/gitea-mcp-wrapper";
+        };
+      };
       settings = {
-        model = "opus";
+        model = cfg.model;
         skipDangerousModePermissionPrompt = true;
         alwaysThinkingEnabled = true;
         permissions = {
@@ -111,6 +165,7 @@ in
             "Bash(nix path-info:*)"
             "Bash(nix search:*)"
             "Bash(nixfmt:*)"
+            "Bash(agent-browser:*)"
             "Read"
             "Edit"
             "Write"

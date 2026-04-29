@@ -6,7 +6,8 @@
 }:
 let
   cfg = config.home-manager.editor.vscode;
-  anthropicBaseUrl = "http://192.168.150.11:4444";
+  claudeCodeCfg = config.home-manager.dev.claude-code;
+  claudeCodePackage = config.programs.claude-code.finalPackage;
 
   claudeCodeExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     mktplcRef = {
@@ -23,7 +24,7 @@ let
       if [ -f "$extensionClaude" ]; then
         printf '%s\n' \
           '#!${pkgs.bash}/bin/bash' \
-          'exec ${pkgs.claude-code}/bin/claude "$@"' \
+          'exec ${claudeCodePackage}/bin/claude "$@"' \
           > "$extensionClaude"
         chmod +x "$extensionClaude"
       fi
@@ -103,7 +104,11 @@ in
           "claudeCode.environmentVariables" = [
             {
               name = "ANTHROPIC_BASE_URL";
-              value = anthropicBaseUrl;
+              value = claudeCodeCfg.anthropicBaseUrl;
+            }
+            {
+              name = "AGENT_BROWSER_EXECUTABLE_PATH";
+              value = "${pkgs.chromium}/bin/chromium";
             }
           ];
           "claudeCode.allowDangerouslySkipPermissions" = true;

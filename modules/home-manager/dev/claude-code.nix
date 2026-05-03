@@ -65,14 +65,22 @@ in
         description = "Gitea host URL used by the MCP server.";
       };
     };
+
+    rtk = {
+      enable = lib.mkEnableOption "RTK token-saving Bash proxy" // {
+        default = true;
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      jq
-      agent-browser
-      chromium
-    ];
+    home.packages =
+      (with pkgs; [
+        jq
+        agent-browser
+        chromium
+      ])
+      ++ lib.optional cfg.rtk.enable pkgs.rtk;
 
     nixpkgs = {
       config.allowUnfreePredicate =
@@ -193,6 +201,17 @@ in
           pr = "";
         };
         hooks = {
+          PreToolUse = lib.mkIf cfg.rtk.enable [
+            {
+              matcher = "Bash";
+              hooks = [
+                {
+                  type = "command";
+                  command = "${pkgs.rtk}/bin/rtk hook claude";
+                }
+              ];
+            }
+          ];
           Notification = [
             {
               matcher = "";

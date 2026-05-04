@@ -82,6 +82,18 @@ in
       ])
       ++ lib.optional cfg.rtk.enable pkgs.rtk;
 
+    home.activation.claudeCodeOnboarding = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      CLAUDE_JSON="$HOME/.claude.json"
+      if [ ! -f "$CLAUDE_JSON" ]; then
+        echo '{}' > "$CLAUDE_JSON"
+      fi
+      run ${pkgs.jq}/bin/jq '. + {
+        hasCompletedOnboarding: true,
+        bypassPermissionsModeAccepted: true
+      }' "$CLAUDE_JSON" > "$CLAUDE_JSON.tmp"
+      run mv "$CLAUDE_JSON.tmp" "$CLAUDE_JSON"
+    '';
+
     nixpkgs = {
       config.allowUnfreePredicate =
         pkg:

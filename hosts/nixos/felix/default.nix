@@ -10,7 +10,7 @@
       wayland.enable = true;
       #xserver.enable = true;
       wireguard = {
-        address = "192.168.240.9/32";
+        address = "192.168.240.15/32";
         privateKeySecretName = "wireguard-private-key-felix";
       };
     };

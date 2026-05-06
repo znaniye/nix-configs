@@ -7,53 +7,6 @@
 }:
 let
   cfg = config.nixos.server.gitea;
-
-  pencilMcpBinaryName =
-    if pkgs.stdenv.hostPlatform.isAarch64
-    then "mcp-server-linux-arm64"
-    else "mcp-server-linux-x64";
-
-  pencilExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
-    mktplcRef = {
-      name = "pencildev";
-      publisher = "highagency";
-      version = "0.6.38";
-      hash = "sha256-SpmKjxBttOdMCrPCxvXp93ZnS+UAd0vRxAOx0BSKIuc=";
-    };
-  };
-
-  pencilExtension = pencilExtensionBase.overrideAttrs (oldAttrs: {
-    postFixup = (oldAttrs.postFixup or "") + ''
-      mcpBinary="$out/share/vscode/extensions/highagency.pencildev/out/${pencilMcpBinaryName}"
-      if [ -f "$mcpBinary" ]; then
-        mv "$mcpBinary" "$mcpBinary.real"
-        cat > "$mcpBinary" <<EOF
-      #!${pkgs.bash}/bin/bash
-      exec ${pkgs.stdenv.cc.bintools.dynamicLinker} --library-path ${
-        pkgs.lib.makeLibraryPath [ pkgs.glibc ]
-      } "$mcpBinary.real" "\$@"
-      EOF
-        chmod +x "$mcpBinary"
-      fi
-    '';
-  });
-
-  pencilMcpPath = "${pencilExtension}/share/vscode/extensions/highagency.pencildev/out/${pencilMcpBinaryName}";
-
-  runnerOpencodeConfig = pkgs.writeText "runner-opencode.json" (builtins.toJSON {
-    "$schema" = "https://opencode.ai/config.json";
-    mcp = {
-      pencil = {
-        enabled = true;
-        type = "local";
-        command = [
-          pencilMcpPath
-          "--app"
-          "vscodium"
-        ];
-      };
-    };
-  });
 in
 
 {
@@ -357,8 +310,7 @@ in
           ];
           serviceConfig.ExecStartPre = lib.mkAfter [
             (pkgs.writeShellScript "gitea-runner-local-install-opencode" ''
-              install -d -m 0700 "$XDG_CONFIG_HOME/opencode" "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
-              install -m 0600 ${runnerOpencodeConfig} "$XDG_CONFIG_HOME/opencode/opencode.json"
+              install -d -m 0700 "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
               if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
                 install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
               fi
@@ -378,8 +330,7 @@ in
         ];
         serviceConfig.ExecStartPre = lib.mkAfter [
           (pkgs.writeShellScript "gitea-runner-shared-install-opencode" ''
-            install -d -m 0700 "$XDG_CONFIG_HOME/opencode" "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
-            install -m 0600 ${runnerOpencodeConfig} "$XDG_CONFIG_HOME/opencode/opencode.json"
+            install -d -m 0700 "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
             if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
               install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
             fi

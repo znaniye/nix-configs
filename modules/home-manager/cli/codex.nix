@@ -7,30 +7,6 @@
 let
   cfg = config.home-manager.cli.codex;
   tomlFormat = pkgs.formats.toml { };
-  pencilExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
-    mktplcRef = {
-      name = "pencildev";
-      publisher = "highagency";
-      version = "0.6.38";
-      hash = "sha256-SpmKjxBttOdMCrPCxvXp93ZnS+UAd0vRxAOx0BSKIuc=";
-    };
-  };
-  pencilExtension = pencilExtensionBase.overrideAttrs (oldAttrs: {
-    postFixup = (oldAttrs.postFixup or "") + ''
-      mcpBinary="$out/share/vscode/extensions/highagency.pencildev/out/mcp-server-linux-x64"
-      if [ -f "$mcpBinary" ]; then
-        mv "$mcpBinary" "$mcpBinary.real"
-        cat > "$mcpBinary" <<EOF
-      #!${pkgs.bash}/bin/bash
-      exec ${pkgs.stdenv.cc.bintools.dynamicLinker} --library-path ${
-        pkgs.lib.makeLibraryPath [ pkgs.glibc ]
-      } "$mcpBinary.real" "\$@"
-      EOF
-        chmod +x "$mcpBinary"
-      fi
-    '';
-  });
-  pencilMcpPath = "${pencilExtension}/share/vscode/extensions/highagency.pencildev/out/mcp-server-linux-x64";
   codexConfig = {
     model = cfg.model;
     model_reasoning_effort = cfg.modelReasoningEffort;
@@ -56,7 +32,7 @@ let
 
     mcp_servers = {
       pencil = {
-        command = pencilMcpPath;
+        command = pkgs.pencil-vscode-extension.mcpPath;
         args = [
           "--app"
           "vscodium"

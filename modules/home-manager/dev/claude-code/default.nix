@@ -8,32 +8,7 @@ let
   cfg = config.home-manager.dev.claude-code;
   notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
 
-  pencilExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
-    mktplcRef = {
-      name = "pencildev";
-      publisher = "highagency";
-      version = "0.6.38";
-      hash = "sha256-SpmKjxBttOdMCrPCxvXp93ZnS+UAd0vRxAOx0BSKIuc=";
-    };
-  };
-  pencilExtension = pencilExtensionBase.overrideAttrs (oldAttrs: {
-    postFixup = (oldAttrs.postFixup or "") + ''
-      mcpBinary="$out/share/vscode/extensions/highagency.pencildev/out/mcp-server-linux-x64"
-      if [ -f "$mcpBinary" ]; then
-        mv "$mcpBinary" "$mcpBinary.real"
-        cat > "$mcpBinary" <<EOF
-      #!${pkgs.bash}/bin/bash
-      exec ${pkgs.stdenv.cc.bintools.dynamicLinker} --library-path ${
-        pkgs.lib.makeLibraryPath [ pkgs.glibc ]
-      } "$mcpBinary.real" "\$@"
-      EOF
-        chmod +x "$mcpBinary"
-      fi
-    '';
-  });
-  pencilMcpPath = "${pencilExtension}/share/vscode/extensions/highagency.pencildev/out/mcp-server-linux-x64";
-
-  pencilDesignerAgent = lib.replaceStrings [ "@pencilMcpCommand@" ] [ pencilMcpPath ] (
+  pencilDesignerAgent = lib.replaceStrings [ "@pencilMcpCommand@" ] [ pkgs.pencil-vscode-extension.mcpPath ] (
     builtins.readFile ./agents/pencil-designer.md
   );
 

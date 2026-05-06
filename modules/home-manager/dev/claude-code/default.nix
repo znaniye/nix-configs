@@ -119,6 +119,9 @@ in
           command = "${giteaMcpWrapper}/bin/gitea-mcp-wrapper";
         };
       };
+      agents = {
+        web-debugger = ./agents/web-debugger.md;
+      };
       settings = {
         model = cfg.model;
         skipDangerousModePermissionPrompt = true;

@@ -8,7 +8,7 @@
 {
   imports = [
     ./cc.nix
-    ./claude-code.nix
+    ./claude-code
     ./dotnet.nix
     ./elixir.nix
     ./glsl.nix

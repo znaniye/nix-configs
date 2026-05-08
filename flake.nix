@@ -59,9 +59,14 @@
     };
 
     emit = {
-      url = "git+https://gitea.znaniye.xyz/znaniye/emit.git?ref=experiment/domain-application";
+      url = "git+http://192.168.68.111:3000/znaniye/emit.git?ref=experiment/domain-application";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.blueprint.inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    opencode-nix = {
+      url = "github:albertov/opencode-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

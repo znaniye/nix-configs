@@ -5,6 +5,7 @@
     ./comin.nix
     ./emit.nix
     ./gitea.nix
+    ./opencode.nix
     ./openssh.nix
     ./pi-hole.nix
   ];

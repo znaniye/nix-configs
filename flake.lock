@@ -196,18 +196,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1777037875,
-        "narHash": "sha256-lroXlWhFsBYJhRKUaw6sJHLmFSTcBKRs/Hp8pOl3Hnc=",
+        "lastModified": 1775158134,
+        "narHash": "sha256-YiS8Z3rToPhM6UPJYXrUquMn8OOtF6qsP87AN8Xo0WM=",
         "ref": "experiment/domain-application",
-        "rev": "d8a7e55ccbd4a31c5d684dcd4da30b6e139b5487",
-        "revCount": 395,
+        "rev": "8dd30d7cf9998ccaa47ad947e03b6b2065ac17c6",
+        "revCount": 344,
         "type": "git",
-        "url": "https://gitea.znaniye.xyz/znaniye/emit.git"
+        "url": "http://192.168.68.111:3000/znaniye/emit.git"
       },
       "original": {
         "ref": "experiment/domain-application",
         "type": "git",
-        "url": "https://gitea.znaniye.xyz/znaniye/emit.git"
+        "url": "http://192.168.68.111:3000/znaniye/emit.git"
       }
     },
     "flake-compat": {
@@ -330,7 +330,7 @@
     },
     "flake-utils": {
       "inputs": {
-        "systems": "systems_5"
+        "systems": "systems_6"
       },
       "locked": {
         "lastModified": 1705309234,
@@ -632,6 +632,50 @@
         "type": "github"
       }
     },
+    "opencode": {
+      "inputs": {
+        "nixpkgs": [
+          "opencode-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1771626013,
+        "narHash": "sha256-b74ascBNcHlXjhxRX4FgqQXJTpcYhika5ay+fx1eX90=",
+        "owner": "anomalyco",
+        "repo": "opencode",
+        "rev": "f07e8772042d9980bf6b6912d20b59709cbccd51",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anomalyco",
+        "repo": "opencode",
+        "type": "github"
+      }
+    },
+    "opencode-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "opencode": "opencode",
+        "systems": "systems_4",
+        "treefmt-nix": "treefmt-nix_4"
+      },
+      "locked": {
+        "lastModified": 1771719369,
+        "narHash": "sha256-IVcbOErLwI4vQ3berLgQNhAOVax+KKRhuOj50QY2k3E=",
+        "owner": "albertov",
+        "repo": "opencode-nix",
+        "rev": "57517849bb2cfdff854bfbb2b61cb9694ef906f8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "albertov",
+        "repo": "opencode-nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "comin": "comin",
@@ -644,6 +688,7 @@
         "nixos-raspberrypi": "nixos-raspberrypi",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
+        "opencode-nix": "opencode-nix",
         "sops": "sops",
         "zig": "zig",
         "zls": "zls"
@@ -715,7 +760,6 @@
       }
     },
     "systems_4": {
-      "flake": false,
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
@@ -731,6 +775,22 @@
       }
     },
     "systems_5": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_6": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
@@ -808,6 +868,27 @@
         "type": "github"
       }
     },
+    "treefmt-nix_4": {
+      "inputs": {
+        "nixpkgs": [
+          "opencode-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770228511,
+        "narHash": "sha256-wQ6NJSuFqAEmIg2VMnLdCnUc0b7vslUohqqGGD+Fyxk=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "337a4fe074be1042a35086f15481d763b8ddc0e7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
     "xwayland-satellite-stable": {
       "flake": false,
       "locked": {
@@ -847,7 +928,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "systems": "systems_4"
+        "systems": "systems_5"
       },
       "locked": {
         "lastModified": 1777251652,

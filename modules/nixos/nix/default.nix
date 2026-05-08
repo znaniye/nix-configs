@@ -25,10 +25,15 @@ in
 
     programs.git = {
       enable = true;
-      config = {
-        credential."https://gitea.znaniye.xyz".helper =
-          "!f() { if [ \"$1\" = get ] && [ -r ${config.sops.secrets.gitea-pat-token-user.path} ]; then echo username=${config.nixos.home.username}; printf 'password='; cat ${config.sops.secrets.gitea-pat-token-user.path}; fi; }; f";
-      };
+      config =
+        let
+          helper = ''
+            !f() { if [ "$1" = get ] && [ -r ${config.sops.secrets.gitea-pat-token-user.path} ]; then echo username=${config.nixos.home.username}; printf 'password='; cat ${config.sops.secrets.gitea-pat-token-user.path}; fi; }; f'';
+        in
+        {
+          credential."https://gitea.znaniye.xyz".helper = helper;
+          credential."http://192.168.68.111:3000".helper = helper;
+        };
     };
 
     sops = {

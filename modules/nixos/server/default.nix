@@ -3,7 +3,7 @@
   imports = [
     ./cloudflared.nix
     ./comin.nix
-    ./emit.nix
+    #./emit.nix
     ./gitea.nix
     ./opencode.nix
     ./openssh.nix

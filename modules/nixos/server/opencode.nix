@@ -69,7 +69,6 @@ in
           address = "0.0.0.0";
           port = cfg.port;
         };
-        logLevel = "INFO";
         path = with pkgs; [
           git
           coreutils

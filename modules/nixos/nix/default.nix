@@ -27,8 +27,10 @@ in
       enable = true;
       config =
         let
+          rootToken = config.sops.secrets.gitea-pat-token.path;
+          userToken = config.sops.secrets.gitea-pat-token-user.path;
           helper = ''
-            !f() { if [ "$1" = get ] && [ -r ${config.sops.secrets.gitea-pat-token-user.path} ]; then echo username=${config.nixos.home.username}; printf 'password='; cat ${config.sops.secrets.gitea-pat-token-user.path}; fi; }; f'';
+            !f() { if [ "$1" = get ]; then if [ -r ${rootToken} ]; then t=${rootToken}; elif [ -r ${userToken} ]; then t=${userToken}; else exit 0; fi; echo username=${config.nixos.home.username}; printf 'password='; cat $t; fi; }; f'';
         in
         {
           credential."https://gitea.znaniye.xyz".helper = helper;

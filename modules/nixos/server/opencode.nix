@@ -75,15 +75,17 @@ in
           coreutils
         ];
         environmentFile = config.sops.templates.${envFile}.path;
-        model = "deepseek/deepseek-v4-flash";
-        config.provider.deepseek = {
-          npm = "@ai-sdk/openai-compatible";
-          name = "DeepSeek";
-          options = {
-            baseURL = "https://api.deepseek.com/v1";
-            apiKey = "{env:DEEPSEEK_API_KEY}";
+        config = {
+          model = "deepseek/deepseek-v4-flash";
+          provider.deepseek = {
+            npm = "@ai-sdk/openai-compatible";
+            name = "DeepSeek";
+            options = {
+              baseURL = "https://api.deepseek.com/v1";
+              apiKey = "{env:DEEPSEEK_API_KEY}";
+            };
+            models.deepseek-v4-flash.name = "DeepSeek V4 Flash";
           };
-          models.deepseek-v4-flash.name = "DeepSeek V4 Flash";
         };
       };
     };

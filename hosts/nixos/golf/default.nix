@@ -17,7 +17,6 @@
       syncthing = {
         enable = true;
         deviceId = "U5RIZFP-YTCUPJ3-ZH2LKC6-EVLRLZK-7THXOGE-P6FYCQU-2OS7HXR-2A44LQC";
-        mode = "sendonly";
       };
     };
 

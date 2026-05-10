@@ -38,13 +38,19 @@
     syncthing = {
       enable = true;
       deviceId = "ZWMG6VR-NMEPKRG-YGO7D2C-KILL6TI-SEZ6MOY-SOHPHU6-OTSGJOW-XVX4VQI";
-      mode = "receiveonly";
+      folder = "/var/lib/opencode/workdir";
     };
   };
   nixos.home.extraModules = {
     home-manager.dev.enable = false;
     home-manager.cli.codex.enable = false;
   };
+
+  users.users.znaniye.extraGroups = [ "opencode" ];
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/opencode/workdir 2770 znaniye opencode - -"
+  ];
 
   networking.dhcpcd.denyInterfaces = [ "end0" ];
   networking.interfaces.end0 = {

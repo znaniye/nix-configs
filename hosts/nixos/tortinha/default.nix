@@ -48,9 +48,12 @@
 
   users.users.znaniye.extraGroups = [ "opencode" ];
 
-  systemd.tmpfiles.rules = [
-    "d /var/lib/opencode/workdir 2770 znaniye opencode - -"
-  ];
+  system.activationScripts.opencodeWorkdirShare = {
+    text = ''
+      install -d -o znaniye -g opencode -m 2770 /var/lib/opencode/workdir
+    '';
+    deps = [ "users" "groups" ];
+  };
 
   networking.dhcpcd.denyInterfaces = [ "end0" ];
   networking.interfaces.end0 = {

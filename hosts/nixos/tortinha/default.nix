@@ -35,6 +35,11 @@
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;
+    syncthing = {
+      enable = true;
+      deviceId = "ZWMG6VR-NMEPKRG-YGO7D2C-KILL6TI-SEZ6MOY-SOHPHU6-OTSGJOW-XVX4VQI";
+      mode = "receiveonly";
+    };
   };
   nixos.home.extraModules = {
     home-manager.dev.enable = false;

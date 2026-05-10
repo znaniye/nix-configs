@@ -18,6 +18,7 @@
     ./sops.nix
     ./sound.nix
     ./steam.nix
+    ./syncthing.nix
     ./tailscale
     ./tlp.nix
     ./virtualization.nix

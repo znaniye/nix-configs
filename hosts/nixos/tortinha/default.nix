@@ -63,6 +63,7 @@
     script = ''
       chown znaniye:opencode /var/lib/opencode/workdir
       chmod 2770 /var/lib/opencode/workdir
+      install -d -o znaniye -g opencode -m 2770 /var/lib/opencode/workdir/.stfolder
     '';
   };
 

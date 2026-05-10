@@ -72,6 +72,11 @@ in
         path = with pkgs; [
           git
           coreutils
+          bashInteractive
+          findutils
+          gnugrep
+          gnused
+          which
         ];
         environmentFile = config.sops.templates.${envFile}.path;
         config = {
@@ -103,6 +108,8 @@ in
         '')
       ];
     };
+
+    users.users.opencode-main.shell = lib.mkForce pkgs.bashInteractive;
 
     networking.firewall.interfaces = lib.genAttrs cfg.allowedInterfaces (_: {
       allowedTCPPorts = [ cfg.port ];

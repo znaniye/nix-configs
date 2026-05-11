@@ -122,6 +122,7 @@ in
       ];
       environment = {
         HOME = stateDir;
+        LD_LIBRARY_PATH = lib.makeLibraryPath [ pkgs.stdenv.cc.cc ];
       };
       serviceConfig = {
         Type = "simple";

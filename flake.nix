@@ -64,8 +64,8 @@
       inputs.blueprint.inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    opencode-nix = {
-      url = "github:albertov/opencode-nix";
+    opencode = {
+      url = "github:anomalyco/opencode";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

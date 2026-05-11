@@ -48,25 +48,6 @@
 
   users.users.znaniye.extraGroups = [ "opencode" ];
 
-  systemd.services.opencode-workdir-share = {
-    description = "Reset /var/lib/opencode/workdir ownership for the syncthing share";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "systemd-tmpfiles-setup.service" ];
-    before = [
-      "syncthing.service"
-      "opencode-main.service"
-    ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      chown znaniye:opencode /var/lib/opencode/workdir
-      chmod 2770 /var/lib/opencode/workdir
-      install -d -o znaniye -g opencode -m 2770 /var/lib/opencode/workdir/.stfolder
-    '';
-  };
-
   networking.dhcpcd.denyInterfaces = [ "end0" ];
   networking.interfaces.end0 = {
     useDHCP = false;

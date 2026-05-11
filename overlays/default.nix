@@ -11,6 +11,8 @@ in
   zls = self.inputs.zls.packages.${system}.default;
   zig = self.inputs.zig.packages.${system}."0.15.1";
 
+  opencode = self.inputs.opencode.packages.${system}.opencode;
+
   pencil-vscode-extension =
     let
       pencilMcpBinaryName =

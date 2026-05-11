@@ -100,8 +100,6 @@ in
       };
     };
 
-    environment.etc."opencode/config.json".source = pkgs.writers.writeJSON "opencode-config.json" cfg.settings;
-
     systemd.tmpfiles.rules = [
       "d /var/lib/opencode 0755 root root -"
       "d ${stateDir} 0750 ${user} ${group} -"
@@ -123,7 +121,6 @@ in
         which
       ];
       environment = {
-        XDG_CONFIG_HOME = "/etc";
         HOME = stateDir;
       };
       serviceConfig = {
@@ -135,8 +132,11 @@ in
         LoadCredential = [
           "opencode-auth.json:${config.sops.secrets.${authSecret}.path}"
         ];
-        ExecStartPre = pkgs.writeShellScript "opencode-main-install-auth" ''
+        ExecStartPre = pkgs.writeShellScript "opencode-main-prestart" ''
           install -d -m 0700 "$HOME/.local/share/opencode"
+          install -d -m 0700 "$HOME/.config/opencode"
+          install -m 0600 ${pkgs.writers.writeJSON "opencode.json" cfg.settings} \
+            "$HOME/.config/opencode/opencode.json"
           if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
             install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" \
               "$HOME/.local/share/opencode/auth.json"

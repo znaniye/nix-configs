@@ -19,7 +19,7 @@
     ./nix.nix
     ./ocaml.nix
     ./opencode
-    ./pi-agent.nix
+    ./pi-agent
     ./python.nix
     ./rust.nix
     ./zig.nix

@@ -8,18 +8,9 @@ let
   cfg = config.home-manager.dev.claude-code;
   notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
 
-  pencilDesignerAgent = lib.replaceStrings [ "@pencilMcpCommand@" ] [ pkgs.pencil-vscode-extension.mcpPath ] (
+  pencilDesignerAgent = lib.replaceStrings [ "@pencilMcpCommand@" ] [ config.shared.mcp.pencil.mcpPath ] (
     builtins.readFile ./agents/pencil-designer.md
   );
-
-  giteaMcpWrapper = pkgs.writeShellScriptBin "gitea-mcp-wrapper" ''
-    #!/bin/bash
-    TOKEN=$(cat ${config.sops.secrets.gitea-pat-token.path})
-    exec ${pkgs.gitea-mcp-server}/bin/gitea-mcp \
-      -host "${cfg.giteaMcp.host}" \
-      -token "$TOKEN" \
-      "$@"
-  '';
 
   claudeCodeWithEnv = pkgs.symlinkJoin {
     name = "claude-code";
@@ -62,12 +53,6 @@ in
       enable = lib.mkEnableOption "Gitea MCP server integration" // {
         default = true;
       };
-
-      host = lib.mkOption {
-        type = lib.types.str;
-        default = "http://192.168.68.111:3000";
-        description = "Gitea host URL used by the MCP server.";
-      };
     };
 
     rtk = {
@@ -107,12 +92,7 @@ in
         ];
     };
 
-    sops.secrets = {
-      anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
-    }
-    // lib.optionalAttrs cfg.giteaMcp.enable {
-      gitea-pat-token = { };
-    };
+    sops.secrets.anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
 
     programs.claude-code = {
       enable = true;
@@ -120,7 +100,7 @@ in
       mcpServers = lib.optionalAttrs cfg.giteaMcp.enable {
         gitea-mcp = {
           type = "stdio";
-          command = "${giteaMcpWrapper}/bin/gitea-mcp-wrapper";
+          command = "${config.shared.mcp.gitea.wrapper}/bin/gitea-mcp-wrapper";
         };
       };
       agents = {

@@ -12,7 +12,7 @@ let
   clangTools = pkgs.clang-tools or llvmPkgs.clang-tools;
   llmAgentsPkgs = flake.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
-  pencilMcpPath = "${config.home.homeDirectory}/.pencil/mcp/vscodium/out/mcp-server-linux-x64";
+
   opencodePlugins = import ./plugins {
     inherit lib notificationSound pkgs;
   };
@@ -74,16 +74,11 @@ let
     zls = mkLspCommand cfg.zig.enable [ "${pkgs.zls}/bin/zls" ];
   };
 
-  giteaMcpWrapper = pkgs.writeShellScriptBin "gitea-mcp-wrapper" ''
-    #!/bin/bash
-    TOKEN=$(cat ${config.sops.secrets.gitea-pat-token.path})
-    exec ${pkgs.gitea-mcp-server}/bin/gitea-mcp \
-      -host "http://192.168.68.111:3000" \
-      -token "$TOKEN" \
-      "$@"
-  '';
 in
 {
+  options.home-manager.dev.opencode.giteaMcp.enable = lib.mkEnableOption "Gitea MCP server integration" // {
+    default = false;
+  };
   config = lib.mkIf cfg.enable {
     home.packages = [ llmAgentsPkgs.openspec ];
 
@@ -91,10 +86,7 @@ in
       name: pluginPath: lib.nameValuePair "opencode/plugins/${name}.js" { source = pluginPath; }
     ) opencodePlugins.files;
 
-    sops.secrets = {
-      exa-api-key = { };
-      gitea-pat-token = { };
-    };
+    sops.secrets.exa-api-key = { };
 
     programs.opencode = {
       enable = true;
@@ -126,17 +118,13 @@ in
               type = "local";
             };
             gitea-mcp = {
-              enabled = false;
-              command = [ "${giteaMcpWrapper}/bin/gitea-mcp-wrapper" ];
+              enabled = cfg.opencode.giteaMcp.enable;
+              command = [ "${config.shared.mcp.gitea.wrapper}/bin/gitea-mcp-wrapper" ];
               type = "local";
             };
             pencil = {
               enabled = true;
-              command = [
-                pencilMcpPath
-                "--app"
-                "vscodium"
-              ];
+              command = config.shared.mcp.pencil.mcpCommand;
               type = "local";
             };
           };

@@ -32,11 +32,8 @@ let
 
     mcp_servers = {
       pencil = {
-        command = pkgs.pencil-vscode-extension.mcpPath;
-        args = [
-          "--app"
-          "vscodium"
-        ];
+        command = config.shared.mcp.pencil.mcpPath;
+        args = config.shared.mcp.pencil.mcpArgs;
       };
     };
   };

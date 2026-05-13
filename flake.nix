@@ -67,6 +67,11 @@
     opencode = {
       url = "github:anomalyco/opencode";
     };
+
+    coding-agents = {
+      url = "github:kissgyorgy/coding-agents";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

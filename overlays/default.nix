@@ -13,6 +13,8 @@ in
 
   opencode = self.inputs.opencode.packages.${system}.opencode;
 
+  pi-coding-agent = self.inputs.coding-agents.packages.${system}.pi-coding-agent;
+
   pencil-vscode-extension =
     let
       pencilMcpBinaryName =

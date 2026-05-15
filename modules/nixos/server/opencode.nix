@@ -157,7 +157,9 @@ in
               "$HOME/.local/share/opencode/auth.json"
           fi
           if [ -f "$CREDENTIALS_DIRECTORY/ssh-key" ]; then
-            install -m 0600 "$CREDENTIALS_DIRECTORY/ssh-key" "$HOME/.ssh/id_ed25519"
+            install -m 0600 /dev/null "$HOME/.ssh/id_ed25519"
+            cat "$CREDENTIALS_DIRECTORY/ssh-key" > "$HOME/.ssh/id_ed25519"
+            tail -c1 "$HOME/.ssh/id_ed25519" | read -r _ || echo >> "$HOME/.ssh/id_ed25519"
           fi
           install -m 0644 ${giteaKnownHosts} "$HOME/.ssh/known_hosts"
         '';

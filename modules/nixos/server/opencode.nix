@@ -12,6 +12,9 @@ let
   user = "opencode-main";
   group = "opencode";
   stateDir = "/var/lib/opencode/state";
+  giteaKnownHosts = pkgs.writeText "opencode-known_hosts" ''
+    [192.168.68.111]:2222 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDQiiqH2vsocbL6Hp9JHRQckGWNqMl5aW5PbM2oGvp9+R08eW2sb6GkBATGWsBl1Il2lp1mX3Uo4wDCgVpZn6dgKmjrRPFrVCYxmDeI/Kcjt/ugbsC6MsR8N26xlJ1hC1FgkN2taihFbCWOd4wRbhl0omanf2nD1N9if631DmWQvthJmJM0uCWxzuXVEjUKletnzLeOkkwcAeUHAFSJEtVKgZobRA93GuTuFZu/5aHLAEtbR2bx/vVtBTvR6YxSjHNi+TL+Eju5WyVTFA8nS4frHzCJLRGXpDbeoU3GXYu/xMIftJehqvY/rzMzzoyF05j6fCV4Ns9OkZQzDUjqvHtSouYUVxfD8POsEbnGR5ouE44rS0Uig5++4+3qLJiwcirB1zRs6jVma37NGkTf8W2IbNT3dP9CQtCN9DDQkX1s5fJ+fWFFkv2LjvBdvmqqhwSQUbF7XG2pSApt/mhYoQ8TmInvcvkH0Kt7wbJCY56urWdT7e5d9Z28cDQJmKcw7Kjq/B1KnpT8fIqDwIaR+pRxkcJ2OCu83gR1jfEkh+V+xmAinayUQYLgo1UR0W8A5LY3VQz0KbqBbKryaHyJa+cTVYYU4/KgB09fRk2O/wgLDA/iRsCzVRsZOqTgtUXjwPNMm+O7ib43GBGGwTVAUPfoVWTZswKK4F8+MsGUxmOcIQ==
+  '';
 in
 {
   options.nixos.server.opencode = {
@@ -68,6 +71,10 @@ in
         owner = "root";
         mode = "0400";
       };
+      opencode-main-ssh-key = {
+        owner = user;
+        mode = "0400";
+      };
     };
 
     sops.templates.${envFile} = {
@@ -76,6 +83,11 @@ in
       content = ''
         DEEPSEEK_API_KEY=${config.sops.placeholder.${deepseekSecret}}
       '';
+    };
+
+    programs.git.config.user = lib.mkDefault {
+      name = "opencode-bot";
+      email = "opencode@${config.networking.hostName}.local";
     };
 
     users.groups.${group} = { };
@@ -132,16 +144,22 @@ in
         EnvironmentFile = config.sops.templates.${envFile}.path;
         LoadCredential = [
           "opencode-auth.json:${config.sops.secrets.${authSecret}.path}"
+          "ssh-key:${config.sops.secrets.opencode-main-ssh-key.path}"
         ];
         ExecStartPre = pkgs.writeShellScript "opencode-main-prestart" ''
           install -d -m 0700 "$HOME/.local/share/opencode"
           install -d -m 0700 "$HOME/.config/opencode"
+          install -d -m 0700 "$HOME/.ssh"
           install -m 0600 ${pkgs.writers.writeJSON "opencode.json" cfg.settings} \
             "$HOME/.config/opencode/opencode.json"
           if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
             install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" \
               "$HOME/.local/share/opencode/auth.json"
           fi
+          if [ -f "$CREDENTIALS_DIRECTORY/ssh-key" ]; then
+            install -m 0600 "$CREDENTIALS_DIRECTORY/ssh-key" "$HOME/.ssh/id_ed25519"
+          fi
+          install -m 0644 ${giteaKnownHosts} "$HOME/.ssh/known_hosts"
         '';
         ExecStart = "${pkgs.opencode}/bin/opencode serve --print-logs --port ${toString cfg.port} --hostname ${cfg.hostname}";
         Restart = "on-failure";

@@ -20,6 +20,18 @@ let
       -token "$TOKEN" \
       "$@"
   '';
+  sharedAgentsDir = pkgs.runCommand "opencode-shared-agents" { } ''
+    mkdir -p $out
+    ${lib.concatMapStringsSep "\n" (name:
+      let
+        agent = config.shared.codingAgents.agents.${name};
+        rendered = pkgs.writeText "${name}.md"
+          (config.shared.codingAgents.renderOpencodeAgent name agent);
+      in
+      "cp ${rendered} $out/${name}.md"
+    ) (lib.attrNames config.shared.codingAgents.agents)}
+  '';
+
   giteaKnownHosts = pkgs.writeText "opencode-known_hosts" ''
     [192.168.68.111]:2222 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDQiiqH2vsocbL6Hp9JHRQckGWNqMl5aW5PbM2oGvp9+R08eW2sb6GkBATGWsBl1Il2lp1mX3Uo4wDCgVpZn6dgKmjrRPFrVCYxmDeI/Kcjt/ugbsC6MsR8N26xlJ1hC1FgkN2taihFbCWOd4wRbhl0omanf2nD1N9if631DmWQvthJmJM0uCWxzuXVEjUKletnzLeOkkwcAeUHAFSJEtVKgZobRA93GuTuFZu/5aHLAEtbR2bx/vVtBTvR6YxSjHNi+TL+Eju5WyVTFA8nS4frHzCJLRGXpDbeoU3GXYu/xMIftJehqvY/rzMzzoyF05j6fCV4Ns9OkZQzDUjqvHtSouYUVxfD8POsEbnGR5ouE44rS0Uig5++4+3qLJiwcirB1zRs6jVma37NGkTf8W2IbNT3dP9CQtCN9DDQkX1s5fJ+fWFFkv2LjvBdvmqqhwSQUbF7XG2pSApt/mhYoQ8TmInvcvkH0Kt7wbJCY56urWdT7e5d9Z28cDQJmKcw7Kjq/B1KnpT8fIqDwIaR+pRxkcJ2OCu83gR1jfEkh+V+xmAinayUQYLgo1UR0W8A5LY3VQz0KbqBbKryaHyJa+cTVYYU4/KgB09fRk2O/wgLDA/iRsCzVRsZOqTgtUXjwPNMm+O7ib43GBGGwTVAUPfoVWTZswKK4F8+MsGUxmOcIQ==
   '';
@@ -167,9 +179,15 @@ in
         ExecStartPre = pkgs.writeShellScript "opencode-main-prestart" ''
           install -d -m 0700 "$HOME/.local/share/opencode"
           install -d -m 0700 "$HOME/.config/opencode"
+          install -d -m 0700 "$HOME/.config/opencode/agents"
           install -d -m 0700 "$HOME/.ssh"
           install -m 0600 ${pkgs.writers.writeJSON "opencode.json" cfg.settings} \
             "$HOME/.config/opencode/opencode.json"
+          rm -f "$HOME/.config/opencode/agents/"*.md
+          for src in ${sharedAgentsDir}/*.md; do
+            [ -e "$src" ] || continue
+            install -m 0600 "$src" "$HOME/.config/opencode/agents/$(basename "$src")"
+          done
           if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
             install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" \
               "$HOME/.local/share/opencode/auth.json"

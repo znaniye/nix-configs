@@ -8,10 +8,18 @@ let
   cfg = config.nixos.server.opencode;
   authSecret = "opencode-auth-json";
   deepseekSecret = "deepseek-api-key";
+  giteaTokenSecret = "gitea-pat-token-opencode";
   envFile = "opencode-env";
   user = "opencode-main";
   group = "opencode";
   stateDir = "/var/lib/opencode/state";
+  giteaMcpWrapper = pkgs.writeShellScriptBin "gitea-mcp-opencode" ''
+    TOKEN=$(cat ${config.sops.secrets.${giteaTokenSecret}.path})
+    exec ${pkgs.gitea-mcp-server}/bin/gitea-mcp \
+      -host "${config.shared.mcp.gitea.host}" \
+      -token "$TOKEN" \
+      "$@"
+  '';
   giteaKnownHosts = pkgs.writeText "opencode-known_hosts" ''
     [192.168.68.111]:2222 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDQiiqH2vsocbL6Hp9JHRQckGWNqMl5aW5PbM2oGvp9+R08eW2sb6GkBATGWsBl1Il2lp1mX3Uo4wDCgVpZn6dgKmjrRPFrVCYxmDeI/Kcjt/ugbsC6MsR8N26xlJ1hC1FgkN2taihFbCWOd4wRbhl0omanf2nD1N9if631DmWQvthJmJM0uCWxzuXVEjUKletnzLeOkkwcAeUHAFSJEtVKgZobRA93GuTuFZu/5aHLAEtbR2bx/vVtBTvR6YxSjHNi+TL+Eju5WyVTFA8nS4frHzCJLRGXpDbeoU3GXYu/xMIftJehqvY/rzMzzoyF05j6fCV4Ns9OkZQzDUjqvHtSouYUVxfD8POsEbnGR5ouE44rS0Uig5++4+3qLJiwcirB1zRs6jVma37NGkTf8W2IbNT3dP9CQtCN9DDQkX1s5fJ+fWFFkv2LjvBdvmqqhwSQUbF7XG2pSApt/mhYoQ8TmInvcvkH0Kt7wbJCY56urWdT7e5d9Z28cDQJmKcw7Kjq/B1KnpT8fIqDwIaR+pRxkcJ2OCu83gR1jfEkh+V+xmAinayUQYLgo1UR0W8A5LY3VQz0KbqBbKryaHyJa+cTVYYU4/KgB09fRk2O/wgLDA/iRsCzVRsZOqTgtUXjwPNMm+O7ib43GBGGwTVAUPfoVWTZswKK4F8+MsGUxmOcIQ==
   '';
@@ -75,6 +83,11 @@ in
         owner = user;
         mode = "0400";
       };
+      ${giteaTokenSecret} = {
+        key = "gitea-pat-token";
+        owner = user;
+        mode = "0400";
+      };
     };
 
     sops.templates.${envFile} = {
@@ -109,6 +122,11 @@ in
           apiKey = "{env:DEEPSEEK_API_KEY}";
         };
         models.deepseek-v4-flash.name = "DeepSeek V4 Flash";
+      };
+      mcp.gitea-mcp = {
+        enabled = true;
+        type = "local";
+        command = [ "${giteaMcpWrapper}/bin/gitea-mcp-opencode" ];
       };
     };
 

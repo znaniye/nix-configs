@@ -82,9 +82,13 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ llmAgentsPkgs.openspec ];
 
-    xdg.configFile = lib.mapAttrs' (
+    xdg.configFile = (lib.mapAttrs' (
       name: pluginPath: lib.nameValuePair "opencode/plugins/${name}.js" { source = pluginPath; }
-    ) opencodePlugins.files;
+    ) opencodePlugins.files) // (lib.mapAttrs' (
+      name: agent: lib.nameValuePair "opencode/agents/${name}.md" {
+        text = config.shared.codingAgents.renderOpencodeAgent name agent;
+      }
+    ) config.shared.codingAgents.agents);
 
     sops.secrets.exa-api-key = { };
 

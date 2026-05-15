@@ -8,9 +8,9 @@ let
   cfg = config.home-manager.dev.claude-code;
   notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
 
-  pencilDesignerAgent = lib.replaceStrings [ "@pencilMcpCommand@" ] [ config.shared.mcp.pencil.mcpPath ] (
-    builtins.readFile ./agents/pencil-designer.md
-  );
+  pencilMcpWrapper = pkgs.writeShellScriptBin "pencil-mcp-wrapper" ''
+    exec ${lib.escapeShellArgs config.shared.mcp.pencil.mcpCommand} "$@"
+  '';
 
   claudeCodeWithEnv = pkgs.symlinkJoin {
     name = "claude-code";
@@ -97,16 +97,20 @@ in
     programs.claude-code = {
       enable = true;
       package = claudeCodeWithEnv;
-      mcpServers = lib.optionalAttrs cfg.giteaMcp.enable {
+      mcpServers = {
+        pencil = {
+          type = "stdio";
+          command = "${pencilMcpWrapper}/bin/pencil-mcp-wrapper";
+        };
+      } // lib.optionalAttrs cfg.giteaMcp.enable {
         gitea-mcp = {
           type = "stdio";
           command = "${config.shared.mcp.gitea.wrapper}/bin/gitea-mcp-wrapper";
         };
       };
-      agents = {
-        web-debugger = ./agents/web-debugger.md;
-        pencil-designer = pencilDesignerAgent;
-      };
+      agents = lib.mapAttrs
+        (name: agent: config.shared.codingAgents.renderClaudeAgent name agent)
+        config.shared.codingAgents.agents;
       settings = {
         model = cfg.model;
         skipDangerousModePermissionPrompt = true;

@@ -64,10 +64,6 @@
       inputs.blueprint.inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    opencode = {
-      url = "github:anomalyco/opencode";
-    };
-
     coding-agents = {
       url = "github:kissgyorgy/coding-agents";
       inputs.nixpkgs.follows = "nixpkgs";

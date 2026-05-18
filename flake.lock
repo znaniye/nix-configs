@@ -217,18 +217,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1775158134,
-        "narHash": "sha256-YiS8Z3rToPhM6UPJYXrUquMn8OOtF6qsP87AN8Xo0WM=",
+        "lastModified": 1777037875,
+        "narHash": "sha256-lroXlWhFsBYJhRKUaw6sJHLmFSTcBKRs/Hp8pOl3Hnc=",
         "ref": "experiment/domain-application",
-        "rev": "8dd30d7cf9998ccaa47ad947e03b6b2065ac17c6",
-        "revCount": 344,
+        "rev": "d8a7e55ccbd4a31c5d684dcd4da30b6e139b5487",
+        "revCount": 395,
         "type": "git",
-        "url": "http://192.168.68.111:3000/znaniye/emit.git"
+        "url": "https://gitea.znaniye.xyz/znaniye/emit.git"
       },
       "original": {
         "ref": "experiment/domain-application",
         "type": "git",
-        "url": "http://192.168.68.111:3000/znaniye/emit.git"
+        "url": "https://gitea.znaniye.xyz/znaniye/emit.git"
       }
     },
     "flake-compat": {

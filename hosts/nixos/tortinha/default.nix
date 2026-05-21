@@ -48,6 +48,11 @@
 
   users.users.znaniye.extraGroups = [ "opencode" ];
 
+  # Authorize root@golf for remote aarch64 builds from x86 hosts.
+  users.users.znaniye.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE+nHM0J+aP4BsM+hkIv71WcTQ9y/JMJIDbA1JMA0/fH root@golf"
+  ];
+
   networking.dhcpcd.denyInterfaces = [ "end0" ];
   networking.interfaces.end0 = {
     useDHCP = false;

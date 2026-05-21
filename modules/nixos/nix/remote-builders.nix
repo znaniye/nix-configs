@@ -40,8 +40,20 @@ in
             "kvm"
           ];
         }
-
-      ];
+      ]
+      ++ lib.optional (config.networking.hostName != "tortinha") {
+        hostName = "192.168.68.111";
+        protocol = "ssh-ng";
+        sshUser = "znaniye";
+        sshKey = "/root/.ssh/id_ed25519";
+        systems = [ "aarch64-linux" ];
+        maxJobs = 4;
+        supportedFeatures = [
+          "nixos-test"
+          "benchmark"
+          "kvm"
+        ];
+      };
 
       distributedBuilds = true;
 

@@ -320,9 +320,16 @@ in
         # DynamicUser=true forces noexec on StateDirectory; whitelist it
         # so jobs can exec binaries they install (playwright, QuestPdfSkia).
         serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/local" ];
-        # DynamicUser=true implies PrivateTmp=yes (~800 MB tmpfs); too small
-        # for ephemeral Postgres under `mktemp -t`. Use host /tmp on ext4.
-        serviceConfig.PrivateTmp = lib.mkForce false;
+        # DynamicUser=true also forces PrivateTmp=yes with a tmpfs /tmp
+        # (~800 MB on this Pi) that can't be turned off. Point TMPDIR into
+        # the StateDirectory on ext4 so workflows using `mktemp -t` (e.g.
+        # ephemeral Postgres) don't blow the cap.
+        environment.TMPDIR = "/var/lib/gitea-runner/local/tmp";
+        serviceConfig.ExecStartPre = lib.mkAfter [
+          (pkgs.writeShellScript "gitea-runner-local-mktmpdir" ''
+            install -d -m 0700 "$TMPDIR"
+          '')
+        ];
       })
     ];
 
@@ -357,7 +364,12 @@ in
         wants = [ "gitea-runner-shared-token.service" ];
         # See gitea-runner-local for rationale.
         serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/shared" ];
-        serviceConfig.PrivateTmp = lib.mkForce false;
+        environment.TMPDIR = "/var/lib/gitea-runner/shared/tmp";
+        serviceConfig.ExecStartPre = lib.mkAfter [
+          (pkgs.writeShellScript "gitea-runner-shared-mktmpdir" ''
+            install -d -m 0700 "$TMPDIR"
+          '')
+        ];
       })
     ];
 

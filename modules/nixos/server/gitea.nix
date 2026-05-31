@@ -297,26 +297,34 @@ in
         };
       };
 
-    systemd.services.gitea-runner-local =
-      lib.mkIf (cfg.runner.enable && cfg.runner.opencodeAuthSecretName != null)
-        {
-          environment = {
-            XDG_CACHE_HOME = "/var/lib/gitea-runner/local/.cache";
-            XDG_CONFIG_HOME = "/var/lib/gitea-runner/local/.config";
-            XDG_DATA_HOME = "/var/lib/gitea-runner/local/.local/share";
-          };
-          serviceConfig.LoadCredential = [
-            "opencode-auth.json:${config.sops.secrets."${cfg.runner.opencodeAuthSecretName}".path}"
-          ];
-          serviceConfig.ExecStartPre = lib.mkAfter [
-            (pkgs.writeShellScript "gitea-runner-local-install-opencode" ''
-              install -d -m 0700 "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
-              if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
-                install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
-              fi
-            '')
-          ];
+    systemd.services.gitea-runner-local = lib.mkMerge [
+      (lib.mkIf (cfg.runner.enable && cfg.runner.opencodeAuthSecretName != null) {
+        environment = {
+          XDG_CACHE_HOME = "/var/lib/gitea-runner/local/.cache";
+          XDG_CONFIG_HOME = "/var/lib/gitea-runner/local/.config";
+          XDG_DATA_HOME = "/var/lib/gitea-runner/local/.local/share";
         };
+        serviceConfig.LoadCredential = [
+          "opencode-auth.json:${config.sops.secrets."${cfg.runner.opencodeAuthSecretName}".path}"
+        ];
+        serviceConfig.ExecStartPre = lib.mkAfter [
+          (pkgs.writeShellScript "gitea-runner-local-install-opencode" ''
+            install -d -m 0700 "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
+            if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
+              install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
+            fi
+          '')
+        ];
+      })
+      (lib.mkIf cfg.runner.enable {
+        # DynamicUser=true forces noexec on StateDirectory; whitelist it
+        # so jobs can exec binaries they install (playwright, QuestPdfSkia).
+        serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/local" ];
+        # DynamicUser=true implies PrivateTmp=yes (~800 MB tmpfs); too small
+        # for ephemeral Postgres under `mktemp -t`. Use host /tmp on ext4.
+        serviceConfig.PrivateTmp = lib.mkForce false;
+      })
+    ];
 
     systemd.services.gitea-runner-shared = lib.mkMerge [
       (lib.mkIf (cfg.runner.shared.enable && cfg.runner.opencodeAuthSecretName != null) {
@@ -347,6 +355,9 @@ in
           "gitea-runner-shared-token.service"
         ];
         wants = [ "gitea-runner-shared-token.service" ];
+        # See gitea-runner-local for rationale.
+        serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/shared" ];
+        serviceConfig.PrivateTmp = lib.mkForce false;
       })
     ];
 

@@ -32,6 +32,7 @@
         lua.enable = true;
         dotnet.enable = true;
         python.enable = true;
+        haskell.enable = true;
       };
     };
   };

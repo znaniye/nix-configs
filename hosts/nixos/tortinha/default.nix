@@ -31,7 +31,8 @@
       "emit"
     ];
   };
-  nixos.server.opencode.enable = true;
+  #nixos.server.opencode.enable = true;
+  nixos.server.garnix.enable = false;
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;

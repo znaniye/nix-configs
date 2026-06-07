@@ -4,6 +4,7 @@
     ./cloudflared.nix
     ./comin.nix
     #./emit.nix
+    ./garnix.nix
     ./gitea.nix
     ./opencode.nix
     ./openssh.nix

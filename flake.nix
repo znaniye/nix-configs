@@ -68,6 +68,11 @@
       url = "github:kissgyorgy/coding-agents";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    garnix-ci = {
+      url = "github:znaniye/garnix-ci/selfhost";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

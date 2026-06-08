@@ -9,6 +9,7 @@
   imports = [
     ./flatpak.nix
     ./fonts.nix
+    ./greetd.nix
     ./locale.nix
     ./logind.nix
     ./openssh.nix

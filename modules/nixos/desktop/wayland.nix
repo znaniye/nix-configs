@@ -11,8 +11,6 @@
   };
 
   config = lib.mkIf config.nixos.desktop.wayland.enable {
-    services.displayManager.gdm.enable = true;
-
     programs.niri = {
       enable = true;
       package = pkgs.niri-unstable;

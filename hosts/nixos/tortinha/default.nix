@@ -5,6 +5,12 @@
   nixos-raspberrypi,
   ...
 }:
+let
+  golfCfg = flake.nixosConfigurations.golf.config;
+  golfIp = lib.head (
+    lib.splitString "/" golfCfg.networking.networkmanager.ensureProfiles.profiles.wired-golf.ipv4.address1
+  );
+in
 {
 
   imports = [
@@ -35,11 +41,11 @@
   nixos.server.garnix = {
     enable = true;
     localActionRunner = false;
-    actionRunnerHost = "192.168.68.107"; # golf, LAN
+    actionRunnerHost = golfIp;
     remoteBuilders = [
       {
         name = "golf";
-        hostname = "192.168.68.107";
+        hostname = golfIp;
         user = "nixremote";
         # sshKeyPath falls back to remoteBuilders.sshKeyPath, which garnix-secrets
         # stages from secrets.remoteBuilderSshPath (the action-runner key).
@@ -83,7 +89,7 @@
   programs.ssh.knownHosts.golf = {
     hostNames = [
       "golf"
-      "192.168.68.107"
+      golfIp
     ];
     publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDWYfyw/IaVnBoGDHpb2CBa9M34Dty9PNl4wZhJ/VcwT";
   };

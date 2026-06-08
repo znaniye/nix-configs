@@ -1,7 +1,7 @@
 { lib, ... }:
 
 {
-  options.meta = {
+  options.shared.meta = {
     username = lib.mkOption {
       description = "Main username.";
       type = lib.types.str;

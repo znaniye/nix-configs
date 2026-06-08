@@ -40,7 +40,7 @@ in
       useGlobalPkgs = true;
       backupFileExtension = lib.mkDefault "backup";
       users.${cfg.username} = {
-        inherit (config) meta theme;
+        shared = { inherit (config.shared) meta theme; };
         imports = [ flake.outputs.homeModules.default ] ++ cfg.extraModules;
         home-manager = {
           inherit (config.networking) hostName;

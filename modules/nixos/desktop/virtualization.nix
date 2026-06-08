@@ -30,7 +30,7 @@ in
     virtualisation.libvirtd.enable = true;
     programs.virt-manager.enable = true;
 
-    users.users.${config.meta.username}.extraGroups =
+    users.users.${config.shared.meta.username}.extraGroups =
       lib.optional config.nixos.desktop.virtualization.enable "libvirtd"; # ++
 
     virtualisation = {

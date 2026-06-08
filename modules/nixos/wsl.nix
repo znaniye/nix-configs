@@ -23,7 +23,7 @@ in
   config = lib.mkIf cfg.enable {
     wsl = {
       enable = true;
-      defaultUser = config.meta.username;
+      defaultUser = config.shared.meta.username;
       inherit (cfg) startMenuLaunchers;
     };
 

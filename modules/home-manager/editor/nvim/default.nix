@@ -220,7 +220,7 @@
             dashboard.section.header.opts.hl = "Title"
             dashboard.section.buttons.val = {
                 dashboard.button( "n", "󰈔 New file" , ":enew<CR>"),
-                dashboard.button( "e", " Explore codes", ":cd /home/${config.meta.username}/code | :Explore<CR>"),
+                dashboard.button( "e", " Explore codes", ":cd /home/${config.shared.meta.username}/code | :Explore<CR>"),
                 dashboard.button( "c", "  Nix config flake" , ":e ~/nix-configs/flake.nix<CR>"),
                 dashboard.button( "q", "󰅙  Quit nvim", ":qa<CR>"),
             }

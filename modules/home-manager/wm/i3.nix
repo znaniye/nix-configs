@@ -64,7 +64,7 @@ in
             notification = false;
           }
           {
-            command = "${pkgs.feh}/bin/feh --bg-scale ${config.theme.wallpaper}";
+            command = "${pkgs.feh}/bin/feh --bg-scale ${config.shared.theme.wallpaper}";
             always = true;
             notification = false;
           }

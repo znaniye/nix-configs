@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.nixos.desktop.syncthing;
-  user = config.meta.username;
+  user = config.shared.meta.username;
   selfHost = config.networking.hostName;
 
   defaultCert = ../../../secrets/syncthing/${selfHost}.pem;

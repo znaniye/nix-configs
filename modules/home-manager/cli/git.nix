@@ -14,8 +14,8 @@
         enable = true;
         settings = {
           user = {
-            name = config.meta.fullname;
-            email = config.meta.work-email;
+            name = config.shared.meta.fullname;
+            email = config.shared.meta.work-email;
           };
           fetch = {
             prune = true;

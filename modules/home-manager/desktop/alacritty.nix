@@ -38,28 +38,28 @@
 
         colors = {
           primary = {
-            background = "0x${config.theme.nord.scheme.base00}";
-            foreground = "0x${config.theme.nord.scheme.base04}";
+            background = "0x${config.shared.theme.nord.scheme.base00}";
+            foreground = "0x${config.shared.theme.nord.scheme.base04}";
           };
           normal = {
-            black = "0x${config.theme.nord.scheme.base01}";
-            red = "0x${config.theme.nord.scheme.base08}";
-            green = "0x${config.theme.nord.scheme.base0B}";
-            yellow = "0x${config.theme.nord.scheme.base0A}";
-            blue = "0x${config.theme.nord.scheme.base16}";
-            magenta = "0x${config.theme.nord.scheme.base0E}";
-            cyan = "0x${config.theme.nord.scheme.base0D}";
-            white = "0x${config.theme.nord.scheme.base05}";
+            black = "0x${config.shared.theme.nord.scheme.base01}";
+            red = "0x${config.shared.theme.nord.scheme.base08}";
+            green = "0x${config.shared.theme.nord.scheme.base0B}";
+            yellow = "0x${config.shared.theme.nord.scheme.base0A}";
+            blue = "0x${config.shared.theme.nord.scheme.base16}";
+            magenta = "0x${config.shared.theme.nord.scheme.base0E}";
+            cyan = "0x${config.shared.theme.nord.scheme.base0D}";
+            white = "0x${config.shared.theme.nord.scheme.base05}";
           };
           bright = {
-            black = "0x${config.theme.nord.scheme.base03}";
-            red = "0x${config.theme.nord.scheme.base08}";
-            green = "0x${config.theme.nord.scheme.base0B}";
-            yellow = "0x${config.theme.nord.scheme.base0A}";
-            blue = "0x${config.theme.nord.scheme.base16}";
-            magenta = "0x${config.theme.nord.scheme.base0E}";
-            cyan = "0x${config.theme.nord.scheme.base0C}";
-            white = "0x${config.theme.nord.scheme.base06}";
+            black = "0x${config.shared.theme.nord.scheme.base03}";
+            red = "0x${config.shared.theme.nord.scheme.base08}";
+            green = "0x${config.shared.theme.nord.scheme.base0B}";
+            yellow = "0x${config.shared.theme.nord.scheme.base0A}";
+            blue = "0x${config.shared.theme.nord.scheme.base16}";
+            magenta = "0x${config.shared.theme.nord.scheme.base0E}";
+            cyan = "0x${config.shared.theme.nord.scheme.base0C}";
+            white = "0x${config.shared.theme.nord.scheme.base06}";
           };
         };
       };

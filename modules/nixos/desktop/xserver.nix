@@ -16,7 +16,7 @@
         defaultSession = "none+i3";
         autoLogin = {
           enable = true;
-          user = config.meta.username;
+          user = config.shared.meta.username;
         };
       };
 

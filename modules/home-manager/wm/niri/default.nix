@@ -43,7 +43,7 @@ in
           command = [
             "${lib.getExe pkgs.swaybg}"
             "--image"
-            "${config.theme.wallpaper}"
+            "${config.shared.theme.wallpaper}"
           ];
         }
       ];
@@ -83,7 +83,7 @@ in
 	        shadow.enable = true;
 	        focus-ring = {
 	          width = 2;
-	          active.color = config.theme.nord.colors.background.primary;
+	          active.color = config.shared.theme.nord.colors.background.primary;
 	        };
 	      };
 

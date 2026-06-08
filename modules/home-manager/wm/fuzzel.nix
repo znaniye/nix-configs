@@ -16,13 +16,13 @@ in
   config = lib.mkIf cfg.enable {
     programs.fuzzel.settings = {
       colors = {
-        background = "${config.theme.nord.scheme.base00}ff";
-        text = "${config.theme.nord.scheme.base04}ff";
-        match = "${config.theme.nord.scheme.base0D}ff";
-        selection = "${config.theme.nord.scheme.base01}ff";
-        selection-text = "${config.theme.nord.scheme.base06}ff";
-        selection-match = "${config.theme.nord.scheme.base0D}ff";
-        border = "${config.theme.nord.scheme.base0D}ff";
+        background = "${config.shared.theme.nord.scheme.base00}ff";
+        text = "${config.shared.theme.nord.scheme.base04}ff";
+        match = "${config.shared.theme.nord.scheme.base0D}ff";
+        selection = "${config.shared.theme.nord.scheme.base01}ff";
+        selection-text = "${config.shared.theme.nord.scheme.base06}ff";
+        selection-match = "${config.shared.theme.nord.scheme.base0D}ff";
+        border = "${config.shared.theme.nord.scheme.base0D}ff";
       };
     };
   };

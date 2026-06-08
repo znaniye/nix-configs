@@ -165,7 +165,7 @@ in
           TimeoutStartSec = "30min";
           WorkingDirectory = "/var/lib/ts-auth-auto-update";
           Environment = [
-            "HOME=/home/${config.meta.username}"
+            "HOME=/home/${config.shared.meta.username}"
           ];
           ExecStart = "${updateScript}/bin/ts-update-script";
         };

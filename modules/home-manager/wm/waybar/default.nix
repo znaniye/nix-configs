@@ -94,11 +94,11 @@ in
               weeks-pos = "right";
               on-scroll = 1;
               format = {
-                months = "<span color='#${config.theme.nord.scheme.base0D}'><b>{}</b></span>";
-                days = "<span color='#${config.theme.nord.scheme.base04}'><b>{}</b></span>";
-                weeks = "<span color='#${config.theme.nord.scheme.base0C}'><b>W{}</b></span>";
-                weekdays = "<span color='#${config.theme.nord.scheme.base09}'><b>{}</b></span>";
-                today = "<span color='#${config.theme.nord.scheme.base08}'><b><u>{}</u></b></span>";
+                months = "<span color='#${config.shared.theme.nord.scheme.base0D}'><b>{}</b></span>";
+                days = "<span color='#${config.shared.theme.nord.scheme.base04}'><b>{}</b></span>";
+                weeks = "<span color='#${config.shared.theme.nord.scheme.base0C}'><b>W{}</b></span>";
+                weekdays = "<span color='#${config.shared.theme.nord.scheme.base09}'><b>{}</b></span>";
+                today = "<span color='#${config.shared.theme.nord.scheme.base08}'><b><u>{}</u></b></span>";
               };
             };
           };
@@ -179,16 +179,16 @@ in
         }
 
         window#waybar {
-          background: #${config.theme.nord.scheme.base01};
-          color: #${config.theme.nord.scheme.base05};
+          background: #${config.shared.theme.nord.scheme.base01};
+          color: #${config.shared.theme.nord.scheme.base05};
         }
 
         #workspaces {
-          background: #${config.theme.nord.scheme.base02};
+          background: #${config.shared.theme.nord.scheme.base02};
           margin: 5px 5px 5px 10px;
           padding: 0px 5px;
           border-radius: 16px;
-          border: solid 0px #${config.theme.nord.scheme.base0D};
+          border: solid 0px #${config.shared.theme.nord.scheme.base0D};
           font-weight: bold;
           font-style: normal;
         }
@@ -197,28 +197,28 @@ in
           padding: 0px 5px;
           margin: 4px 3px;
           border-radius: 16px;
-          border: solid 0px #${config.theme.nord.scheme.base0D};
-          color: #${config.theme.nord.scheme.base04};
+          border: solid 0px #${config.shared.theme.nord.scheme.base0D};
+          color: #${config.shared.theme.nord.scheme.base04};
           background: transparent;
           transition: all 0.3s ease-in-out;
         }
 
         #workspaces button.active {
-          color: #${config.theme.nord.scheme.base00};
-          background: #${config.theme.nord.scheme.base0D};
+          color: #${config.shared.theme.nord.scheme.base00};
+          background: #${config.shared.theme.nord.scheme.base0D};
           border-radius: 16px;
           min-width: 40px;
         }
 
         #workspaces button:hover {
-          color: #${config.theme.nord.scheme.base0D};
-          background: #${config.theme.nord.scheme.base02};
+          color: #${config.shared.theme.nord.scheme.base0D};
+          background: #${config.shared.theme.nord.scheme.base02};
           border-radius: 16px;
         }
 
         #custom-launcher {
-          color: #${config.theme.nord.scheme.base0D};
-          background: #${config.theme.nord.scheme.base02};
+          color: #${config.shared.theme.nord.scheme.base0D};
+          background: #${config.shared.theme.nord.scheme.base02};
           border-radius: 16px;
           margin: 5px;
           margin-left: 10px;
@@ -227,16 +227,16 @@ in
         }
 
         #window {
-          color: #${config.theme.nord.scheme.base04};
-          background: #${config.theme.nord.scheme.base02};
+          color: #${config.shared.theme.nord.scheme.base04};
+          background: #${config.shared.theme.nord.scheme.base02};
           border-radius: 16px;
           margin: 5px;
           padding: 2px 15px;
         }
 
         #clock {
-          color: #${config.theme.nord.scheme.base05};
-          background: #${config.theme.nord.scheme.base02};
+          color: #${config.shared.theme.nord.scheme.base05};
+          background: #${config.shared.theme.nord.scheme.base02};
           border-radius: 16px;
           margin: 5px;
           padding: 2px 15px;
@@ -247,51 +247,51 @@ in
         #backlight,
         #network,
         #battery {
-          color: #${config.theme.nord.scheme.base05};
-          background: #${config.theme.nord.scheme.base02};
+          color: #${config.shared.theme.nord.scheme.base05};
+          background: #${config.shared.theme.nord.scheme.base02};
           border-radius: 16px;
           margin: 5px 2px;
           padding: 2px 12px;
         }
 
         #pulseaudio {
-          color: #${config.theme.nord.scheme.base0D};
+          color: #${config.shared.theme.nord.scheme.base0D};
         }
 
         #backlight {
-          color: #${config.theme.nord.scheme.base0A};
+          color: #${config.shared.theme.nord.scheme.base0A};
         }
 
         #network {
-          color: #${config.theme.nord.scheme.base0B};
+          color: #${config.shared.theme.nord.scheme.base0B};
         }
 
         #battery {
-          color: #${config.theme.nord.scheme.base0C};
+          color: #${config.shared.theme.nord.scheme.base0C};
         }
 
         #battery.charging {
-          color: #${config.theme.nord.scheme.base0B};
+          color: #${config.shared.theme.nord.scheme.base0B};
         }
 
         #battery.warning:not(.charging) {
-          color: #${config.theme.nord.scheme.base09};
+          color: #${config.shared.theme.nord.scheme.base09};
         }
 
         #battery.critical:not(.charging) {
-          color: #${config.theme.nord.scheme.base08};
+          color: #${config.shared.theme.nord.scheme.base08};
         }
 
         #tray {
-          background: #${config.theme.nord.scheme.base02};
+          background: #${config.shared.theme.nord.scheme.base02};
           border-radius: 16px;
           margin: 5px;
           padding: 2px 5px;
         }
 
         #custom-power {
-          color: #${config.theme.nord.scheme.base08};
-          background: #${config.theme.nord.scheme.base02};
+          color: #${config.shared.theme.nord.scheme.base08};
+          background: #${config.shared.theme.nord.scheme.base02};
           border-radius: 16px;
           margin: 5px;
           margin-right: 10px;

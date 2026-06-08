@@ -1,7 +1,7 @@
 { lib, ... }:
 {
 
-  options.theme = {
+  options.shared.theme = {
     wallpaper = lib.mkOption {
       type = lib.types.path;
       default = ./wallpaper.png;

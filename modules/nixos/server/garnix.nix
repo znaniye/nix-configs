@@ -186,11 +186,7 @@ in
           ensureDBOwnership = true;
         }
       ];
-      # Backend uses postgresql-typed which speaks only md5/cleartext auth
-      # (no SASL/SCRAM). Force md5 for the garnix TCP entries.
-      # dev/emit-app.nix's authentication block sets it at mkOverride 10,
-      # which discards default-priority strings, so match priority to merge.
-      authentication = lib.mkOverride 10 ''
+      authentication = ''
         host garnix garnix 127.0.0.1/32 md5
         host garnix garnix ::1/128     md5
       '';

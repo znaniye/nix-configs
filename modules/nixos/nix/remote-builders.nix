@@ -10,50 +10,50 @@ in
 
   config = lib.mkIf cfg.enable {
     nix = {
-      buildMachines = [
-        # {
-        #   hostName = "golf";
-        #   system = "x86_64-linux";
-        #   protocol = "ssh-ng";
-        #   sshUser = "nixremote";
-        #   sshKey = "/root/.ssh/nixremote.pub";
-        #   supportedFeatures = [
-        #     "nixos-test"
-        #     "benchmark"
-        #     "big-parallel"
-        #     "kvm"
-        #   ];
-        # }
-        #   {
-        #     hostName = "cache.freedom.ind.br:60022";
-        #     protocol = "ssh-ng";
-        #     sshUser = "remote-builder";
-        #     sshKey = "/root/.ssh/id_ed25519";
-        #     systems = [
-        #       "x86_64-linux"
-        #       "aarch64-linux"
-        #     ];
-        #     supportedFeatures = [
-        #       "nixos-test"
-        #       "benchmark"
-        #       "big-parallel"
-        #       "kvm"
-        #     ];
-        #   }
-      ]
-      ++ lib.optional (config.networking.hostName != "tortinha") {
-        hostName = "192.168.68.111";
-        protocol = "ssh-ng";
-        sshUser = "znaniye";
-        sshKey = "/root/.ssh/id_ed25519";
-        systems = [ "aarch64-linux" ];
-        maxJobs = 4;
-        supportedFeatures = [
-          "nixos-test"
-          "benchmark"
-          "kvm"
-        ];
-      };
+      #buildMachines = [
+      # {
+      #   hostName = "golf";
+      #   system = "x86_64-linux";
+      #   protocol = "ssh-ng";
+      #   sshUser = "nixremote";
+      #   sshKey = "/root/.ssh/nixremote.pub";
+      #   supportedFeatures = [
+      #     "nixos-test"
+      #     "benchmark"
+      #     "big-parallel"
+      #     "kvm"
+      #   ];
+      # }
+      #   {
+      #     hostName = "cache.freedom.ind.br:60022";
+      #     protocol = "ssh-ng";
+      #     sshUser = "remote-builder";
+      #     sshKey = "/root/.ssh/id_ed25519";
+      #     systems = [
+      #       "x86_64-linux"
+      #       "aarch64-linux"
+      #     ];
+      #     supportedFeatures = [
+      #       "nixos-test"
+      #       "benchmark"
+      #       "big-parallel"
+      #       "kvm"
+      #     ];
+      #   }
+      # ]
+      # ++ lib.optional (config.networking.hostName != "tortinha") {
+      #   hostName = "192.168.68.111";
+      #   protocol = "ssh-ng";
+      #   sshUser = "znaniye";
+      #   sshKey = "/root/.ssh/id_ed25519";
+      #   systems = [ "aarch64-linux" ];
+      #   maxJobs = 4;
+      #   supportedFeatures = [
+      #     "nixos-test"
+      #     "benchmark"
+      #     "kvm"
+      #   ];
+      # };
 
       distributedBuilds = true;
 

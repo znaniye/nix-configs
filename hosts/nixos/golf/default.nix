@@ -23,7 +23,8 @@
     dev.postgres.enable = true;
     dev.emitApp.enable = true;
 
-    server.garnix.enable = true;
+    server.garnix.enable = false;
+    server.garnixRunner.enable = true;
 
     home.extraModules = {
       home-manager.dev = {
@@ -37,4 +38,29 @@
   };
 
   services.hardware.deepcool-digital-linux.enable = true;
+
+  users.users.nixremote = {
+    isNormalUser = true;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf"
+    ];
+  };
+
+  nix.settings.trusted-users = [ "nixremote" ];
+
+  networking.networkmanager.ensureProfiles.profiles.wired-golf = {
+    connection = {
+      id = "wired-golf";
+      type = "ethernet";
+      interface-name = "eno1";
+      autoconnect = true;
+      autoconnect-priority = 100;
+    };
+    ipv4 = {
+      method = "manual";
+      address1 = "192.168.68.107/24,192.168.68.1";
+      dns = "192.168.68.1;1.1.1.1";
+    };
+    ipv6.method = "ignore";
+  };
 }

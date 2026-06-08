@@ -30,8 +30,7 @@
               service = "http://localhost:3000";
             };
             "garnix.znaniye.xyz" = {
-              # garnix runs on golf; reach it via tailscale.
-              service = "http://100.109.18.27:80";
+              service = "http://localhost:80";
             };
             "emit.znaniye.xyz" = {
               service = "http://10.231.10.2:9999";

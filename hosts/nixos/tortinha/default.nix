@@ -31,8 +31,33 @@
       "emit"
     ];
   };
-  #nixos.server.opencode.enable = true;
-  nixos.server.garnix.enable = false;
+  nixos.server.garnix = {
+    enable = true;
+    localActionRunner = false;
+    actionRunnerHost = "192.168.68.107"; # golf, LAN
+    remoteBuilders = [
+      {
+        name = "golf";
+        hostname = "192.168.68.107";
+        user = "nixremote";
+        # sshKeyPath falls back to remoteBuilders.sshKeyPath, which garnix-secrets
+        # stages from secrets.remoteBuilderSshPath (the action-runner key).
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+        ];
+        maxJobs = 8;
+        speedFactor = 4;
+        supportedFeatures = [
+          "nixos-test"
+          "benchmark"
+          "big-parallel"
+          "kvm"
+        ];
+        mandatoryFeatures = [ ];
+      }
+    ];
+  };
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;

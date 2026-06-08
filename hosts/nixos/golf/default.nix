@@ -31,6 +31,7 @@
         dotnet.enable = true;
         python.enable = true;
         haskell.enable = true;
+        typescript.enable = true;
       };
     };
   };

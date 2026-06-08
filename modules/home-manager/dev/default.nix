@@ -22,6 +22,7 @@
     ./pi-agent
     ./python.nix
     ./rust.nix
+    ./typescript.nix
     ./zig.nix
   ];
 

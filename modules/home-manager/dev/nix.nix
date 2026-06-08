@@ -40,20 +40,19 @@ in
       ++ lib.optionals (cfg.languageServer == "nixd") [ nixd ];
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages =
-        lib.mkAfter
-          (
-            [ pkgs.nixfmt ]
-            ++ lib.optionals (cfg.languageServer == "nil") [ pkgs.nil ]
-            ++ lib.optionals (cfg.languageServer == "nixd") [ pkgs.nixd ]
-          );
+      extraPackages = lib.mkAfter (
+        [ pkgs.nixfmt ]
+        ++ lib.optionals (cfg.languageServer == "nil") [ pkgs.nil ]
+        ++ lib.optionals (cfg.languageServer == "nixd") [ pkgs.nixd ]
+      );
 
       plugins = lib.mkAfter (with pkgs.vimPlugins; [ vim-nix ]);
 
       extraLuaConfig = lib.mkAfter (
         ''
-          vim.g.conform_formatters_by_ft = vim.g.conform_formatters_by_ft or {}
-          vim.g.conform_formatters_by_ft.nix = { "nixfmt" }
+          local conform_fts = vim.g.conform_formatters_by_ft or {}
+          conform_fts.nix = { "nixfmt" }
+          vim.g.conform_formatters_by_ft = conform_fts
         ''
         + (
           if cfg.languageServer == "nil" then

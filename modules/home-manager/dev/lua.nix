@@ -24,19 +24,23 @@
         pkgs.stylua
       ];
 
-      plugins = lib.mkAfter (with pkgs.vimPlugins; [
-        {
-          plugin = lazydev-nvim;
-          type = "lua";
-          config = ''
-            require("lazydev").setup({})
-          '';
-        }
-      ]);
+      plugins = lib.mkAfter (
+        with pkgs.vimPlugins;
+        [
+          {
+            plugin = lazydev-nvim;
+            type = "lua";
+            config = ''
+              require("lazydev").setup({})
+            '';
+          }
+        ]
+      );
 
       extraLuaConfig = lib.mkAfter ''
-        vim.g.conform_formatters_by_ft = vim.g.conform_formatters_by_ft or {}
-        vim.g.conform_formatters_by_ft.lua = { "stylua" }
+        local conform_fts = vim.g.conform_formatters_by_ft or {}
+        conform_fts.lua = { "stylua" }
+        vim.g.conform_formatters_by_ft = conform_fts
 
         vim.lsp.config.lua_ls = {
           cmd = { "${pkgs.lua-language-server}/bin/lua-language-server" },

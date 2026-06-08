@@ -96,7 +96,7 @@
         {
           plugin = vim-visual-multi;
           type = "lua";
-          config = '''';
+          config = "";
         }
         {
           plugin = nvim-cmp;
@@ -126,6 +126,8 @@
           config = ''
             require("conform").setup({
               formatters_by_ft = vim.g.conform_formatters_by_ft or {},
+              -- when an ft lists several formatters, run the first available one
+              stop_after_first = true,
               format_on_save = {
                 --these options will be passed to conform.format()
                 timeout_ms = 500,

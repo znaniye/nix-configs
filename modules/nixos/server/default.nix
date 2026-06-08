@@ -20,5 +20,7 @@
 
   config = lib.mkIf config.nixos.server.enable {
     programs.zsh.enable = true;
+
+    time.timeZone = lib.mkDefault "America/Sao_Paulo";
   };
 }

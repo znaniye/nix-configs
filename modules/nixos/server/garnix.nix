@@ -44,7 +44,11 @@ in
 
     sops.secrets =
       let
-        garnixOwned = { owner = "root"; group = "garnix"; mode = "0440"; };
+        garnixOwned = {
+          owner = "root";
+          group = "garnix";
+          mode = "0440";
+        };
       in
       {
         "garnix-database-password" = {
@@ -61,6 +65,7 @@ in
         "garnix-jwt-key" = garnixOwned;
         "garnix-repo-secrets-key" = garnixOwned;
         "garnix-repo-secrets-key-pub" = garnixOwned;
+        "garnix-action-runner-ssh" = garnixOwned;
       };
 
     services.garnixServer = {
@@ -87,6 +92,8 @@ in
       s3Cache.enable = false;
       remoteBuilders.hosts = [ ];
 
+      actionRunner.host = "127.0.0.1";
+
       secrets = {
         databasePasswordPath = config.sops.secrets."garnix-database-password".path;
         opensearchCredentialPath = config.sops.secrets."garnix-opensearch-password".path;
@@ -98,8 +105,11 @@ in
         jwtKeyPath = config.sops.secrets."garnix-jwt-key".path;
         repoSecretsKeyPath = config.sops.secrets."garnix-repo-secrets-key".path;
         repoSecretsPubKeyPath = config.sops.secrets."garnix-repo-secrets-key-pub".path;
+        actionRunnerSshPath = config.sops.secrets."garnix-action-runner-ssh".path;
       };
     };
+
+    garnix.actionRunner.authorizedKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf";
 
     services.nginx.virtualHosts.${hostname} = {
       forceSSL = lib.mkForce false;
@@ -126,9 +136,6 @@ in
       '';
     };
 
-    # Sync the garnix postgres role password with the sops secret. Runs after
-    # postgresql-setup.service (which creates the role via ensureUsers).
-    # Forces md5 encoding because postgresql-typed cannot do SCRAM.
     systemd.services.garnix-postgres-password-sync = {
       description = "Sync garnix postgres role password from sops secret";
       after = [ "postgresql-setup.service" ];

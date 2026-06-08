@@ -112,6 +112,7 @@ in
       url = "https://${hostname}";
       adminGithubLogin = "znaniye";
       githubAppName = "garnix-znaniye";
+      frontend.port = 3001;
 
       database = {
         host = "127.0.0.1";

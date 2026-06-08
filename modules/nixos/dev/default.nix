@@ -1,6 +1,7 @@
 { lib, ... }:
 {
   imports = [
+    ./emit-app.nix
     ./postgres.nix
   ];
 

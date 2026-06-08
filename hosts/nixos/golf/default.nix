@@ -20,12 +20,8 @@
       };
     };
 
-    dev.postgres = {
-      enable = true;
-      emitApp = {
-        enable = true;
-      };
-    };
+    dev.postgres.enable = true;
+    dev.emitApp.enable = true;
 
     server.garnix.enable = true;
 

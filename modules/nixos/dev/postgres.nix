@@ -6,7 +6,6 @@
 }:
 let
   cfg = config.nixos.dev.postgres;
-  emitAppCfg = cfg.emitApp;
 in
 {
   options.nixos.dev.postgres = {
@@ -43,28 +42,6 @@ in
         description = "Value for postgresql password_encryption.";
       };
     };
-
-    emitApp = {
-      enable = lib.mkEnableOption "emit-app local database bootstrap" // {
-        default = false;
-      };
-
-      database = lib.mkOption {
-        type = lib.types.str;
-        default = "emit_app";
-        description = "Database name used by emit-app.";
-      };
-
-      user = lib.mkOption {
-        type = lib.types.str;
-        default = "emit_app";
-        description = "Role name used by emit-app.";
-      };
-
-      authentication.enable = lib.mkEnableOption "emit-app localhost auth rules" // {
-        default = true;
-      };
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -81,23 +58,6 @@ in
         listen_addresses = cfg.settings.listenAddresses;
         port = cfg.settings.port;
       };
-
-      ensureDatabases = lib.optionals emitAppCfg.enable [ emitAppCfg.database ];
-      ensureUsers = lib.optionals emitAppCfg.enable [
-        {
-          name = emitAppCfg.user;
-          ensureDBOwnership = true;
-        }
-      ];
-
-      authentication = lib.mkIf (emitAppCfg.enable && emitAppCfg.authentication.enable) (
-        lib.mkOverride 10 ''
-          # TYPE  DATABASE  USER      ADDRESS           METHOD
-          local   all       all                         peer
-          host  ${emitAppCfg.database}  ${emitAppCfg.user}  127.0.0.1/32  ${cfg.settings.passwordEncryption}
-          host  ${emitAppCfg.database}  ${emitAppCfg.user}  ::1/128       ${cfg.settings.passwordEncryption}
-        ''
-      );
     };
   };
 }

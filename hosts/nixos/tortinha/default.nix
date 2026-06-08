@@ -80,6 +80,14 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE+nHM0J+aP4BsM+hkIv71WcTQ9y/JMJIDbA1JMA0/fH root@golf"
   ];
 
+  programs.ssh.knownHosts.golf = {
+    hostNames = [
+      "golf"
+      "192.168.68.107"
+    ];
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDWYfyw/IaVnBoGDHpb2CBa9M34Dty9PNl4wZhJ/VcwT";
+  };
+
   networking.dhcpcd.denyInterfaces = [ "end0" ];
   networking.interfaces.end0 = {
     useDHCP = false;

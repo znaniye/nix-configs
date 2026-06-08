@@ -8,6 +8,9 @@
 let
   cfg = config.nixos.server.garnix;
   hostname = "garnix.znaniye.xyz";
+  # Strip an optional ":port" the same way garnix-server does, so the ssh
+  # Match block below targets the bare host.
+  actionRunnerHostName = lib.head (lib.splitString ":" cfg.actionRunnerHost);
 in
 {
   imports = [
@@ -18,6 +21,39 @@ in
     enable = lib.mkEnableOption "garnix self-host" // {
       default = false;
     };
+
+    localActionRunner = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Run the garnix action-runner (krun/KVM microVMs) on this host. Set to
+        false when the coordinator offloads actions to a runner on another host
+        (e.g. a low-RAM aarch64 box delegating to an x86_64 builder). When
+        false, the local runner service is disabled and only the ssh client
+        config needed to reach the remote runner is emitted.
+      '';
+    };
+
+    actionRunnerHost = lib.mkOption {
+      type = lib.types.str;
+      default = "127.0.0.1";
+      description = ''
+        Host the backend SSHes into (as user action-runner) to execute garnix
+        actions. Defaults to loopback (runner co-located with the coordinator).
+        Accepts "host" or "host:port".
+      '';
+    };
+
+    remoteBuilders = lib.mkOption {
+      type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
+      default = [ ];
+      description = ''
+        Remote Nix builders, passed straight to
+        services.garnixServer.remoteBuilders.hosts. When non-empty the
+        coordinator sets max-jobs=0 and offloads all realisation to these
+        builders.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -26,9 +62,8 @@ in
       flakePackages = flake.inputs.garnix-ci.packages.${pkgs.system};
     };
 
-    # nix.distributedBuilds is asserted false by garnix-server when remoteBuilders
-    # is empty. tortinha runs its own remote-builder module (cache.freedom.ind.br),
-    # so flip it back on.
+    # Both garnix-server and our nixos.nix.remote-builders module define
+    # nix.distributedBuilds; force it on to resolve the merge conflict.
     nix.distributedBuilds = lib.mkForce true;
     nix.daemonIOSchedPriority = lib.mkForce 7;
 
@@ -93,9 +128,9 @@ in
       };
 
       s3Cache.enable = false;
-      remoteBuilders.hosts = [ ];
+      remoteBuilders.hosts = cfg.remoteBuilders;
 
-      actionRunner.host = "127.0.0.1";
+      actionRunner.host = cfg.actionRunnerHost;
 
       secrets = {
         databasePasswordPath = config.sops.secrets."garnix-database-password".path;
@@ -109,10 +144,28 @@ in
         repoSecretsKeyPath = config.sops.secrets."garnix-repo-secrets-key".path;
         repoSecretsPubKeyPath = config.sops.secrets."garnix-repo-secrets-key-pub".path;
         actionRunnerSshPath = config.sops.secrets."garnix-action-runner-ssh".path;
+        # Reuse the action-runner key as the build-offload key: the backend uses
+        # one identity to reach golf for both actions (user action-runner) and
+        # remote builds (user nixremote). Required iff remoteBuilders != [].
+        remoteBuilderSshPath = config.sops.secrets."garnix-action-runner-ssh".path;
       };
     };
 
-    garnix.actionRunner.authorizedKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf";
+    # Local runner: authorize the coordinator's key on the action-runner user.
+    # garnix-server also emits the ssh client Match block (gated on
+    # garnix.actionRunner.enable) so the backend can reach it.
+    garnix.actionRunner.authorizedKey = lib.mkIf cfg.localActionRunner
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf";
+
+    # Remote runner: don't build/run the krun stack locally (would force a heavy
+    # aarch64 libkrun/crun build on a Pi). Disabling it also drops the ssh client
+    # Match block garnix-server emits, so re-add it here for the remote host.
+    garnix.actionRunner.enable = lib.mkIf (!cfg.localActionRunner) (lib.mkForce false);
+    programs.ssh.extraConfig = lib.mkIf (!cfg.localActionRunner) (lib.mkAfter ''
+      Match host ${actionRunnerHostName} user action-runner
+         StrictHostKeyChecking accept-new
+         UserKnownHostsFile /var/lib/garnix/known_hosts
+    '');
 
     services.nginx.virtualHosts.${hostname} = {
       forceSSL = lib.mkForce false;

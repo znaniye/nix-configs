@@ -5,6 +5,7 @@
     ./comin.nix
     #./emit.nix
     ./garnix.nix
+    ./garnix-runner.nix
     ./gitea.nix
     ./opencode.nix
     ./openssh.nix

@@ -151,21 +151,24 @@ in
       };
     };
 
+    systemd.services.garnixServer.environment.GARNIX_BUILD_TIMEOUT_MINUTES = "600";
+
     # Local runner: authorize the coordinator's key on the action-runner user.
     # garnix-server also emits the ssh client Match block (gated on
     # garnix.actionRunner.enable) so the backend can reach it.
-    garnix.actionRunner.authorizedKey = lib.mkIf cfg.localActionRunner
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf";
+    garnix.actionRunner.authorizedKey = lib.mkIf cfg.localActionRunner "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf";
 
     # Remote runner: don't build/run the krun stack locally (would force a heavy
     # aarch64 libkrun/crun build on a Pi). Disabling it also drops the ssh client
     # Match block garnix-server emits, so re-add it here for the remote host.
     garnix.actionRunner.enable = lib.mkIf (!cfg.localActionRunner) (lib.mkForce false);
-    programs.ssh.extraConfig = lib.mkIf (!cfg.localActionRunner) (lib.mkAfter ''
-      Match host ${actionRunnerHostName} user action-runner
-         StrictHostKeyChecking accept-new
-         UserKnownHostsFile /var/lib/garnix/known_hosts
-    '');
+    programs.ssh.extraConfig = lib.mkIf (!cfg.localActionRunner) (
+      lib.mkAfter ''
+        Match host ${actionRunnerHostName} user action-runner
+           StrictHostKeyChecking accept-new
+           UserKnownHostsFile /var/lib/garnix/known_hosts
+      ''
+    );
 
     services.nginx.virtualHosts.${hostname} = {
       forceSSL = lib.mkForce false;

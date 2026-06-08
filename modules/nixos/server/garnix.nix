@@ -37,10 +37,13 @@ in
     # SSH socket. Force startAgent off to avoid the assertion conflict.
     programs.ssh.startAgent = lib.mkForce false;
 
-    # Fluent-bit defaults to OpenSearch on port 443 over TLS (no option to change).
-    # Local OpenSearch is plain HTTP. Disable shipping for now; backend log endpoints
-    # still work because OpenSearch query path is independent.
-    garnix.fluent-bit.enable = lib.mkForce false;
+    # Local OpenSearch is plain HTTP on :9200 (security plugin off). Point the
+    # fluent-bit shipper there instead of the upstream 443/TLS default. This
+    # also brings up the build-logs HTTP input on :8888 — the backend POSTs
+    # build logs there, and a refused connection (shipper down) otherwise
+    # propagates as a build failure.
+    garnix.fluent-bit.opensearch.port = 9200;
+    garnix.fluent-bit.opensearch.tls = false;
 
     sops.secrets =
       let

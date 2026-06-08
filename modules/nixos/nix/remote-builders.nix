@@ -24,22 +24,22 @@ in
         #     "kvm"
         #   ];
         # }
-        {
-          hostName = "cache.freedom.ind.br:60022";
-          protocol = "ssh-ng";
-          sshUser = "remote-builder";
-          sshKey = "/root/.ssh/id_ed25519";
-          systems = [
-            "x86_64-linux"
-            "aarch64-linux"
-          ];
-          supportedFeatures = [
-            "nixos-test"
-            "benchmark"
-            "big-parallel"
-            "kvm"
-          ];
-        }
+        #   {
+        #     hostName = "cache.freedom.ind.br:60022";
+        #     protocol = "ssh-ng";
+        #     sshUser = "remote-builder";
+        #     sshKey = "/root/.ssh/id_ed25519";
+        #     systems = [
+        #       "x86_64-linux"
+        #       "aarch64-linux"
+        #     ];
+        #     supportedFeatures = [
+        #       "nixos-test"
+        #       "benchmark"
+        #       "big-parallel"
+        #       "kvm"
+        #     ];
+        #   }
       ]
       ++ lib.optional (config.networking.hostName != "tortinha") {
         hostName = "192.168.68.111";

@@ -132,6 +132,7 @@ in
       remoteBuilders.hosts = cfg.remoteBuilders;
 
       actionRunner.host = cfg.actionRunnerHost;
+      actionRunner.sharedResourcesUsers = [ "znaniye" ];
 
       secrets = {
         databasePasswordPath = config.sops.secrets."garnix-database-password".path;

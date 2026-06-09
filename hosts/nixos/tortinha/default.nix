@@ -94,6 +94,13 @@ in
     publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDWYfyw/IaVnBoGDHpb2CBa9M34Dty9PNl4wZhJ/VcwT";
   };
 
+  swapDevices = [
+    {
+      device = "/var/swapfile";
+      size = 8 * 1024;
+    }
+  ];
+
   networking.dhcpcd.denyInterfaces = [ "end0" ];
   networking.interfaces.end0 = {
     useDHCP = false;

@@ -91,6 +91,7 @@ in
           extra-platforms = [ "aarch64-linux" ];
           auto-optimise-store = true;
           max-jobs = hostBasedJobs;
+          max-silent-time = 1800;
 
           extra-substituters = [
             "https://nixos-raspberrypi.cachix.org"

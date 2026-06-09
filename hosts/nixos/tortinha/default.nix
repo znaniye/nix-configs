@@ -68,11 +68,11 @@ in
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;
-    syncthing = {
-      enable = true;
-      deviceId = "ZWMG6VR-NMEPKRG-YGO7D2C-KILL6TI-SEZ6MOY-SOHPHU6-OTSGJOW-XVX4VQI";
-      folder = "/var/lib/opencode/workdir";
-    };
+    # syncthing = {
+    #   enable = true;
+    #   deviceId = "ZWMG6VR-NMEPKRG-YGO7D2C-KILL6TI-SEZ6MOY-SOHPHU6-OTSGJOW-XVX4VQI";
+    #   folder = "/var/lib/opencode/workdir";
+    # };
   };
   nixos.home.extraModules = {
     home-manager.dev.enable = false;

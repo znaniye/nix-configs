@@ -14,10 +14,10 @@
         address = "192.168.240.8/32";
         privateKeySecretName = "wireguard-private-key-golf";
       };
-      syncthing = {
-        enable = true;
-        deviceId = "U5RIZFP-YTCUPJ3-ZH2LKC6-EVLRLZK-7THXOGE-P6FYCQU-2OS7HXR-2A44LQC";
-      };
+      # syncthing = {
+      #   enable = true;
+      #   deviceId = "U5RIZFP-YTCUPJ3-ZH2LKC6-EVLRLZK-7THXOGE-P6FYCQU-2OS7HXR-2A44LQC";
+      # };
     };
 
     dev.postgres.enable = true;

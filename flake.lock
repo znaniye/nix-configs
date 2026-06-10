@@ -490,11 +490,11 @@
         "treetop": "treetop"
       },
       "locked": {
-        "lastModified": 1781019773,
-        "narHash": "sha256-hb4PloOYJaAQ1Esgx/mcdP+csfCW42a5vy+aTzR7xL0=",
+        "lastModified": 1781102530,
+        "narHash": "sha256-N8IQyXKIJqEotcr8fC5TG4MaMMB3/8qCAairQ808hn8=",
         "owner": "znaniye",
         "repo": "garnix-ci",
-        "rev": "c1d0917e63878cf939923793809a7fc9afe29a45",
+        "rev": "59f02f3d908802be2d930f6be287cf4c91873bef",
         "type": "github"
       },
       "original": {

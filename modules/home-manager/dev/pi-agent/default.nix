@@ -41,7 +41,7 @@ let
     providers.deepseek = {
       baseUrl = cfg.baseUrl;
       api = "openai-completions";
-      apiKey = "DEEPSEEK_API_KEY";
+      apiKey = "$DEEPSEEK_API_KEY";
       models = [
         {
           id = "deepseek-v4-flash";

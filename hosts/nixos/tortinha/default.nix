@@ -29,7 +29,7 @@ in
   ];
 
   nixos.server.enable = true;
-  nixos.server.pi-hole.enable = false;
+  nixos.server.pi-hole.enable = true;
   nixos.server.gitea = {
     runner.opencodeAuthSecretName = "opencode-auth-json";
     runner.shared.enable = true;

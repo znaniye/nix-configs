@@ -15,7 +15,7 @@
       pihole-web = {
         enable = true;
         ports = [
-          80
+          8053
         ];
       };
       pihole-ftl = {
@@ -56,11 +56,9 @@
     };
 
     networking.firewall.allowedTCPPorts = [
-      80
       53
     ];
     networking.firewall.allowedUDPPorts = [
-      80
       53
     ];
   };

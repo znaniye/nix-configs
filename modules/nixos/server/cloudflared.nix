@@ -32,6 +32,9 @@
             "garnix.znaniye.xyz" = {
               service = "http://localhost:80";
             };
+            "pihole.znaniye.xyz" = {
+              service = "http://localhost:8053";
+            };
             "emit.znaniye.xyz" = {
               service = "http://10.231.10.2:9999";
             };

@@ -232,9 +232,6 @@ in
               hooks = [
                 {
                   type = "command";
-                }
-                {
-                  type = "command";
                   command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Task finished' 2>/dev/null || true";
                 }
               ];

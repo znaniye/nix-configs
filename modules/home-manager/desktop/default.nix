@@ -14,6 +14,7 @@ in
   imports = [
     ./alacritty.nix
     ./zellij.nix
+    ./herdr.nix
   ];
 
   options.home-manager.desktop = {

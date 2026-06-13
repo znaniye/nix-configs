@@ -15,13 +15,12 @@ in
 
   pi-coding-agent = self.inputs.coding-agents.packages.${system}.pi-coding-agent;
 
+  herdr = self.inputs.herdr.packages.${system}.herdr;
+
   pencil-vscode-extension =
     let
       pencilMcpBinaryName =
-        if prev.stdenv.hostPlatform.isAarch64 then
-          "mcp-server-linux-arm64"
-        else
-          "mcp-server-linux-x64";
+        if prev.stdenv.hostPlatform.isAarch64 then "mcp-server-linux-arm64" else "mcp-server-linux-x64";
       base = prev.vscode-utils.buildVscodeMarketplaceExtension {
         mktplcRef = {
           name = "pencildev";

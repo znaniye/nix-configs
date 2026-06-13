@@ -525,6 +525,26 @@
         "type": "github"
       }
     },
+    "herdr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781282305,
+        "narHash": "sha256-cWw4ezpfLjXHeLt6vEjsMB69DHeWxj5+D4276TBfTpI=",
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "rev": "78b13acfba23d571ea7585599fd477ee78f0875a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
     "hermes-agent": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -972,6 +992,7 @@
         "emacs-overlay": "emacs-overlay",
         "emit": "emit",
         "garnix-ci": "garnix-ci",
+        "herdr": "herdr",
         "home-manager": "home-manager",
         "llm-agents": "llm-agents",
         "niri": "niri",

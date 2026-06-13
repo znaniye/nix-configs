@@ -69,6 +69,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    herdr = {
+      url = "github:ogulcancelik/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     garnix-ci = {
       url = "github:znaniye/garnix-ci/selfhost";
       inputs.nixpkgs.follows = "nixpkgs";

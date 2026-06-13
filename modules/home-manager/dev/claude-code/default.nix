@@ -6,7 +6,6 @@
 }:
 let
   cfg = config.home-manager.dev.claude-code;
-  notificationSound = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
 
   pencilMcpWrapper = pkgs.writeShellScriptBin "pencil-mcp-wrapper" ''
     exec ${lib.escapeShellArgs config.shared.mcp.pencil.mcpCommand} "$@"
@@ -102,15 +101,16 @@ in
           type = "stdio";
           command = "${pencilMcpWrapper}/bin/pencil-mcp-wrapper";
         };
-      } // lib.optionalAttrs cfg.giteaMcp.enable {
+      }
+      // lib.optionalAttrs cfg.giteaMcp.enable {
         gitea-mcp = {
           type = "stdio";
           command = "${config.shared.mcp.gitea.wrapper}/bin/gitea-mcp-wrapper";
         };
       };
-      agents = lib.mapAttrs
-        (name: agent: config.shared.codingAgents.renderClaudeAgent name agent)
-        config.shared.codingAgents.agents;
+      agents = lib.mapAttrs (
+        name: agent: config.shared.codingAgents.renderClaudeAgent name agent
+      ) config.shared.codingAgents.agents;
       settings = {
         model = cfg.model;
         skipDangerousModePermissionPrompt = true;
@@ -222,10 +222,6 @@ in
               hooks = [
                 {
                   type = "command";
-                  command = "${pkgs.pulseaudio}/bin/paplay ${notificationSound} 2>/dev/null || true";
-                }
-                {
-                  type = "command";
                   command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Session needs your attention' 2>/dev/null || true";
                 }
               ];
@@ -236,7 +232,6 @@ in
               hooks = [
                 {
                   type = "command";
-                  command = "${pkgs.pulseaudio}/bin/paplay ${notificationSound} 2>/dev/null || true";
                 }
                 {
                   type = "command";

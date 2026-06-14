@@ -39,6 +39,17 @@ in
         detach = "prefix+d";
         rename_tab = "prefix+shift+t";
         split_horizontal = "prefix+minus";
+
+        navigate_workspace_up = [
+          "k"
+          "up"
+        ];
+        navigate_workspace_down = [
+          "j"
+          "down"
+        ];
+        navigate_pane_up = "";
+        navigate_pane_down = "";
       };
     };
 

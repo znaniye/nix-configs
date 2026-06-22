@@ -18,6 +18,7 @@
     sops.age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";
 
     sops.secrets.tailscale-key = { };
+    sops.secrets.ossystems-headscale-key = { };
     sops.secrets.ts-client-id = { };
     sops.secrets.ts-client-secret = { };
     sops.secrets.gh-token = { };

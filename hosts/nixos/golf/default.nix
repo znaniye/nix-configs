@@ -8,6 +8,7 @@
     desktop = {
       enable = true;
       virtualization.enable = true;
+      tailscale.ossystems.enable = true;
       wayland.enable = true;
       flatpak.enable = true;
       wireguard = {

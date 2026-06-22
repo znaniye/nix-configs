@@ -121,6 +121,8 @@ let
 
 in
 {
+  imports = [ ./ossystems.nix ];
+
   options.nixos.desktop.tailscale.enable = lib.mkEnableOption "tailscale config (client side)" // {
     default = config.nixos.desktop.enable;
   };

@@ -56,7 +56,7 @@ in
   config = lib.mkIf cfg.enable {
     sops.secrets.anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
 
-    programs.vscode = {
+    programs.vscodium = {
       enable = true;
       package = vscodiumWithAnthropicEnv;
       mutableExtensionsDir = false;

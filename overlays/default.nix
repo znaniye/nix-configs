@@ -25,8 +25,8 @@ in
         mktplcRef = {
           name = "pencildev";
           publisher = "highagency";
-          version = "0.6.38";
-          hash = "sha256-SpmKjxBttOdMCrPCxvXp93ZnS+UAd0vRxAOx0BSKIuc=";
+          version = "0.6.55";
+          hash = "sha256-6Drsokr6VCT2mSgkHvylduaWZOr2A8mM0RmXHVGj0rU=";
         };
       };
       patched = base.overrideAttrs (oldAttrs: {

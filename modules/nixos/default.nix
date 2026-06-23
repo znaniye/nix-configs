@@ -6,6 +6,7 @@
 }:
 {
   imports = [
+    ./attic-client
     ./boot
     ./desktop
     ./dev

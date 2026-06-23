@@ -4,6 +4,8 @@
     ./hardware-configuration.nix
   ];
 
+  nixos.attic-client.enable = true;
+
   nixos = {
     desktop = {
       enable = true;

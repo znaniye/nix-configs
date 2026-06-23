@@ -37,6 +37,7 @@ in
           inherit myAuthorizedKeys;
           flake = self;
           nixos-raspberrypi = self.inputs.nixos-raspberrypi;
+          attic = self.inputs.attic;
         };
       };
     };

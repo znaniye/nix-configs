@@ -7,10 +7,10 @@
     ./garnix.nix
     ./garnix-runner.nix
     ./gitea.nix
-    ./kimai.nix
     ./opencode.nix
     ./openssh.nix
     ./pi-hole.nix
+    ./solidtime.nix
   ];
 
   options.nixos.server = {

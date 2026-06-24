@@ -30,6 +30,10 @@ in
 
   nixos.server.enable = true;
   nixos.server.pi-hole.enable = true;
+  nixos.server.solidtime = {
+    enable = true;
+    superAdmins = [ "samuelwww17@gmail.com" ];
+  };
   nixos.server.gitea = {
     runner.opencodeAuthSecretName = "opencode-auth-json";
     runner.shared.enable = true;

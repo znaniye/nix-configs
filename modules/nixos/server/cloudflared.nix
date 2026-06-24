@@ -29,9 +29,6 @@
             "gitea.znaniye.xyz" = {
               service = "http://localhost:3000";
             };
-            "kimai.znaniye.xyz" = {
-              service = "http://localhost:80";
-            };
             "garnix.znaniye.xyz" = {
               service = "http://localhost:80";
             };

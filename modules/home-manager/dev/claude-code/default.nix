@@ -11,6 +11,14 @@ let
     exec ${lib.escapeShellArgs config.shared.mcp.pencil.mcpCommand} "$@"
   '';
 
+  intervalsMcpWrapper = pkgs.writeShellScriptBin "intervals-mcp-wrapper" ''
+    if [ -f "${config.sops.secrets.intervals-api-key.path}" ]; then
+      export INTERVALS_ICU_API_KEY="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.intervals-api-key.path})"
+    fi
+    export INTERVALS_ICU_ATHLETE_ID="${cfg.intervalsMcp.athleteId}"
+    exec ${pkgs.uv}/bin/uvx intervals-icu-mcp "$@"
+  '';
+
   claudeCodeWithEnv = pkgs.symlinkJoin {
     name = "claude-code";
     paths = [ pkgs.claude-code ];
@@ -54,6 +62,20 @@ in
       };
     };
 
+    stravaMcp = {
+      enable = lib.mkEnableOption "Strava MCP server integration";
+    };
+
+    intervalsMcp = {
+      enable = lib.mkEnableOption "intervals.icu MCP server integration";
+
+      athleteId = lib.mkOption {
+        type = lib.types.str;
+        default = "i537398";
+        description = "intervals.icu athlete ID (format: iXXXXXX).";
+      };
+    };
+
     rtk = {
       enable = lib.mkEnableOption "RTK token-saving Bash proxy" // {
         default = true;
@@ -91,7 +113,12 @@ in
         ];
     };
 
-    sops.secrets.anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
+    sops.secrets = {
+      anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
+    }
+    // lib.optionalAttrs cfg.intervalsMcp.enable {
+      intervals-api-key.path = "${config.xdg.configHome}/secrets/intervals-api-key";
+    };
 
     programs.claude-code = {
       enable = true;
@@ -102,10 +129,23 @@ in
           command = "${pencilMcpWrapper}/bin/pencil-mcp-wrapper";
         };
       }
+      // lib.optionalAttrs cfg.stravaMcp.enable {
+        strava = {
+          type = "stdio";
+          command = "${pkgs.nodejs}/bin/npx";
+          args = [ "-y" "@r-huijts/strava-mcp-server" ];
+        };
+      }
       // lib.optionalAttrs cfg.giteaMcp.enable {
         gitea-mcp = {
           type = "stdio";
           command = "${config.shared.mcp.gitea.wrapper}/bin/gitea-mcp-wrapper";
+        };
+      }
+      // lib.optionalAttrs cfg.intervalsMcp.enable {
+        intervals-icu = {
+          type = "stdio";
+          command = "${intervalsMcpWrapper}/bin/intervals-mcp-wrapper";
         };
       };
       agents = lib.mapAttrs (

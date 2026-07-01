@@ -14,12 +14,12 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${lib.getExe pkgs.greetd.tuigreet} --time --remember --asterisks --cmd niri-session";
+          command = "${lib.getExe pkgs.tuigreet} --time --remember --asterisks --cmd niri-session";
           user = "greeter";
         };
       };
     };
 
-    environment.systemPackages = [ pkgs.greetd.tuigreet ];
+    environment.systemPackages = [ pkgs.tuigreet ];
   };
 }

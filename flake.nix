@@ -59,7 +59,7 @@
     };
 
     emit = {
-      url = "git+https://gitea.znaniye.xyz/znaniye/emit.git?ref=experiment/domain-application";
+      url = "git+https://gitea.znaniye.xyz/znaniye/emit.git?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.blueprint.inputs.nixpkgs.follows = "nixpkgs";
     };

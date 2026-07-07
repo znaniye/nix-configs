@@ -61,6 +61,15 @@ in
                 cmd = { "${pkgs.nil}/bin/nil" },
                 filetypes = { "nix" },
                 root_markers = { "flake.nix", ".git" },
+                settings = {
+                  ["nil"] = {
+                    nix = {
+                      flake = {
+                        autoArchive = false,
+                      },
+                    },
+                  },
+                },
               }
               vim.lsp.enable("nil_ls")
             ''

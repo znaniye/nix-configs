@@ -133,7 +133,10 @@ in
         strava = {
           type = "stdio";
           command = "${pkgs.nodejs}/bin/npx";
-          args = [ "-y" "@r-huijts/strava-mcp-server" ];
+          args = [
+            "-y"
+            "@r-huijts/strava-mcp-server"
+          ];
         };
       }
       // lib.optionalAttrs cfg.giteaMcp.enable {

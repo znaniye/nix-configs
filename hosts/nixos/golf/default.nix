@@ -36,6 +36,8 @@
         python.enable = true;
         haskell.enable = true;
         typescript.enable = true;
+        ocaml.enable = true;
+        claude-code.stravaMcp.enable = true;
       };
     };
   };
@@ -46,6 +48,7 @@
     isNormalUser = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE1gU2lqhpKdSMSp/G1AODlhQ9WFOfUvFxZBcxtJhgGN root@felix"
     ];
   };
 

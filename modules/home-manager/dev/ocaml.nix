@@ -11,15 +11,6 @@
   };
 
   config = lib.mkIf config.home-manager.dev.ocaml.enable {
-    home.packages =
-      (with pkgs; [
-        ocaml
-        ocamlformat_0_26_1
-      ])
-      ++ (with pkgs.ocamlPackages; [
-        ocaml-lsp
-        utop
-      ]);
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
       extraPackages = lib.mkAfter [ pkgs.ocamlPackages.ocaml-lsp ];

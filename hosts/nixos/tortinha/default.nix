@@ -122,6 +122,8 @@ in
     "1.1.1.1"
   ];
 
+  hardware.deviceTree.enable = lib.mkForce true;
+
   hardware.raspberry-pi.config = {
     all = {
       base-dt-params = {

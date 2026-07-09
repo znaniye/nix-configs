@@ -25,8 +25,12 @@ in
       hostName,
       configuration ? ../hosts/nixos/${hostName},
     }:
+    let
+      hostNixpkgs =
+        if hostName == "tortinha" then self.inputs.nixos-raspberrypi.inputs.nixpkgs else nixpkgs;
+    in
     {
-      nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.${hostName} = hostNixpkgs.lib.nixosSystem {
         modules = [
           (setHostname hostName)
           self.outputs.nixosModules.default

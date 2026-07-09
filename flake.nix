@@ -76,7 +76,10 @@
 
     garnix-ci = {
       url = "github:znaniye/garnix-ci/selfhost";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # Do NOT follow the root nixpkgs: the garnix-server Haskell closure
+      # (cradle et al.) is fragile to GHC/haskellPackages bumps and its test
+      # suite breaks on aarch64. Pin garnix to the nixpkgs it ships in its own
+      # lock so root nixpkgs bumps don't recompile the server.
     };
 
     attic = {

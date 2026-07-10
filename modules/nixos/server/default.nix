@@ -3,10 +3,10 @@
   imports = [
     ./cloudflared.nix
     ./comin.nix
-    #./emit.nix
     ./garnix.nix
     ./garnix-runner.nix
     ./gitea.nix
+    ./k3s
     ./opencode.nix
     ./openssh.nix
     ./pi-hole.nix

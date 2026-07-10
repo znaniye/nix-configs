@@ -35,18 +35,6 @@
             "pihole.znaniye.xyz" = {
               service = "http://localhost:8053";
             };
-            "emit.znaniye.xyz" = {
-              service = "http://10.231.10.2:9999";
-            };
-            "emit-api.znaniye.xyz" = {
-              service = "http://10.231.10.2:5055";
-            };
-            "emit-staging.znaniye.xyz" = {
-              service = "http://10.231.10.4:9999";
-            };
-            "emit-api-staging.znaniye.xyz" = {
-              service = "http://10.231.10.4:5055";
-            };
           };
           default = "http_status:404";
         };

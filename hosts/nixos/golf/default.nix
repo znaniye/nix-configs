@@ -28,6 +28,7 @@
 
     server.garnix.enable = false;
     server.garnixRunner.enable = true;
+    server.k3s.enable = true;
 
     home.extraModules = {
       home-manager.dev = {

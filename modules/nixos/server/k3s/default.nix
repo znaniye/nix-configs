@@ -1,0 +1,171 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.nixos.server.k3s;
+
+  giteaHost = "192.168.68.111";
+  giteaPort = "2222";
+  opsUrl = "ssh://gitea@${giteaHost}:${giteaPort}/znaniye/ops.git";
+  opsBranch = "main";
+  gitSecretName = "flux-git-auth";
+
+  ciliumVersion = "1.19.5";
+  gatewayApiVersion = "1.4.1";
+
+  gatewayApiCrds = pkgs.fetchurl {
+    url = "https://github.com/kubernetes-sigs/gateway-api/releases/download/v${gatewayApiVersion}/standard-install.yaml";
+    hash = "sha256-c7kbd/a+AjqMkslp/GZOW9OxoorqWerJ68kEYHNU2tI=";
+  };
+
+  manifests = import ./manifests.nix {
+    inherit
+      lib
+      opsUrl
+      opsBranch
+      gitSecretName
+      ciliumVersion
+      ;
+  };
+
+  sopsOperatorNamespace = "sops-secrets-operator";
+  fluxNamespace = "flux-system";
+in
+{
+  options.nixos.server.k3s = {
+    enable = lib.mkEnableOption "k3s cluster (Cilium CNI + Gateway API + Flux GitOps)";
+
+    serverAddr = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      example = "https://192.168.68.111:6443";
+      description = "URL of an existing k3s server to join. null makes this node initialize the cluster (embedded etcd).";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    sops.secrets."cluster-age-key" = { };
+    sops.secrets."flux-git-deploy-key" = { };
+    sops.secrets."k3s-token" = { };
+
+    services.k3s = {
+      enable = true;
+      role = "server";
+      clusterInit = cfg.serverAddr == null;
+      serverAddr = lib.mkIf (cfg.serverAddr != null) cfg.serverAddr;
+      tokenFile = config.sops.secrets."k3s-token".path;
+
+      disable = [
+        "traefik"
+        "servicelb"
+      ];
+
+      extraFlags = [
+        "--flannel-backend=none"
+        "--disable-network-policy"
+        "--disable-kube-proxy"
+      ];
+
+      autoDeployCharts.flux = {
+        repo = "https://fluxcd-community.github.io/helm-charts";
+        name = "flux2";
+        version = "2.18.4";
+        hash = "sha256-Ji8GRuYP/bUP+clE3QpkVcp+ZDWbI3/4ou3WC1kW9Xo=";
+        targetNamespace = fluxNamespace;
+        createNamespace = true;
+      };
+
+      inherit manifests;
+    };
+
+    systemd.services.k3s-sops-age-bootstrap = {
+      description = "Seed sops-age Secret for sops-secrets-operator";
+      after = [ "k3s.service" ];
+      requires = [ "k3s.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        LoadCredential = "age-key:${config.sops.secrets."cluster-age-key".path}";
+      };
+      path = [ config.services.k3s.package ];
+      script = ''
+        export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+        until k3s kubectl get --raw=/readyz >/dev/null 2>&1; do
+          echo "waiting for k3s API..."; sleep 3
+        done
+
+        k3s kubectl create namespace ${sopsOperatorNamespace} \
+          --dry-run=client -o yaml | k3s kubectl apply -f -
+
+        k3s kubectl -n ${sopsOperatorNamespace} create secret generic sops-age \
+          --from-file=keys.txt="$CREDENTIALS_DIRECTORY/age-key" \
+          --dry-run=client -o yaml | k3s kubectl apply -f -
+      '';
+    };
+
+    systemd.services.k3s-flux-git-bootstrap = {
+      description = "Seed flux-git-auth Secret (deploy key) for Flux";
+      after = [ "k3s.service" ];
+      requires = [ "k3s.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        LoadCredential = "git-key:${config.sops.secrets."flux-git-deploy-key".path}";
+      };
+      path = [
+        config.services.k3s.package
+        pkgs.openssh
+      ];
+      script = ''
+        export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+        until k3s kubectl get --raw=/readyz >/dev/null 2>&1; do
+          echo "waiting for k3s API..."; sleep 3
+        done
+
+        k3s kubectl create namespace ${fluxNamespace} \
+          --dry-run=client -o yaml | k3s kubectl apply -f -
+
+        known_hosts="$(ssh-keyscan -p ${giteaPort} ${giteaHost} 2>/dev/null)"
+
+        k3s kubectl -n ${fluxNamespace} create secret generic ${gitSecretName} \
+          --from-file=identity="$CREDENTIALS_DIRECTORY/git-key" \
+          --from-literal=known_hosts="$known_hosts" \
+          --dry-run=client -o yaml | k3s kubectl apply -f -
+      '';
+    };
+
+    systemd.services.k3s-gateway-api-crds = {
+      description = "Install Gateway API CRDs (server-side) for Cilium Gateway";
+      after = [ "k3s.service" ];
+      requires = [ "k3s.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      path = [ config.services.k3s.package ];
+      script = ''
+        export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+        until k3s kubectl get --raw=/readyz >/dev/null 2>&1; do
+          echo "waiting for k3s API..."; sleep 3
+        done
+
+        k3s kubectl apply --server-side --force-conflicts -f ${gatewayApiCrds}
+
+        for _ in $(seq 1 10); do
+          if k3s kubectl get gatewayclass cilium >/dev/null 2>&1; then
+            exit 0
+          fi
+          sleep 3
+        done
+
+        k3s kubectl -n kube-system rollout restart deployment/cilium-operator || true
+      '';
+    };
+  };
+}

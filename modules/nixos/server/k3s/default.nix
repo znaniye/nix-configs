@@ -9,6 +9,7 @@ let
 
   giteaHost = "192.168.68.111";
   giteaPort = "2222";
+  registryEndpoint = "${giteaHost}:3000";
   opsUrl = "ssh://gitea@${giteaHost}:${giteaPort}/znaniye/ops.git";
   opsBranch = "main";
   gitSecretName = "flux-git-auth";
@@ -50,6 +51,26 @@ in
     sops.secrets."cluster-age-key" = { };
     sops.secrets."flux-git-deploy-key" = { };
     sops.secrets."k3s-token" = { };
+    sops.secrets."gitea-pat-token" = { };
+
+    sops.templates."k3s-registries.yaml" = {
+      path = "/etc/rancher/k3s/registries.yaml";
+      content = ''
+        mirrors:
+          "${registryEndpoint}":
+            endpoint:
+              - "http://${registryEndpoint}"
+        configs:
+          "${registryEndpoint}":
+            auth:
+              username: znaniye
+              password: ${config.sops.placeholder."gitea-pat-token"}
+      '';
+    };
+
+    systemd.services.k3s.restartTriggers = [
+      config.sops.templates."k3s-registries.yaml".content
+    ];
 
     services.k3s = {
       enable = true;

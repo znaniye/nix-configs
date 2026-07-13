@@ -61,7 +61,7 @@ jobs:
           current_system="$(nix eval --impure --raw --expr builtins.currentSystem)"
 
           if [ "$current_system" = "aarch64-linux" ]; then
-            nix --accept-flake-config --option builders '' build -L .#nixosConfigurations.tortinha.config.system.build.toplevel
+            nix --accept-flake-config build -L .#nixosConfigurations.tortinha.config.system.build.toplevel
           else
             nix --accept-flake-config eval --raw .#nixosConfigurations.tortinha.config.system.build.toplevel.drvPath >/dev/null
           fi

@@ -72,7 +72,6 @@ in
           ])
           ++ [
             claudeCodeExtension
-            pkgs.pencil-vscode-extension
           ];
 
         userSettings = {

@@ -17,38 +17,9 @@ in
 
   herdr = self.inputs.herdr.packages.${system}.herdr;
 
-  pencil-vscode-extension =
-    let
-      pencilMcpBinaryName =
-        if prev.stdenv.hostPlatform.isAarch64 then "mcp-server-linux-arm64" else "mcp-server-linux-x64";
-      base = prev.vscode-utils.buildVscodeMarketplaceExtension {
-        mktplcRef = {
-          name = "pencildev";
-          publisher = "highagency";
-          version = "0.6.55";
-          hash = "sha256-6Drsokr6VCT2mSgkHvylduaWZOr2A8mM0RmXHVGj0rU=";
-        };
-      };
-      patched = base.overrideAttrs (oldAttrs: {
-        postFixup = (oldAttrs.postFixup or "") + ''
-          mcpBinary="$out/share/vscode/extensions/highagency.pencildev/out/${pencilMcpBinaryName}"
-          if [ -f "$mcpBinary" ]; then
-            mv "$mcpBinary" "$mcpBinary.real"
-            cat > "$mcpBinary" <<EOF
-          #!${prev.bash}/bin/bash
-          exec ${prev.stdenv.cc.bintools.dynamicLinker} --library-path ${
-            prev.lib.makeLibraryPath [ prev.glibc ]
-          } "$mcpBinary.real" "\$@"
-          EOF
-            chmod +x "$mcpBinary"
-          fi
-        '';
-        passthru = (oldAttrs.passthru or { }) // {
-          mcpPath = "${patched}/share/vscode/extensions/highagency.pencildev/out/${pencilMcpBinaryName}";
-        };
-      });
-    in
-    patched;
+  pencil-cli = import ./pencil-cli.nix { pkgs = prev; };
+
+  pencil = import ./pencil.nix { pkgs = prev; };
 
   # aiohttp 3.13.4 rejects duplicate 'Server' headers (RFC 9110 strict check),
   # breaking aioboto3 tests that use moto+werkzeug. Fixed in 3.13.5.

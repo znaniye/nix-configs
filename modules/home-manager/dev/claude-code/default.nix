@@ -7,10 +7,6 @@
 let
   cfg = config.home-manager.dev.claude-code;
 
-  pencilMcpWrapper = pkgs.writeShellScriptBin "pencil-mcp-wrapper" ''
-    exec ${lib.escapeShellArgs config.shared.mcp.pencil.mcpCommand} "$@"
-  '';
-
   intervalsMcpWrapper = pkgs.writeShellScriptBin "intervals-mcp-wrapper" ''
     if [ -f "${config.sops.secrets.intervals-api-key.path}" ]; then
       export INTERVALS_ICU_API_KEY="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.intervals-api-key.path})"
@@ -126,7 +122,7 @@ in
       mcpServers = {
         pencil = {
           type = "stdio";
-          command = "${pencilMcpWrapper}/bin/pencil-mcp-wrapper";
+          command = config.shared.mcp.pencil.command;
         };
       }
       // lib.optionalAttrs cfg.stravaMcp.enable {

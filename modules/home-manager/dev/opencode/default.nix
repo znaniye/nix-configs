@@ -128,7 +128,7 @@ in
             };
             pencil = {
               enabled = true;
-              command = config.shared.mcp.pencil.mcpCommand;
+              command = [ config.shared.mcp.pencil.command ];
               type = "local";
             };
           };

@@ -32,8 +32,8 @@ let
 
     mcp_servers = {
       pencil = {
-        command = config.shared.mcp.pencil.mcpPath;
-        args = config.shared.mcp.pencil.mcpArgs;
+        command = config.shared.mcp.pencil.command;
+        args = [ ];
       };
     };
   };

@@ -1,8 +1,12 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   giteaCfg = config.shared.mcp.gitea;
-  pencilExt = pkgs.pencil-vscode-extension;
 
   defaultGiteaHost = "http://192.168.68.111:3000";
   defaultGiteaTokenSecretName = "gitea-pat-token";
@@ -39,25 +43,11 @@ in
     };
 
     pencil = {
-      mcpPath = lib.mkOption {
+      command = lib.mkOption {
         type = lib.types.str;
         readOnly = true;
-        default = pencilExt.mcpPath;
-        description = "Path to the pencil MCP server binary.";
-      };
-
-      mcpCommand = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        readOnly = true;
-        default = [ pencilExt.mcpPath "--app" "vscodium" ];
-        description = "Full command list for the pencil MCP server (binary + args).";
-      };
-
-      mcpArgs = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        readOnly = true;
-        default = [ "--app" "vscodium" ];
-        description = "Command arguments for the pencil MCP server (excluding binary path).";
+        default = "${pkgs.pencil-cli}/bin/pencil-mcp-bridge";
+        description = "Command that starts the pencil stdio MCP server (headless bridge).";
       };
     };
   };

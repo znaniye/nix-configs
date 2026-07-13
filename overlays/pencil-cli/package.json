@@ -1,0 +1,36 @@
+{
+  "name": "@pencil.dev/cli",
+  "version": "0.2.8",
+  "description": "CLI tool for running the Pencil AI agent manipulating .pen design files",
+  "type": "module",
+  "main": "dist/index.mjs",
+  "bin": {
+    "pencil": "dist/index.mjs"
+  },
+  "keywords": [
+    "pencil",
+    "design",
+    "ai",
+    "cli",
+    "pen"
+  ],
+  "author": "High Agency, Inc.",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.197",
+    "@inquirer/prompts": "^8.3.0",
+    "@node-ipc/node-ipc": "^11.0.3",
+    "@openai/codex-sdk": "^0.142.5",
+    "eventemitter3": "^5.0.1",
+    "semver": "^7.7.4",
+    "sharp": "^0.34.5",
+    "svgo": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist",
+    "SKILL.md"
+  ]
+}

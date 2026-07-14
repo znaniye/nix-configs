@@ -8,9 +8,8 @@ let
   cfg = config.nixos.server.k3s;
 
   giteaHost = "192.168.68.111";
-  giteaPort = "2222";
   registryEndpoint = "${giteaHost}:3000";
-  opsUrl = "ssh://gitea@${giteaHost}:${giteaPort}/znaniye/ops.git";
+  opsUrl = "http://${giteaHost}:3000/znaniye/ops.git";
   opsBranch = "main";
   gitSecretName = "flux-git-auth";
 
@@ -49,7 +48,6 @@ in
 
   config = lib.mkIf cfg.enable {
     sops.secrets."cluster-age-key" = { };
-    sops.secrets."flux-git-deploy-key" = { };
     sops.secrets."k3s-token" = { };
     sops.secrets."gitea-pat-token" = { };
 
@@ -129,19 +127,16 @@ in
     };
 
     systemd.services.k3s-flux-git-bootstrap = {
-      description = "Seed flux-git-auth Secret (deploy key) for Flux";
+      description = "Seed flux-git-auth Secret (HTTP PAT) for Flux";
       after = [ "k3s.service" ];
       requires = [ "k3s.service" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        LoadCredential = "git-key:${config.sops.secrets."flux-git-deploy-key".path}";
+        LoadCredential = "git-token:${config.sops.secrets."gitea-pat-token".path}";
       };
-      path = [
-        config.services.k3s.package
-        pkgs.openssh
-      ];
+      path = [ config.services.k3s.package ];
       script = ''
         export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
         until k3s kubectl get --raw=/readyz >/dev/null 2>&1; do
@@ -151,12 +146,12 @@ in
         k3s kubectl create namespace ${fluxNamespace} \
           --dry-run=client -o yaml | k3s kubectl apply -f -
 
-        known_hosts="$(ssh-keyscan -p ${giteaPort} ${giteaHost} 2>/dev/null)"
+        password="$(tr -d '\r\n' < "$CREDENTIALS_DIRECTORY/git-token")"
 
+        k3s kubectl -n ${fluxNamespace} delete secret ${gitSecretName} --ignore-not-found >/dev/null 2>&1
         k3s kubectl -n ${fluxNamespace} create secret generic ${gitSecretName} \
-          --from-file=identity="$CREDENTIALS_DIRECTORY/git-key" \
-          --from-literal=known_hosts="$known_hosts" \
-          --dry-run=client -o yaml | k3s kubectl apply -f -
+          --from-literal=username=znaniye \
+          --from-literal=password="$password"
       '';
     };
 

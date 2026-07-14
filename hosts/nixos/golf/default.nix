@@ -28,6 +28,7 @@
 
     server.garnix.enable = false;
     server.garnixRunner.enable = true;
+    server.gitea.remoteRunner.enable = true;
     server.k3s.enable = true;
 
     home.extraModules = {

@@ -16,6 +16,8 @@ in
       default = config.nixos.server.enable;
     };
 
+    remoteRunner.enable = lib.mkEnableOption "runner-only mode against the tortinha Gitea";
+
     runner = {
       enable = lib.mkEnableOption "self-hosted Gitea Actions runner" // {
         default = config.nixos.server.enable;
@@ -118,7 +120,57 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkMerge [
+
+    (lib.mkIf cfg.remoteRunner.enable {
+      sops.secrets.gitea-pat-token = { };
+
+      systemd.services.gitea-remote-runner-token = {
+        description = "User-scoped registration token for the remote runner";
+        wantedBy = [ "multi-user.target" ];
+        before = [ "gitea-runner-${config.networking.hostName}.service" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        path = with pkgs; [
+          curl
+          jq
+          coreutils
+        ];
+        script = ''
+          set -euo pipefail
+          pat="$(cat ${config.sops.secrets.gitea-pat-token.path})"
+          token="$(curl -s --fail -X POST -H "Authorization: token $pat" \
+            http://192.168.68.111:3000/api/v1/user/actions/runners/registration-token \
+            | jq -r .token)"
+          install -d -m 0700 /run/gitea-remote-runner
+          printf 'TOKEN=%s\n' "$token" > /run/gitea-remote-runner/token.env
+          chmod 0400 /run/gitea-remote-runner/token.env
+        '';
+      };
+
+      services.gitea-actions-runner.instances.${config.networking.hostName} = {
+        enable = true;
+        name = config.networking.hostName;
+        url = "http://192.168.68.111:3000";
+        tokenFile = "/run/gitea-remote-runner/token.env";
+        labels = [ "amd64:host" ];
+        hostPackages = lib.mkOptionDefault [
+          pkgs.nix
+          pkgs.skopeo
+        ];
+      };
+
+      systemd.services."gitea-runner-${config.networking.hostName}" = {
+        after = [ "gitea-remote-runner-token.service" ];
+        requires = [ "gitea-remote-runner-token.service" ];
+      };
+    })
+
+    (lib.mkIf cfg.enable {
 
     assertions = [
       {
@@ -395,5 +447,6 @@ in
       3000
       2222
     ];
-  };
+    })
+  ];
 }

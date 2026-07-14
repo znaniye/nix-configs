@@ -50,7 +50,7 @@
     isNormalUser = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2DPx198YXU9f0dCAwWhPBIVswQ/H9KVuaXe19Brhme garnix-action-runner@golf"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE1gU2lqhpKdSMSp/G1AODlhQ9WFOfUvFxZBcxtJhgGN root@felix"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEmroI8gBPj2J2JxGZZYFhQCUYeU0FKZTK6kgP+9gmFZ root@felix"
     ];
   };
 

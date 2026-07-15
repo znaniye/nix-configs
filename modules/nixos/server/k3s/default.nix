@@ -15,10 +15,16 @@ let
 
   ciliumVersion = "1.19.5";
   gatewayApiVersion = "1.4.1";
+  envoyGatewayVersion = "1.8.2";
 
   gatewayApiCrds = pkgs.fetchurl {
     url = "https://github.com/kubernetes-sigs/gateway-api/releases/download/v${gatewayApiVersion}/standard-install.yaml";
     hash = "sha256-c7kbd/a+AjqMkslp/GZOW9OxoorqWerJ68kEYHNU2tI=";
+  };
+
+  envoyGatewayCrds = pkgs.fetchurl {
+    url = "https://github.com/envoyproxy/gateway/releases/download/v${envoyGatewayVersion}/envoy-gateway-crds.yaml";
+    hash = "sha256-I/CRPyAKvR18Y0w/ssPrYCHMToS9110ylnEbkzRHKrs=";
   };
 
   manifests = import ./manifests.nix {
@@ -181,6 +187,26 @@ in
         done
 
         k3s kubectl -n kube-system rollout restart deployment/cilium-operator || true
+      '';
+    };
+
+    systemd.services.k3s-envoy-gateway-crds = {
+      description = "Install Envoy Gateway CRDs (server-side)";
+      after = [ "k3s.service" ];
+      requires = [ "k3s.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      path = [ config.services.k3s.package ];
+      script = ''
+        export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+        until k3s kubectl get --raw=/readyz >/dev/null 2>&1; do
+          echo "waiting for k3s API..."; sleep 3
+        done
+
+        k3s kubectl apply --server-side --force-conflicts -f ${envoyGatewayCrds}
       '';
     };
   };

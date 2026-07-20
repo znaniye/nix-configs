@@ -94,7 +94,7 @@ jobs:
           git -c "http.extraHeader=Authorization: token $PAT_TOKEN" \
             push $lease origin HEAD:flake-updates
 
-      - name: Create or update pull request
+      - name: Create pull request
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
@@ -111,30 +111,28 @@ jobs:
           fi
 
           repo="${{ gitea.repository }}"
-          owner="${repo%%/*}"
           api="https://gitea.znaniye.xyz/api/v1/repos/$repo"
           run_url="https://gitea.znaniye.xyz/$repo/actions/runs/${{ gitea.run_id }}"
-          # body is a fixed, URL-only string — safe to embed in JSON without escaping.
           body="Run report: $run_url"
 
-          existing=$(curl -sS -H "Authorization: token $PAT_TOKEN" \
-            "$api/pulls?state=open&head=${owner}:flake-updates" \
-            | grep -o '"number":[[:space:]]*[0-9]*' \
-            | head -n1 \
-            | grep -o '[0-9]*$' || true)
+          resp="$(mktemp)"
+          trap 'rm -f "$resp"' EXIT
+          code=$(curl -sS -o "$resp" -w '%{http_code}' -X POST \
+            -H "Authorization: token $PAT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"title\":\"Update flake.lock\",\"head\":\"flake-updates\",\"base\":\"master\",\"body\":\"$body\"}" \
+            "$api/pulls")
 
-          if [ -n "$existing" ]; then
-            echo "Updating PR #$existing body"
-            curl -sS --fail -X PATCH \
-              -H "Authorization: token $PAT_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d "{\"body\":\"$body\"}" \
-              "$api/issues/$existing" >/dev/null
-          else
-            echo "Creating PR"
-            curl -sS --fail -X POST \
-              -H "Authorization: token $PAT_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d "{\"title\":\"Update flake.lock\",\"head\":\"flake-updates\",\"base\":\"master\",\"body\":\"$body\"}" \
-              "$api/pulls" >/dev/null
-          fi
+          case "$code" in
+            201)
+              echo "Created PR"
+              ;;
+            409)
+              echo "PR from flake-updates already open; branch push refreshed its diff"
+              ;;
+            *)
+              echo "Unexpected response ($code):"
+              cat "$resp"
+              exit 1
+              ;;
+          esac

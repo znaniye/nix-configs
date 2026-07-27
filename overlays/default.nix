@@ -13,6 +13,8 @@ in
 
   opencode = self.inputs.llm-agents.packages.${system}.opencode;
 
+  rtk = self.inputs.llm-agents.packages.${system}.rtk;
+
   pi-coding-agent = self.inputs.coding-agents.packages.${system}.pi-coding-agent;
 
   herdr = self.inputs.herdr.packages.${system}.herdr;

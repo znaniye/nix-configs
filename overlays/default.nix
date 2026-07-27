@@ -20,4 +20,6 @@ in
   pencil-cli = import ./pencil-cli.nix { pkgs = prev; };
 
   pencil = import ./pencil.nix { pkgs = prev; };
+
+  inherit (import ./qasync.nix final prev) pythonPackagesExtensions;
 }

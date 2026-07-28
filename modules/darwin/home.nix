@@ -17,6 +17,9 @@ in
   config = lib.mkIf cfg.enable {
     darwin.home.extraModules = {
       home.stateVersion = lib.mkDefault "24.05";
+
+      targets.darwin.linkApps.enable = false;
+      targets.darwin.copyApps.enable = true;
     };
 
     system.primaryUser = lib.mkDefault cfg.username;

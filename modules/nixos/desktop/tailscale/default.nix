@@ -131,8 +131,9 @@ in
 
     (lib.mkIf cfg.enable {
 
+      shared.tailscale.enable = true;
+
       services.tailscale = {
-        enable = true;
         authKeyFile = config.sops.secrets.tailscale-key.path;
         #useRoutingFeatures = if config.nixos.server.tailscale.enable then "both" else "client";
       };

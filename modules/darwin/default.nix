@@ -1,10 +1,11 @@
-{ lib, ... }:
+{ flake, lib, ... }:
 {
   imports = [
     ../shared/meta.nix
     ../shared/theme.nix
     ./home.nix
     ./nix
+    flake.outputs.internal.sharedModules.system
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-darwin";

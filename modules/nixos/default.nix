@@ -16,6 +16,7 @@
     ./server
     ./wsl.nix
     flake.outputs.internal.sharedModules.default
+    flake.outputs.internal.sharedModules.system
   ];
 
   config.system.stateVersion = lib.mkDefault config.system.nixos.release;

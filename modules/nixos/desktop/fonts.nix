@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -11,15 +10,10 @@
   };
 
   config = lib.mkIf config.nixos.desktop.fonts.enable {
+    shared.fonts.enable = true;
+
     fonts = {
       fontDir.enable = true;
-
-      packages = with pkgs; [
-        nerd-fonts.iosevka
-        noto-fonts
-        noto-fonts-cjk-sans
-        noto-fonts-cjk-serif
-      ];
 
       fontconfig = {
         defaultFonts = {

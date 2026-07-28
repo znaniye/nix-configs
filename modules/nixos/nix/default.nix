@@ -1,6 +1,5 @@
 {
   config,
-  flake,
   lib,
   pkgs,
   ...
@@ -29,8 +28,7 @@ in
         let
           rootToken = config.sops.secrets.gitea-pat-token.path;
           userToken = config.sops.secrets.gitea-pat-token-user.path;
-          helper = ''
-            !f() { if [ "$1" = get ]; then if [ -r ${rootToken} ]; then t=${rootToken}; elif [ -r ${userToken} ]; then t=${userToken}; else exit 0; fi; echo username=${config.nixos.home.username}; printf 'password='; cat $t; fi; }; f'';
+          helper = ''!f() { if [ "$1" = get ]; then if [ -r ${rootToken} ]; then t=${rootToken}; elif [ -r ${userToken} ]; then t=${userToken}; else exit 0; fi; echo username=${config.nixos.home.username}; printf 'password='; cat $t; fi; }; f'';
         in
         {
           credential."https://gitea.znaniye.xyz".helper = helper;
@@ -62,7 +60,6 @@ in
         hostBasedJobs = if config.networking.hostName == "golf" then 3 else 1;
       in
       {
-        package = pkgs.nixVersions.latest;
         gc = {
           automatic = true;
           persistent = true;
@@ -70,8 +67,6 @@ in
           dates = "3:15";
           options = "--delete-older-than 30d";
         };
-        # Optimise nix-store via service
-        optimise.automatic = true;
         # Reduce disk usage
         daemonIOSchedClass = "best-effort";
         daemonIOSchedPriority = 7;
@@ -79,15 +74,11 @@ in
         daemonCPUSchedPolicy = "batch";
 
         extraOptions = ''
-          experimental-features = nix-command flakes
           !include ${config.sops.secrets.freedom-github-http-auth-token.path}
         '';
 
         settings = {
-          trusted-users = [
-            "root"
-            "@wheel"
-          ];
+          trusted-users = [ "@wheel" ];
           extra-platforms = [ "aarch64-linux" ];
           auto-optimise-store = true;
           max-jobs = hostBasedJobs;
@@ -96,23 +87,12 @@ in
           extra-substituters = [
             "https://nixos-raspberrypi.cachix.org"
             "https://niri.cachix.org"
-            "https://nix-community.cachix.org"
-            "https://cache.numtide.com"
           ];
           extra-trusted-public-keys = [
             "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
             "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
           ];
         };
       };
-
-    nixpkgs = {
-      config.allowUnfree = true;
-      overlays = [
-        flake.outputs.overlays.default
-      ];
-    };
   };
 }

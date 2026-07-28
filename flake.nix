@@ -106,6 +106,7 @@
           internal.sharedModules = {
             default = import ./modules/shared;
             helpers = import ./modules/shared/helpers;
+            system = import ./modules/shared/system;
           };
           nixosModules.default = import ./modules/nixos;
           darwinModules.default = import ./modules/darwin;

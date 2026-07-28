@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -26,11 +27,14 @@
             lines = 75;
             columns = 100;
           };
+        }
+        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+          option_as_alt = "Both";
         };
 
         font = {
           normal = {
-            family = "Iosevka Nerd Font";
+            family = "Iosevka Nerd Font Mono";
             style = "Medium";
           };
           size = 14;

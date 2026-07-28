@@ -3,6 +3,8 @@
   shared.tailscale.enable = true;
   shared.fonts.enable = true;
 
+  darwin.wireguard.enable = true;
+
   darwin.home.extraModules = {
     home-manager.editor.enable = true;
     home-manager.desktop.herdr.enable = true;

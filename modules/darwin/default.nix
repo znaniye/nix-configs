@@ -13,5 +13,12 @@
 
   programs.zsh.enable = lib.mkDefault true;
 
+  system.defaults.dock = {
+    autohide = true;
+    autohide-delay = 0.0;
+    autohide-time-modifier = 0.0;
+    show-recents = false;
+  };
+
   system.stateVersion = lib.mkDefault 5;
 }

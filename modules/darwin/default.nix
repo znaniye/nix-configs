@@ -5,6 +5,7 @@
     ../shared/theme.nix
     ./home.nix
     ./nix
+    ./wireguard.nix
     flake.outputs.internal.sharedModules.system
   ];
 

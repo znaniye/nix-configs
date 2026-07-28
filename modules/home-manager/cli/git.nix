@@ -41,7 +41,9 @@
       };
 
       zsh.initContent = lib.mkIf config.programs.gh.enable ''
-        export GH_TOKEN="$(cat ${config.sops.secrets.gh-token.path})"
+        if [ -f "${config.sops.secrets.gh-token.path}" ]; then
+          export GH_TOKEN="$(cat ${config.sops.secrets.gh-token.path})"
+        fi
       '';
 
     };

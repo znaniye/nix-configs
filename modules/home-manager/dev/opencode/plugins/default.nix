@@ -21,7 +21,7 @@ let
 
   configuredPlugins = {
     notification = {
-      enabled = true;
+      enabled = pkgs.stdenv.hostPlatform.isLinux;
       source = ./notification.js;
       substitutions = {
         __DUNSTIFY_COMMAND__ = "${pkgs.dunst}/bin/dunstify";

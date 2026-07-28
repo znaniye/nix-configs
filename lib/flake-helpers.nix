@@ -1,5 +1,6 @@
 {
   home-manager,
+  nix-darwin,
   nixpkgs,
   self,
   ...
@@ -42,6 +43,26 @@ in
           flake = self;
           nixos-raspberrypi = self.inputs.nixos-raspberrypi;
           attic = self.inputs.attic;
+        };
+      };
+    };
+
+  mkDarwinConfig =
+    {
+      hostName,
+      configuration ? ../hosts/darwin/${hostName},
+    }:
+    {
+      darwinConfigurations.${hostName} = nix-darwin.lib.darwinSystem {
+        modules = [
+          (setHostname hostName)
+          self.outputs.darwinModules.default
+          configuration
+        ];
+
+        specialArgs = {
+          inherit myAuthorizedKeys;
+          flake = self;
         };
       };
     };

@@ -17,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     sops = {
       defaultSopsFile = ../../secrets/var.yaml;
-      age.keyFile = "/home/znaniye/.config/sops/age/keys.txt";
+      age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
     };
   };
 }

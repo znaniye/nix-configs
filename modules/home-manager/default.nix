@@ -2,6 +2,7 @@
   config,
   flake,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -30,7 +31,9 @@
   config = lib.mkIf config.home-manager.enable {
     home = {
       username = lib.mkOptionDefault "znaniye";
-      homeDirectory = lib.mkOptionDefault "/home/znaniye";
+      homeDirectory = lib.mkOptionDefault (
+        if pkgs.stdenv.hostPlatform.isDarwin then "/Users/znaniye" else "/home/znaniye"
+      );
     };
   };
 }

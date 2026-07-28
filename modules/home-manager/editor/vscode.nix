@@ -80,11 +80,11 @@ in
               name = "ANTHROPIC_BASE_URL";
               value = claudeCodeCfg.anthropicBaseUrl;
             }
-            {
-              name = "AGENT_BROWSER_EXECUTABLE_PATH";
-              value = "${pkgs.chromium}/bin/chromium";
-            }
-          ];
+          ]
+          ++ lib.optional (claudeCodeCfg.agentBrowserExecutable != "") {
+            name = "AGENT_BROWSER_EXECUTABLE_PATH";
+            value = claudeCodeCfg.agentBrowserExecutable;
+          };
           "claudeCode.allowDangerouslySkipPermissions" = true;
           "claudeCode.initialPermissionMode" = "bypassPermissions";
 

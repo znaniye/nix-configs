@@ -7,6 +7,8 @@
 let
   cfg = config.home-manager.dev.claude-code;
 
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
+
   intervalsMcpWrapper = pkgs.writeShellScriptBin "intervals-mcp-wrapper" ''
     if [ -f "${config.sops.secrets.intervals-api-key.path}" ]; then
       export INTERVALS_ICU_API_KEY="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.intervals-api-key.path})"
@@ -24,7 +26,9 @@ let
       #!${pkgs.bash}/bin/bash
       export PATH="${pkgs.nodejs}/bin:\$PATH"
       export ANTHROPIC_BASE_URL="${cfg.anthropicBaseUrl}"
-      export AGENT_BROWSER_EXECUTABLE_PATH="${pkgs.chromium}/bin/chromium"
+      ${lib.optionalString (
+        cfg.agentBrowserExecutable != ""
+      ) ''export AGENT_BROWSER_EXECUTABLE_PATH="${cfg.agentBrowserExecutable}"''}
       if [ -f "${config.sops.secrets.anthropic-auth-token.path}" ]; then
         export ANTHROPIC_AUTH_TOKEN="\$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.anthropic-auth-token.path})"
       fi
@@ -50,6 +54,13 @@ in
       type = lib.types.str;
       default = "http://192.168.150.11:4444";
       description = "Base URL for the Anthropic API.";
+    };
+
+    agentBrowserExecutable = lib.mkOption {
+      type = lib.types.str;
+      readOnly = true;
+      default = lib.optionalString isLinux "${pkgs.chromium}/bin/chromium";
+      description = "Browser executable for agent-browser; empty when unavailable on the platform.";
     };
 
     giteaMcp = {
@@ -84,8 +95,8 @@ in
       (with pkgs; [
         jq
         agent-browser
-        chromium
       ])
+      ++ lib.optional isLinux pkgs.chromium
       ++ lib.optional cfg.rtk.enable pkgs.rtk;
 
     home.activation.claudeCodeOnboarding = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -120,6 +131,8 @@ in
       enable = true;
       package = claudeCodeWithEnv;
       mcpServers = {
+      }
+      // lib.optionalAttrs isLinux {
         pencil = {
           type = "stdio";
           command = config.shared.mcp.pencil.command;

@@ -10,6 +10,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -103,6 +108,7 @@
             helpers = import ./modules/shared/helpers;
           };
           nixosModules.default = import ./modules/nixos;
+          darwinModules.default = import ./modules/darwin;
           overlays.default = import ./overlays { inherit self; };
           homeModules.default = import ./modules/home-manager;
         }
@@ -131,6 +137,9 @@
       ++
         # NixOS config
         (libEx.mapDir (hostName: libEx.mkNixOSConfig { inherit hostName; }) ./hosts/nixos)
+      ++
+        # nix-darwin config
+        (libEx.mapDir (hostName: libEx.mkDarwinConfig { inherit hostName; }) ./hosts/darwin)
       ++
         # Home-Manager standalone configs
         ((libEx.mapDir (hostName: libEx.mkHomeConfig { inherit hostName; }) ./hosts/home-manager))

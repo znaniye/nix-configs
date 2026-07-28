@@ -46,7 +46,8 @@ in
       command = lib.mkOption {
         type = lib.types.str;
         readOnly = true;
-        default = "${pkgs.pencil-cli}/bin/pencil-mcp-bridge";
+        default =
+          if pkgs.stdenv.hostPlatform.isLinux then "${pkgs.pencil-cli}/bin/pencil-mcp-bridge" else "";
         description = "Command that starts the pencil stdio MCP server (headless bridge).";
       };
     };

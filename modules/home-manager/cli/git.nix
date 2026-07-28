@@ -47,7 +47,5 @@
       '';
 
     };
-
-    sops.secrets.gh-token.path = "${config.xdg.configHome}/secrets/gh-token";
   };
 }

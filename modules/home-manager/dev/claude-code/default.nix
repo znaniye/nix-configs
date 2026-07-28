@@ -120,10 +120,7 @@ in
         ];
     };
 
-    sops.secrets = {
-      anthropic-auth-token.path = "${config.xdg.configHome}/secrets/anthropic-auth-token";
-    }
-    // lib.optionalAttrs cfg.intervalsMcp.enable {
+    sops.secrets = lib.optionalAttrs cfg.intervalsMcp.enable {
       intervals-api-key.path = "${config.xdg.configHome}/secrets/intervals-api-key";
     };
 

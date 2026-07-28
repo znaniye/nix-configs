@@ -4,6 +4,7 @@
   shared.fonts.enable = true;
 
   darwin.wireguard.enable = true;
+  darwin.openssh.enable = true;
 
   darwin.home.extraModules = {
     home-manager.editor.enable = true;

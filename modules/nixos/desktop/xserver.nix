@@ -24,7 +24,7 @@
         enable = true;
 
         xkb = {
-          variant = "";
+          variant = "abnt2";
           layout = "br";
         };
 

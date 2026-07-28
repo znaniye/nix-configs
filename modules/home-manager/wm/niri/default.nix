@@ -10,15 +10,20 @@ let
   defaultKeyBinds = import ./defaultKeyBinds.nix;
   osCfg = if osConfig == null then { } else osConfig;
   hostName = lib.attrByPath [ "networking" "hostName" ] null osCfg;
+  brHosts = [
+    "felix"
+    "golf"
+  ];
   xkb =
-    if hostName != "felix" then
+    if lib.elem hostName brHosts then
       {
-        layout = "us";
-        variant = "altgr-intl";
+        layout = "br";
+        variant = "abnt2";
       }
     else
       {
-        layout = "br";
+        layout = "us";
+        variant = "altgr-intl";
       };
 in
 {

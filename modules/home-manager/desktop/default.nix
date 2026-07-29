@@ -15,11 +15,14 @@ in
     ./alacritty.nix
     ./zellij.nix
     ./herdr.nix
+    ./wallpaper.nix
   ];
 
   options.home-manager.desktop = {
     enable = lib.mkEnableOption "desktop config" // {
-      default = lib.attrByPath [ "nixos" "desktop" "enable" ] false osCfg;
+      default =
+        lib.attrByPath [ "nixos" "desktop" "enable" ] false osCfg
+        || lib.attrByPath [ "darwin" "desktop" "enable" ] false osCfg;
     };
   };
 

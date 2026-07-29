@@ -20,7 +20,9 @@ in
   ];
 
   options.home-manager.editor.enable = lib.mkEnableOption "editor config" // {
-    default = lib.attrByPath [ "nixos" "desktop" "enable" ] false osCfg;
+    default =
+      lib.attrByPath [ "nixos" "desktop" "enable" ] false osCfg
+      || lib.attrByPath [ "darwin" "desktop" "enable" ] false osCfg;
   };
 
   #config = lib.mkIf cfg.enable {

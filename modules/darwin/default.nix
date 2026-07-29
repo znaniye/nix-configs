@@ -1,7 +1,13 @@
-{ flake, lib, ... }:
+{
+  config,
+  flake,
+  lib,
+  ...
+}:
 {
   imports = [
     ../shared/meta.nix
+    ../shared/authorized-keys.nix
     ../shared/theme.nix
     ./desktop.nix
     ./home.nix
@@ -14,6 +20,8 @@
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-darwin";
 
   programs.zsh.enable = lib.mkDefault true;
+
+  users.users.${config.shared.meta.username}.openssh.authorizedKeys.keys = config.shared.authorizedKeys;
 
   system.stateVersion = lib.mkDefault 5;
 }

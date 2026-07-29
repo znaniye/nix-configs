@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  myAuthorizedKeys,
   pkgs,
   ...
 }:
@@ -288,7 +287,7 @@ in
       '';
     };
 
-    users.users.gitea.openssh.authorizedKeys.keys = myAuthorizedKeys;
+    users.users.gitea.openssh.authorizedKeys.keys = config.shared.authorizedKeys;
 
     services.gitea = {
       enable = true;

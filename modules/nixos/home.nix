@@ -2,7 +2,6 @@
   config,
   flake,
   lib,
-  myAuthorizedKeys,
   pkgs,
   ...
 }:
@@ -34,7 +33,7 @@ in
       ];
       shell = pkgs.zsh;
       initialPassword = "changeme";
-      openssh.authorizedKeys.keys = myAuthorizedKeys;
+      openssh.authorizedKeys.keys = config.shared.authorizedKeys;
     };
   };
 }

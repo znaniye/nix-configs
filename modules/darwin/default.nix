@@ -1,4 +1,9 @@
-{ flake, lib, ... }:
+{
+  config,
+  flake,
+  lib,
+  ...
+}:
 {
   imports = [
     ../shared/meta.nix
@@ -20,6 +25,15 @@
     autohide-time-modifier = 0.0;
     show-recents = false;
   };
+
+  system.defaults.CustomUserPreferences."com.apple.WindowManager" = {
+    StandardHideWidgets = true;
+    StageManagerHideWidgets = true;
+  };
+
+  system.activationScripts.postActivation.text = ''
+    osascript -e 'tell application "System Events" to tell every desktop to set picture to "${config.shared.theme.wallpaper}"'
+  '';
 
   system.stateVersion = lib.mkDefault 5;
 }

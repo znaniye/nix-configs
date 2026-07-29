@@ -28,6 +28,13 @@ vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.opt.clipboard = "unnamedplus"
 
+local osc52 = require("vim.ui.clipboard.osc52")
+vim.g.clipboard = {
+    name = "OSC 52",
+    copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+    paste = { ["+"] = osc52.paste("+"), ["*"] = osc52.paste("*") },
+}
+
 vim.keymap.set("n", "<C-l>", ":bnext<CR>", { noremap = true })
 vim.keymap.set("n", "<C-h>", ":bprevious<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>bd", ":bd!<CR>", { noremap = true })

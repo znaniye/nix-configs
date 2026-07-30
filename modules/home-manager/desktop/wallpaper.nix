@@ -18,7 +18,10 @@ in
     lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
       programs.desktoppr = {
         enable = true;
-        settings.picture = builtins.toString config.shared.theme.wallpaper;
+        settings.picture = builtins.path {
+          path = config.shared.theme.wallpaper;
+          name = "wallpaper.png";
+        };
       };
     }
   );

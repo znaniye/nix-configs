@@ -18,7 +18,7 @@
     ./lua.nix
     ./nix.nix
     ./ocaml.nix
-    ./opencode
+    #./opencode
     ./pi-agent
     ./python.nix
     ./rust.nix

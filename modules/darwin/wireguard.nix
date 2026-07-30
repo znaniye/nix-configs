@@ -38,8 +38,6 @@ in
           }
         ];
       };
-
-      launchd.daemons.wg-quick-wg0.serviceConfig.KeepAlive = lib.mkForce true;
     })
   ];
 }

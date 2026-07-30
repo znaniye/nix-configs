@@ -1,6 +1,4 @@
 builds:
-  include:
-    - '*.*.*'
   exclude:
     - 'darwinConfigurations.*'
     - '*.aarch64-darwin.*'

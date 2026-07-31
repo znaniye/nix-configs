@@ -10,8 +10,6 @@ in
   zls = self.inputs.zls.packages.${system}.default;
   zig = self.inputs.zig.packages.${system}."0.15.1";
 
-  opencode = self.inputs.llm-agents.packages.${system}.opencode;
-
   rtk = self.inputs.llm-agents.packages.${system}.rtk;
 
   pi-coding-agent = self.inputs.coding-agents.packages.${system}.pi-coding-agent;

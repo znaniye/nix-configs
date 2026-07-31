@@ -35,7 +35,6 @@ in
     superAdmins = [ "samuelwww17@gmail.com" ];
   };
   nixos.server.gitea = {
-    runner.opencodeAuthSecretName = "opencode-auth-json";
     runner.shared.enable = true;
     actionsSecrets.repositoryNames = [
       "nix-configs"
@@ -72,18 +71,11 @@ in
   nixos.desktop = {
     sops.enable = true;
     tailscale.enable = true;
-    # syncthing = {
-    #   enable = true;
-    #   deviceId = "ZWMG6VR-NMEPKRG-YGO7D2C-KILL6TI-SEZ6MOY-SOHPHU6-OTSGJOW-XVX4VQI";
-    #   folder = "/var/lib/opencode/workdir";
-    # };
   };
   nixos.home.extraModules = {
     home-manager.dev.enable = false;
     home-manager.cli.codex.enable = false;
   };
-
-  users.users.znaniye.extraGroups = [ "opencode" ];
 
   # Authorize root@golf for remote aarch64 builds from x86 hosts.
   users.users.znaniye.openssh.authorizedKeys.keys = [

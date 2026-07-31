@@ -51,12 +51,6 @@ in
         description = "SOPS key name used for the runner registration token.";
       };
 
-      opencodeAuthSecretName = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        description = "Optional SOPS key name containing an OpenCode auth.json payload to materialize in each runner data directory.";
-      };
-
       labels = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ "native:host" ];
@@ -178,21 +172,12 @@ in
       }
     ];
 
-    sops.secrets = lib.mkMerge [
-      (lib.mkIf (cfg.runner.enable && cfg.runner.autoTokenFromSops) {
-        ${cfg.runner.tokenSecretName} = {
-          owner = "root";
-          mode = "0400";
-        };
-      })
-      (lib.mkIf (cfg.runner.enable && cfg.runner.opencodeAuthSecretName != null) {
-        ${cfg.runner.opencodeAuthSecretName} = {
-          owner = "root";
-          mode = "0400";
-          sopsFile = ../../../secrets/opencode-auth.json;
-        };
-      })
-    ];
+    sops.secrets = lib.mkIf (cfg.runner.enable && cfg.runner.autoTokenFromSops) {
+      ${cfg.runner.tokenSecretName} = {
+        owner = "root";
+        mode = "0400";
+      };
+    };
 
     sops.templates = lib.mkIf (cfg.runner.enable && cfg.runner.autoTokenFromSops) {
       gitea-runner-env = {
@@ -330,7 +315,6 @@ in
           labels = cfg.runner.labels;
           hostPackages = lib.mkOptionDefault [
             pkgs.nix
-            pkgs.opencode
           ];
         };
       }
@@ -343,86 +327,45 @@ in
           labels = cfg.runner.labels;
           hostPackages = lib.mkOptionDefault [
             pkgs.nix
-            pkgs.opencode
           ];
         };
       };
 
-    systemd.services.gitea-runner-local = lib.mkMerge [
-      (lib.mkIf (cfg.runner.enable && cfg.runner.opencodeAuthSecretName != null) {
-        environment = {
-          XDG_CACHE_HOME = "/var/lib/gitea-runner/local/.cache";
-          XDG_CONFIG_HOME = "/var/lib/gitea-runner/local/.config";
-          XDG_DATA_HOME = "/var/lib/gitea-runner/local/.local/share";
-        };
-        serviceConfig.LoadCredential = [
-          "opencode-auth.json:${config.sops.secrets."${cfg.runner.opencodeAuthSecretName}".path}"
-        ];
-        serviceConfig.ExecStartPre = lib.mkAfter [
-          (pkgs.writeShellScript "gitea-runner-local-install-opencode" ''
-            install -d -m 0700 "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
-            if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
-              install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
-            fi
-          '')
-        ];
-      })
-      (lib.mkIf cfg.runner.enable {
-        # DynamicUser=true forces noexec on StateDirectory; whitelist it
-        # so jobs can exec binaries they install (playwright, QuestPdfSkia).
-        serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/local" ];
-        # DynamicUser=true also forces PrivateTmp=yes with a tmpfs /tmp
-        # (~800 MB on this Pi) that can't be turned off. Point TMPDIR into
-        # the StateDirectory on ext4 so workflows using `mktemp -t` (e.g.
-        # ephemeral Postgres) don't blow the cap.
-        environment.TMPDIR = "/var/lib/gitea-runner/local/tmp";
-        serviceConfig.ExecStartPre = lib.mkAfter [
-          (pkgs.writeShellScript "gitea-runner-local-mktmpdir" ''
-            install -d -m 0700 "$TMPDIR"
-          '')
-        ];
-      })
-    ];
+    systemd.services.gitea-runner-local = lib.mkIf cfg.runner.enable {
+      # DynamicUser=true forces noexec on StateDirectory; whitelist it
+      # so jobs can exec binaries they install (playwright, QuestPdfSkia).
+      serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/local" ];
+      # DynamicUser=true also forces PrivateTmp=yes with a tmpfs /tmp
+      # (~800 MB on this Pi) that can't be turned off. Point TMPDIR into
+      # the StateDirectory on ext4 so workflows using `mktemp -t` (e.g.
+      # ephemeral Postgres) don't blow the cap.
+      environment.TMPDIR = "/var/lib/gitea-runner/local/tmp";
+      serviceConfig.ExecStartPre = lib.mkAfter [
+        (pkgs.writeShellScript "gitea-runner-local-mktmpdir" ''
+          install -d -m 0700 "$TMPDIR"
+        '')
+      ];
+    };
 
-    systemd.services.gitea-runner-shared = lib.mkMerge [
-      (lib.mkIf (cfg.runner.shared.enable && cfg.runner.opencodeAuthSecretName != null) {
-        environment = {
-          XDG_CACHE_HOME = "/var/lib/gitea-runner/shared/.cache";
-          XDG_CONFIG_HOME = "/var/lib/gitea-runner/shared/.config";
-          XDG_DATA_HOME = "/var/lib/gitea-runner/shared/.local/share";
-        };
-        serviceConfig.LoadCredential = [
-          "opencode-auth.json:${config.sops.secrets."${cfg.runner.opencodeAuthSecretName}".path}"
-        ];
-        serviceConfig.ExecStartPre = lib.mkAfter [
-          (pkgs.writeShellScript "gitea-runner-shared-install-opencode" ''
-            install -d -m 0700 "$XDG_DATA_HOME/opencode" "$XDG_CACHE_HOME"
-            if [ -f "$CREDENTIALS_DIRECTORY/opencode-auth.json" ]; then
-              install -m 0600 "$CREDENTIALS_DIRECTORY/opencode-auth.json" "$XDG_DATA_HOME/opencode/auth.json"
-            fi
-          '')
-        ];
-      })
-      (lib.mkIf cfg.runner.shared.enable {
-        after = [
-          "gitea.service"
-          "gitea-runner-shared-token.service"
-        ];
-        requires = [
-          "gitea.service"
-          "gitea-runner-shared-token.service"
-        ];
-        wants = [ "gitea-runner-shared-token.service" ];
-        # See gitea-runner-local for rationale.
-        serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/shared" ];
-        environment.TMPDIR = "/var/lib/gitea-runner/shared/tmp";
-        serviceConfig.ExecStartPre = lib.mkAfter [
-          (pkgs.writeShellScript "gitea-runner-shared-mktmpdir" ''
-            install -d -m 0700 "$TMPDIR"
-          '')
-        ];
-      })
-    ];
+    systemd.services.gitea-runner-shared = lib.mkIf cfg.runner.shared.enable {
+      after = [
+        "gitea.service"
+        "gitea-runner-shared-token.service"
+      ];
+      requires = [
+        "gitea.service"
+        "gitea-runner-shared-token.service"
+      ];
+      wants = [ "gitea-runner-shared-token.service" ];
+      # See gitea-runner-local for rationale.
+      serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/shared" ];
+      environment.TMPDIR = "/var/lib/gitea-runner/shared/tmp";
+      serviceConfig.ExecStartPre = lib.mkAfter [
+        (pkgs.writeShellScript "gitea-runner-shared-mktmpdir" ''
+          install -d -m 0700 "$TMPDIR"
+        '')
+      ];
+    };
 
     systemd.timers.gitea-backup = {
       description = "Run gitea backup every day.";

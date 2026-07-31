@@ -7,7 +7,6 @@
     ./garnix-runner.nix
     ./gitea.nix
     ./k3s
-    ./opencode.nix
     ./openssh.nix
     ./pi-hole.nix
     ./solidtime.nix

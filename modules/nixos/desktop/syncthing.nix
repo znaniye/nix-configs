@@ -1,6 +1,5 @@
 {
   config,
-  flake,
   lib,
   ...
 }:
@@ -9,31 +8,17 @@ let
   user = config.shared.meta.username;
   selfHost = config.networking.hostName;
 
-  defaultCert = ../../../secrets/syncthing/${selfHost}.pem;
+  defaultCert = ../../shared/syncthing-certs/${selfHost}.pem;
   defaultKeySecretName = "syncthing-key-${selfHost}";
 
-  allHosts = flake.outputs.nixosConfigurations or { };
-
-  peers = lib.filterAttrs (
-    name: host:
-    name != selfHost
-    && (host.config.nixos.desktop.syncthing.enable or false)
-    && (host.config.nixos.desktop.syncthing.deviceId or null) != null
-  ) allHosts;
-
-  peerDevices = lib.mapAttrs (_: host: {
-    id = host.config.nixos.desktop.syncthing.deviceId;
-  }) peers;
+  devices = import ../../shared/syncthing-devices.nix;
+  peerDevices = lib.mapAttrs (_: id: { inherit id; }) (
+    lib.filterAttrs (name: _: name != selfHost) devices
+  );
 in
 {
   options.nixos.desktop.syncthing = {
     enable = lib.mkEnableOption "syncthing config";
-
-    deviceId = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = "This host's Syncthing device ID. Discovered by other hosts.";
-    };
 
     cert = lib.mkOption {
       type = lib.types.path;
@@ -67,8 +52,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.deviceId != null;
-        message = "Set nixos.desktop.syncthing.deviceId for host ${selfHost}.";
+        assertion = devices ? ${selfHost};
+        message = "Host ${selfHost} is missing from modules/shared/syncthing-devices.nix.";
       }
     ];
 

@@ -13,6 +13,7 @@
     ./home.nix
     ./nix
     ./openssh.nix
+    ./syncthing.nix
     ./wireguard.nix
     flake.outputs.internal.sharedModules.system
   ];

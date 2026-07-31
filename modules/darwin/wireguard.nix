@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -9,6 +10,21 @@ let
   username = config.darwin.home.username;
   secretName = "wireguard-private-key-felix";
   privateKeyFile = "${config.home-manager.users.${username}.xdg.configHome}/secrets/${secretName}";
+
+  keepAlive = pkgs.writeShellScript "wg-quick-wg0-keepalive" ''
+    export PATH=${pkgs.wireguard-tools}/bin:${pkgs.wireguard-go}/bin:${config.environment.systemPath}
+    trap 'wg-quick down wg0 2>/dev/null; exit 0' TERM INT
+
+    wg-quick down wg0 2>/dev/null || true
+    wg-quick up wg0 || exit 1
+
+    while :; do
+      sleep 20
+      hs=$(wg show wg0 latest-handshakes 2>/dev/null | awk '{print $2}' | sort -n | tail -1)
+      [ -n "$hs" ] || exit 1
+      [ "$(( $(date +%s) - hs ))" -lt 180 ] || exit 1
+    done
+  '';
 in
 {
   options.darwin.wireguard.enable = lib.mkEnableOption "wireguard config (wg-quick via launchd)";
@@ -37,6 +53,13 @@ in
             persistentKeepalive = 10;
           }
         ];
+      };
+
+      launchd.daemons.wg-quick-wg0.serviceConfig = {
+        ProgramArguments = lib.mkForce [ "${keepAlive}" ];
+        KeepAlive = lib.mkForce true;
+        RunAtLoad = true;
+        ThrottleInterval = 15;
       };
     })
   ];

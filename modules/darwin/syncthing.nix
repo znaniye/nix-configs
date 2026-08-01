@@ -17,6 +17,10 @@ let
   );
 
   relFolder = lib.removePrefix "/Users/${username}/" cfg.folder;
+
+  stignore = builtins.toFile "syncthing-code.stignore" (
+    lib.concatStringsSep "\n" cfg.ignore + "\n"
+  );
 in
 {
   options.darwin.desktop.syncthing = {
@@ -49,8 +53,13 @@ in
     home-manager.users.${username} = {
       sops.secrets.${secretName}.path = keyFile;
 
-      home.file = lib.mkIf (cfg.ignore != [ ]) {
-        "${relFolder}/.stignore".text = lib.concatStringsSep "\n" cfg.ignore + "\n";
+      home.activation.syncthingStignore = lib.mkIf (cfg.ignore != [ ]) {
+        after = [ "linkGeneration" ];
+        before = [ ];
+        data = ''
+          $DRY_RUN_CMD mkdir -p "$HOME/${relFolder}"
+          $DRY_RUN_CMD install -m 0644 ${stignore} "$HOME/${relFolder}/.stignore"
+        '';
       };
 
       services.syncthing = {

@@ -98,6 +98,7 @@ in
           path = cfg.folder;
           devices = lib.attrNames peerDevices;
           type = cfg.mode;
+          ignorePerms = true;
         };
       };
     };

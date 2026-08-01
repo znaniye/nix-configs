@@ -46,7 +46,7 @@ in
 
     model = lib.mkOption {
       type = lib.types.str;
-      default = "opus";
+      default = "claude-opus-5";
       description = "Default Claude Code model.";
     };
 

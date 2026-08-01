@@ -15,6 +15,8 @@ let
   peerDevices = lib.mapAttrs (_: id: { inherit id; }) (
     lib.filterAttrs (name: _: name != selfHost) devices
   );
+
+  relFolder = lib.removePrefix "/Users/${username}/" cfg.folder;
 in
 {
   options.darwin.desktop.syncthing = {
@@ -35,11 +37,21 @@ in
       default = "sendreceive";
       description = "Folder sync mode for this host.";
     };
+
+    ignore = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = import ../shared/syncthing-ignore.nix;
+      description = "Patterns written to the folder's .stignore (regenerable/heavy dirs).";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
       sops.secrets.${secretName}.path = keyFile;
+
+      home.file = lib.mkIf (cfg.ignore != [ ]) {
+        "${relFolder}/.stignore".text = lib.concatStringsSep "\n" cfg.ignore + "\n";
+      };
 
       services.syncthing = {
         enable = true;

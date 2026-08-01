@@ -15,6 +15,10 @@ let
   peerDevices = lib.mapAttrs (_: id: { inherit id; }) (
     lib.filterAttrs (name: _: name != selfHost) devices
   );
+
+  stignore = builtins.toFile "syncthing-code.stignore" (
+    lib.concatStringsSep "\n" cfg.ignore + "\n"
+  );
 in
 {
   options.nixos.desktop.syncthing = {
@@ -47,6 +51,12 @@ in
       default = "sendreceive";
       description = "Folder sync mode for this host.";
     };
+
+    ignore = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = import ../../shared/syncthing-ignore.nix;
+      description = "Patterns written to the folder's .stignore (regenerable/heavy dirs).";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -61,6 +71,12 @@ in
       owner = user;
       mode = "0400";
     };
+
+    system.activationScripts.syncthingStignore.text = lib.optionalString (cfg.ignore != [ ]) ''
+      mkdir -p ${cfg.folder}
+      chown ${user} ${cfg.folder}
+      install -o ${user} -m 0644 ${stignore} ${cfg.folder}/.stignore
+    '';
 
     services.syncthing = {
       enable = true;

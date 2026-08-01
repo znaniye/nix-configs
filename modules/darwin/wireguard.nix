@@ -11,19 +11,17 @@ let
   secretName = "wireguard-private-key-felix";
   privateKeyFile = "${config.home-manager.users.${username}.xdg.configHome}/secrets/${secretName}";
 
-  keepAlive = pkgs.writeShellScript "wg-quick-wg0-keepalive" ''
+  healthcheck = pkgs.writeShellScript "wg0-healthcheck" ''
     export PATH=${pkgs.wireguard-tools}/bin:${pkgs.wireguard-go}/bin:${config.environment.systemPath}
-    trap 'wg-quick down wg0 2>/dev/null; exit 0' TERM INT
+
+    real=$(cat /var/run/wireguard/wg0.name 2>/dev/null)
+    if [ -n "$real" ] && wg show "$real" latest-handshakes 2>/dev/null |
+       awk -v now=$(date +%s) '$2 && now - $2 < 180 { ok = 1 } END { exit !ok }'; then
+      exit 0
+    fi
 
     wg-quick down wg0 2>/dev/null || true
-    wg-quick up wg0 || exit 1
-
-    while :; do
-      sleep 20
-      hs=$(wg show wg0 latest-handshakes 2>/dev/null | awk '{print $2}' | sort -n | tail -1)
-      [ -n "$hs" ] || exit 1
-      [ "$(( $(date +%s) - hs ))" -lt 180 ] || exit 1
-    done
+    wg-quick up wg0
   '';
 in
 {
@@ -48,6 +46,7 @@ in
             allowedIPs = [
               "192.168.0.0/23"
               "192.168.150.0/24"
+              "192.168.7.0/24"
             ];
             endpoint = "hep09fmme67.sn.mynetname.net:13231";
             persistentKeepalive = 10;
@@ -56,10 +55,10 @@ in
       };
 
       launchd.daemons.wg-quick-wg0.serviceConfig = {
-        ProgramArguments = lib.mkForce [ "${keepAlive}" ];
-        KeepAlive = lib.mkForce true;
+        ProgramArguments = lib.mkForce [ "${healthcheck}" ];
+        KeepAlive = lib.mkForce false;
         RunAtLoad = true;
-        ThrottleInterval = 15;
+        StartInterval = 60;
       };
     })
   ];

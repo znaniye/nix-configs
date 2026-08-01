@@ -55,6 +55,7 @@ in
                   allowedIPs = [
                     "192.168.0.0/23"
                     "192.168.150.0/24"
+                    "192.168.7.0/24"
                   ];
                   endpoint = "hep09fmme67.sn.mynetname.net:13231";
                   persistentKeepalive = 10;

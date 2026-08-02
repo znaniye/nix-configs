@@ -66,6 +66,10 @@ in
         vesktop
         telegram-desktop
       ];
+
+      home.activation.restartDock = lib.hm.dag.entryAfter [ "copyApps" ] ''
+        /usr/bin/killall Dock 2>/dev/null || true
+      '';
     })
   ];
 }

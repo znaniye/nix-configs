@@ -26,7 +26,8 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
 
     programs.mangohud = {
       enable = true;
@@ -57,5 +58,14 @@ in
       zellij
       vlc
     ];
-  };
+    })
+
+    (lib.mkIf (config.home-manager.desktop.enable && pkgs.stdenv.hostPlatform.isDarwin) {
+      home.packages = with pkgs; [
+        spotify
+        vesktop
+        telegram-desktop
+      ];
+    })
+  ];
 }

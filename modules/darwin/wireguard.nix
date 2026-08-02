@@ -11,17 +11,28 @@ let
   secretName = "wireguard-private-key-felix";
   privateKeyFile = "${config.home-manager.users.${username}.xdg.configHome}/secrets/${secretName}";
 
-  healthcheck = pkgs.writeShellScript "wg0-healthcheck" ''
+  intranetDomain = "intranet.freedom.ind.br";
+  intranetResolver = "192.168.0.240";
+
+  supervisor = pkgs.writeShellScript "wg0-supervisor" ''
     export PATH=${pkgs.wireguard-tools}/bin:${pkgs.wireguard-go}/bin:${config.environment.systemPath}
 
-    real=$(cat /var/run/wireguard/wg0.name 2>/dev/null)
-    if [ -n "$real" ] && wg show "$real" latest-handshakes 2>/dev/null |
-       awk -v now=$(date +%s) '$2 && now - $2 < 180 { ok = 1 } END { exit !ok }'; then
-      exit 0
-    fi
+    trap 'wg-quick down wg0 2>/dev/null; exit 0' TERM INT
+
+    [ -r ${lib.escapeShellArg privateKeyFile} ] || exit 1
 
     wg-quick down wg0 2>/dev/null || true
-    wg-quick up wg0
+    wg-quick up wg0 || exit 1
+
+    while :; do
+      sleep 20 & wait $!
+
+      real=$(cat /var/run/wireguard/wg0.name 2>/dev/null)
+      [ -n "$real" ] || exit 1
+
+      wg show "$real" latest-handshakes 2>/dev/null |
+        awk -v now=$(date +%s) '$2 && now - $2 < 180 { ok = 1 } END { exit !ok }' || exit 1
+    done
   '';
 in
 {
@@ -33,12 +44,12 @@ in
     }
 
     (lib.mkIf cfg.enable {
+      environment.etc."resolver/${intranetDomain}".text = ''
+        nameserver ${intranetResolver}
+      '';
+
       networking.wg-quick.interfaces.wg0 = {
         address = [ "192.168.240.15/32" ];
-        dns = [
-          "192.168.0.240"
-          "intranet.freedom.ind.br"
-        ];
         privateKeyFile = privateKeyFile;
         peers = [
           {
@@ -55,10 +66,14 @@ in
       };
 
       launchd.daemons.wg-quick-wg0.serviceConfig = {
-        ProgramArguments = lib.mkForce [ "${healthcheck}" ];
-        KeepAlive = lib.mkForce false;
+        ProgramArguments = lib.mkForce [
+          "/bin/sh"
+          "-c"
+          "exec ${supervisor}"
+        ];
+        KeepAlive = lib.mkForce true;
         RunAtLoad = true;
-        StartInterval = 60;
+        ThrottleInterval = 30;
       };
     })
   ];

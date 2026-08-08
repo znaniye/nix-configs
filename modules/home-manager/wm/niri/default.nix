@@ -9,22 +9,38 @@
 let
   defaultKeyBinds = import ./defaultKeyBinds.nix;
   osCfg = if osConfig == null then { } else osConfig;
-  hostName = lib.attrByPath [ "networking" "hostName" ] null osCfg;
-  brHosts = [
-    "felix"
-    "golf"
-  ];
-  xkb =
-    if lib.elem hostName brHosts then
-      {
-        layout = "br";
-        variant = "abnt2";
+  brIndex = 0;
+  usIndex = 1;
+
+  xkb = {
+    layout = "br,us";
+    variant = "abnt2,altgr-intl";
+  };
+
+  corneId = "Vendor=1d50 Product=615e";
+
+  corneLayout = pkgs.writeShellApplication {
+    name = "niri-corne-layout";
+    runtimeInputs = [
+      pkgs.niri-unstable
+      pkgs.systemd
+    ];
+    text = ''
+      recompute() {
+        if grep -qi '${corneId}' /proc/bus/input/devices; then
+          niri msg action switch-layout ${toString usIndex}
+        else
+          niri msg action switch-layout ${toString brIndex}
+        fi
       }
-    else
-      {
-        layout = "us";
-        variant = "altgr-intl";
-      };
+
+      recompute
+
+      udevadm monitor --udev --subsystem-match=input | while read -r _; do
+        recompute
+      done
+    '';
+  };
 in
 {
   imports = [ flake.inputs.niri.homeModules.niri ];
@@ -105,6 +121,22 @@ in
 
       binds = defaultKeyBinds // {
         "Mod+Return".action.spawn = "alacritty";
+      };
+    };
+
+    systemd.user.services = {
+      niri-corne-layout = {
+        Unit = {
+          Description = "Select niri keyboard layout from connected keyboards";
+          PartOf = [ "niri.service" ];
+          After = [ "niri.service" ];
+        };
+        Service = {
+          ExecStart = lib.getExe corneLayout;
+          Restart = "on-failure";
+          RestartSec = 2;
+        };
+        Install.WantedBy = [ "niri.service" ];
       };
     };
 

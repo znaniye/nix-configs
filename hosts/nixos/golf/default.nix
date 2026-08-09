@@ -18,6 +18,7 @@
         privateKeySecretName = "wireguard-private-key-golf";
       };
       syncthing.enable = true;
+      zmk.enable = true;
     };
 
     dev.postgres.enable = true;

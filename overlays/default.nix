@@ -16,10 +16,21 @@ in
 
   herdr = self.inputs.herdr.packages.${system}.herdr;
 
+  corne-firmware = import ./corne-firmware.nix {
+    pkgs = prev;
+    inherit (self.inputs) zmk-nix;
+  };
+
+  corne-update = self.inputs.zmk-nix.packages.${system}.update;
+
   inherit (import ./qasync.nix final prev) pythonPackagesExtensions;
 }
 // prev.lib.optionalAttrs isLinux {
   inherit (self.inputs.niri.packages.${system}) niri-unstable;
+
+  corne-flash = self.inputs.zmk-nix.packages.${system}.flash.override {
+    firmware = final.corne-firmware;
+  };
 
   pencil-cli = import ./pencil-cli.nix { pkgs = prev; };
 

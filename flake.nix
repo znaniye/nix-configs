@@ -85,6 +85,11 @@
       url = "github:zhaofengli/attic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    zmk-nix = {
+      url = "github:lilyinstarlight/zmk-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -132,6 +137,13 @@
               ];
             };
             legacyPackages = pkgs;
+
+            packages = {
+              inherit (pkgs) corne-firmware corne-update;
+            }
+            // nixpkgs.lib.optionalAttrs (nixpkgs.lib.hasSuffix "linux" system) {
+              inherit (pkgs) corne-flash;
+            };
           }
         ))
       ]

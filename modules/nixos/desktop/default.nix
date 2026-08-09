@@ -27,6 +27,7 @@
     ./wireguard.nix
     ./wireless.nix
     ./xserver.nix
+    ./zmk.nix
   ];
 
   options.nixos.desktop = {

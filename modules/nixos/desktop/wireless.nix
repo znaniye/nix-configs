@@ -37,7 +37,10 @@
       };
     };
 
-    environment.systemPackages = with pkgs; [ iw ];
+    environment.systemPackages = with pkgs; [
+      iw
+      overskride
+    ];
 
     hardware.bluetooth.enable = true;
 
@@ -54,7 +57,6 @@
 
     #TODO: common module
     services = {
-      blueman.enable = true;
       resolved = lib.optionalAttrs (!config.nixos.server.pi-hole.enable) {
         enable = true;
         dnssec = "false";

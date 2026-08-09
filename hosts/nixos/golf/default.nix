@@ -37,6 +37,7 @@
         typescript.enable = true;
         ocaml.enable = true;
         claude-code.stravaMcp.enable = true;
+        claude-code.intervalsMcp.enable = true;
       };
     };
   };

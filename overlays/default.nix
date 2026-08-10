@@ -2,9 +2,16 @@
 
 final: prev:
 let
+  inherit (prev) lib;
   inherit (prev.stdenv.hostPlatform) system isLinux;
+
+  inherit (final) callPackage;
 in
-{
+lib.filesystem.packagesFromDirectoryRecursive {
+  inherit callPackage;
+  directory = ../packages;
+}
+// {
   inherit (self.inputs.emacs-overlay.packages.${system}) emacsWithPackagesFromUsePackage;
 
   zls = self.inputs.zls.packages.${system}.default;
@@ -16,23 +23,15 @@ in
 
   herdr = self.inputs.herdr.packages.${system}.herdr;
 
-  corne-firmware = import ./corne-firmware.nix {
-    pkgs = prev;
-    inherit (self.inputs) zmk-nix;
-  };
-
+  zmk-nix = self.inputs.zmk-nix.legacyPackages.${system};
   corne-update = self.inputs.zmk-nix.packages.${system}.update;
 
   inherit (import ./qasync.nix final prev) pythonPackagesExtensions;
 }
-// prev.lib.optionalAttrs isLinux {
+// lib.optionalAttrs isLinux {
   inherit (self.inputs.niri.packages.${system}) niri-unstable;
 
   corne-flash = self.inputs.zmk-nix.packages.${system}.flash.override {
     firmware = final.corne-firmware;
   };
-
-  pencil-cli = import ./pencil-cli.nix { pkgs = prev; };
-
-  pencil = import ./pencil.nix { pkgs = prev; };
 }

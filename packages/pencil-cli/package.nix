@@ -20,8 +20,8 @@ let
     hash = "sha256-fUXDZ60YETUozSE3rcXaSU/OBTx56WMpr9L8buNrBV4=";
   };
 
-  manifest = ./pencil-cli/package.json;
-  lockfile = ./pencil-cli/package-lock.json;
+  manifest = ./package.json;
+  lockfile = ./package-lock.json;
 
   pencil-cli = buildNpmPackage {
     pname = "pencil-cli";
@@ -34,7 +34,7 @@ let
     '';
 
     npmDeps = fetchNpmDeps {
-      src = ./pencil-cli;
+      src = ./.;
       hash = "sha256-X3raU/UGjxjMiitTEjpKYELsfsMoPjIHjgv2y4DPzBI=";
     };
 

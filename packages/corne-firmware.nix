@@ -3,7 +3,7 @@ let
   inherit (pkgs) lib;
   inherit (pkgs.stdenv.hostPlatform) system;
 in
-zmk-nix.legacyPackages.${system}.buildSplitKeyboard {
+zmk-nix.buildSplitKeyboard {
   name = "corne-firmware";
 
   src = lib.sourceFilesBySuffices ../keyboards/corne [

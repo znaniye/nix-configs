@@ -29,8 +29,6 @@ lib.filesystem.packagesFromDirectoryRecursive {
   inherit (import ./qasync.nix final prev) pythonPackagesExtensions;
 }
 // lib.optionalAttrs isLinux {
-  inherit (self.inputs.niri.packages.${system}) niri-unstable;
-
   corne-flash = self.inputs.zmk-nix.packages.${system}.flash.override {
     firmware = final.corne-firmware;
   };

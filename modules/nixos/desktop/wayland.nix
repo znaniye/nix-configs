@@ -11,12 +11,8 @@
   };
 
   config = lib.mkIf config.nixos.desktop.wayland.enable {
-    programs.niri = {
-      enable = true;
-      package = pkgs.niri-unstable;
-    };
+    programs.niri.enable = true;
 
     environment.systemPackages = with pkgs; [ wl-clipboard ];
-
   };
 }

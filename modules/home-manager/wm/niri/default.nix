@@ -1,6 +1,5 @@
 {
   config,
-  flake,
   lib,
   osConfig,
   pkgs,
@@ -22,7 +21,7 @@ let
   corneLayout = pkgs.writeShellApplication {
     name = "niri-corne-layout";
     runtimeInputs = [
-      pkgs.niri-unstable
+      pkgs.niri
       pkgs.systemd
     ];
     text = ''
@@ -43,8 +42,6 @@ let
   };
 in
 {
-  imports = [ flake.inputs.niri.homeModules.niri ];
-
   options.home-manager.wm.niri.enable = lib.mkEnableOption "niri config" // {
     default = lib.attrByPath [ "nixos" "desktop" "wayland" "enable" ] false osCfg;
   };
@@ -56,71 +53,86 @@ in
 
     programs.fuzzel.enable = true;
 
-    programs.niri.settings = {
+    wayland.windowManager.niri = {
+      enable = true;
+      package = pkgs.niri;
+      portalPackage = null;
 
-      spawn-at-startup = [
-        { command = [ "${lib.getExe pkgs.xwayland-satellite}" ]; }
-        {
-          command = [
-            "${lib.getExe pkgs.swaybg}"
-            "--image"
-            "${config.shared.theme.wallpaper}"
-          ];
-        }
-      ];
+      settings = {
+        _children = [
+          {
+            "spawn-at-startup"._args = [ (lib.getExe pkgs.xwayland-satellite) ];
+          }
+          {
+            "spawn-at-startup"._args = [
+              (lib.getExe pkgs.swaybg)
+              "--image"
+              (toString config.shared.theme.wallpaper)
+            ];
+          }
 
-      environment = {
-        DISPLAY = ":0";
-        QT_QPA_PLATFORM = "wayland";
-      };
+          {
+            "window-rule"._children = [
+              { match._props = { "app-id" = "^game.*"; }; }
+              { "open-floating" = true; }
+            ];
+          }
 
-      outputs."eDP-1".scale = 1.15;
+          {
+            "window-rule"._children = [
+              { "clip-to-geometry" = true; }
+              {
+                "geometry-corner-radius"._args = [
+                  12.0
+                  12.0
+                  12.0
+                  12.0
+                ];
+              }
+            ];
+          }
+        ];
 
-      prefer-no-csd = true;
-      window-rules = [
-        # Godot
-        {
-          matches = [
-            {
-              app-id = "^game.*";
-            }
-          ];
-          open-floating = true;
-        }
-
-        # General
-        {
-          clip-to-geometry = true;
-          geometry-corner-radius = {
-            top-left = 12.0;
-            top-right = 12.0;
-            bottom-left = 12.0;
-            bottom-right = 12.0;
-          };
-        }
-      ];
-
-	      layout = {
-	        shadow.enable = true;
-	        focus-ring = {
-	          width = 2;
-	          active.color = config.shared.theme.nord.colors.background.primary;
-	        };
-	      };
-
-      input = {
-        power-key-handling.enable = false;
-        keyboard = { inherit xkb; };
-        touchpad = {
-          tap = true;
-          dwt = true;
-          natural-scroll = true;
-          click-method = "clickfinger";
+        environment = {
+          DISPLAY = ":0";
+          QT_QPA_PLATFORM = "wayland";
         };
-      };
 
-      binds = defaultKeyBinds // {
-        "Mod+Return".action.spawn = "alacritty";
+        output = {
+          _args = [ "eDP-1" ];
+          scale = 1.15;
+        };
+
+        "prefer-no-csd" = { };
+
+        layout = {
+          shadow = {
+            on = { };
+          };
+          "focus-ring" = {
+            on = { };
+            width = 2;
+            "active-color" = config.shared.theme.nord.colors.background.primary;
+          };
+        };
+
+        input = {
+          keyboard = {
+            xkb = {
+              inherit (xkb) layout variant;
+            };
+          };
+          touchpad = {
+            tap = { };
+            dwt = { };
+            "natural-scroll" = { };
+            "click-method" = "clickfinger";
+          };
+        };
+
+        binds = defaultKeyBinds // {
+          "Mod+Return" = { spawn = "alacritty"; };
+        };
       };
     };
 

@@ -40,6 +40,10 @@ in
         rename_tab = "prefix+shift+t";
         split_horizontal = "prefix+minus";
 
+        new_worktree = "prefix+shift+g";
+        open_worktree = "prefix+ctrl+g";
+        remove_worktree = "prefix+alt+g";
+
         navigate_workspace_up = [
           "k"
           "up"

@@ -61,16 +61,12 @@ in
       settings = {
         _children = [
           {
-            "spawn-at-startup"._args = [ (lib.getExe pkgs.xwayland-satellite) ];
-          }
-          {
             "spawn-at-startup"._args = [
               (lib.getExe pkgs.swaybg)
               "--image"
-              (toString config.shared.theme.wallpaper)
+              "${config.shared.theme.wallpaper}"
             ];
           }
-
           {
             "window-rule"._children = [
               { match._props = { "app-id" = "^game.*"; }; }

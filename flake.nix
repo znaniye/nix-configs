@@ -134,7 +134,7 @@
             legacyPackages = pkgs;
 
             packages = {
-              inherit (pkgs) corne-firmware corne-update corne-keymap-export;
+              inherit (pkgs) corne-firmware corne-update corne-keymap-export corne-screen-assets;
             }
             // nixpkgs.lib.optionalAttrs (nixpkgs.lib.hasSuffix "linux" system) {
               inherit (pkgs) corne-flash;

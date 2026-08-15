@@ -1,0 +1,26 @@
+config ZMK_NIX_SCREEN
+    bool "Nix-themed Corne status screen"
+    default y
+    depends on ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+    select LV_USE_IMAGE
+    select LV_USE_ANIMIMG
+    select ZMK_BATTERY_REPORTING
+    imply LV_USE_THEME_MONO if LV_Z_BITS_PER_PIXEL=1
+    help
+      Replaces the built-in status screen with a Nix snowflake on the central
+      half and a rotating lambda on the peripheral half, each sitting in the
+      lower half of the panel under that half's own battery percentage.
+
+      The percentage is drawn from baked bitmap glyphs rather than a font: the
+      panel is mounted a quarter turn from the framebuffer and neither LVGL nor
+      Zephyr's mono glue rotates pixels, so the cells ship pre-rotated. It also
+      sidesteps LV_CONF_MINIMAL leaving us on LV_FONT_DEFAULT_UNSCII_8, whose
+      table stops at 0x7F and so has no charge symbol.
+
+if ZMK_NIX_SCREEN
+
+config ZMK_NIX_SCREEN_LAMBDA_PERIOD_MS
+    int "Milliseconds for one full lambda rotation"
+    default 2000
+
+endif

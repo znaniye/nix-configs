@@ -1,17 +1,26 @@
 { pkgs, zmk-nix }:
 let
   inherit (pkgs) lib;
-  inherit (pkgs.stdenv.hostPlatform) system;
-in
-zmk-nix.buildSplitKeyboard {
-  name = "corne-firmware";
 
-  src = lib.sourceFilesBySuffices ../keyboards/corne [
+  tree = lib.sourceFilesBySuffices ../keyboards/corne [
     ".conf"
     ".keymap"
     ".overlay"
     ".yml"
+    ".c"
+    ".h"
+    "CMakeLists.txt"
+    "Kconfig"
   ];
+in
+zmk-nix.buildSplitKeyboard {
+  name = "corne-firmware";
+
+  src = pkgs.runCommand "corne-src" { } ''
+    cp -r ${tree} $out
+    chmod -R u+w $out
+    install -m644 ${pkgs.corne-screen-assets}/*.c $out/src/
+  '';
 
   board = "nice_nano@2.0.0//zmk";
   shield = "corne_%PART%";

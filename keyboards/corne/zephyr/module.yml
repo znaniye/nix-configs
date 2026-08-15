@@ -1,0 +1,4 @@
+name: corne_nix_screen
+build:
+  cmake: .
+  kconfig: Kconfig

@@ -29,14 +29,8 @@ let
       ${lib.optionalString (
         cfg.agentBrowserExecutable != ""
       ) ''export AGENT_BROWSER_EXECUTABLE_PATH="${cfg.agentBrowserExecutable}"''}
-      ${lib.optionalString cfg.claudish.enable ''
-        export CLAUDISH_PROVIDER="anthropic"
-        export CLAUDISH_MODEL="${cfg.claudish.model}"
-        export CLAUDISH_ANTHROPIC_URL="${cfg.anthropicBaseUrl}"
-      ''}
       if [ -f "${config.sops.secrets.anthropic-auth-token.path}" ]; then
         export ANTHROPIC_AUTH_TOKEN="\$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.anthropic-auth-token.path})"
-        ${lib.optionalString cfg.claudish.enable ''export CLAUDISH_ANTHROPIC_KEY="\$ANTHROPIC_AUTH_TOKEN"''}
       fi
       exec ${pkgs.claude-code}/bin/claude "\$@"
       EOF
@@ -94,25 +88,12 @@ in
         default = true;
       };
     };
-
-    claudish = {
-      enable = lib.mkEnableOption "claudish-to-english plain-English rewrites" // {
-        default = true;
-      };
-
-      model = lib.mkOption {
-        type = lib.types.str;
-        default = "claude-haiku-4-5";
-        description = "Model used for the plain-English rewrites, as named by the Anthropic base URL.";
-      };
-    };
   };
 
   config = lib.mkIf cfg.enable {
     home.packages =
       (with pkgs; [
         jq
-        curl
         agent-browser
       ])
       ++ lib.optional isLinux pkgs.chromium
@@ -315,21 +296,10 @@ in
               repo = "OSSystems/claude-code-plugin";
             };
           };
-        }
-        // lib.optionalAttrs cfg.claudish.enable {
-          gvzdv-plugins = {
-            source = {
-              source = "github";
-              repo = "gvzdv/claudish-to-english";
-            };
-          };
         };
 
         enabledPlugins = {
           "ossystems-commit@ossystems" = true;
-        }
-        // lib.optionalAttrs cfg.claudish.enable {
-          "claudish-to-english@gvzdv-plugins" = true;
         };
       };
     };

@@ -1,15 +1,15 @@
 {
-  lib,
-  runCommand,
-  imagemagick,
-  librsvg,
-  python3,
-  nixos-icons,
   dejavu_fonts,
-  size ? 32,
   frames ? 12,
-  glyphSize ? 10,
   glyphAdvance ? 6,
+  glyphSize ? 10,
+  imagemagick,
+  lib,
+  librsvg,
+  nixos-icons,
+  python3,
+  runCommand,
+  size ? 32,
 }:
 
 let
@@ -21,17 +21,16 @@ let
 in
 runCommand "corne-screen-assets"
   {
-    nativeBuildInputs = [
-      imagemagick
-      librsvg
-      python
-    ];
-
     meta = {
       description = "LVGL I1 artwork for the Corne OLEDs: Nix snowflake and a spinning lambda";
       license = lib.licenses.mit;
       platforms = lib.platforms.all;
     };
+    nativeBuildInputs = [
+      imagemagick
+      librsvg
+      python
+    ];
   }
   ''
     mkdir -p $out

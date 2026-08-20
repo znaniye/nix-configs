@@ -4,40 +4,33 @@
   ...
 }:
 {
-  options.home-manager.wm.picom.enable = lib.mkEnableOption "picom config" // {
-    default = config.home-manager.wm.i3.enable;
-  };
-
   config = lib.mkIf config.home-manager.wm.picom.enable {
     services.picom = {
-      enable = true;
-
       activeOpacity = 0.99;
-
       backend = "glx";
-
-      settings = {
-        no-fading-openclose = true;
-        invert-color-include = [ "TAG_INVERT@:8c = 1" ];
-
-        blur = {
-          method = "gaussian";
-          size = 10;
-          deviation = 5.0;
-        };
-      };
-
+      enable = true;
       fade = true;
       fadeDelta = 12;
       fadeSteps = [
         0.15
         0.15
       ];
-
       inactiveOpacity = 0.9;
-
       menuOpacity = 0.98;
-
+      opacityRules = [
+        "80:class_i ?= 'rofi'"
+        "100:class_g ?= 'firefox'"
+        "100:class_i ?= 'firefox'"
+      ];
+      settings = {
+        blur = {
+          deviation = 5.0;
+          method = "gaussian";
+          size = 10;
+        };
+        invert-color-include = [ "TAG_INVERT@:8c = 1" ];
+        no-fading-openclose = true;
+      };
       shadow = true;
       shadowExclude = [
         "n:e:Notification"
@@ -49,12 +42,9 @@
         (-15)
       ];
       shadowOpacity = 0.7;
-
-      opacityRules = [
-        "80:class_i ?= 'rofi'"
-        "100:class_g ?= 'firefox'"
-        "100:class_i ?= 'firefox'"
-      ];
     };
+  };
+  options.home-manager.wm.picom.enable = lib.mkEnableOption "picom config" // {
+    default = config.home-manager.wm.i3.enable;
   };
 }

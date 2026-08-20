@@ -4,8 +4,6 @@
   ...
 }:
 {
-  options.darwin.openssh.enable = lib.mkEnableOption "OpenSSH server config (Remote Login)";
-
   config = lib.mkIf config.darwin.openssh.enable {
     services.openssh = {
       enable = true;
@@ -15,4 +13,5 @@
       '';
     };
   };
+  options.darwin.openssh.enable = lib.mkEnableOption "OpenSSH server config (Remote Login)";
 }

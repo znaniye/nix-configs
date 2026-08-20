@@ -6,21 +6,17 @@
 }:
 
 {
-  options.home-manager.wm.gtk.enable = lib.mkEnableOption "GTK theme config" // {
-    default = config.home-manager.wm.enable;
-  };
-
   config = lib.mkIf config.home-manager.wm.gtk.enable {
 
     gtk = {
       enable = true;
-      theme = {
-        package = pkgs.nordic;
-        name = "Nordic";
-      };
       iconTheme = {
-        package = pkgs.nordzy-icon-theme;
         name = "Nordzy-dark";
+        package = pkgs.nordzy-icon-theme;
+      };
+      theme = {
+        name = "Nordic";
+        package = pkgs.nordic;
       };
     };
 
@@ -34,5 +30,8 @@
         #"Gtk/CursorThemeName" = xsession.pointerCursor.name;
       };
     };
+  };
+  options.home-manager.wm.gtk.enable = lib.mkEnableOption "GTK theme config" // {
+    default = config.home-manager.wm.enable;
   };
 }

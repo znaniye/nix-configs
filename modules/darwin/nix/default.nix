@@ -8,10 +8,6 @@ let
   cfg = config.darwin.nix;
 in
 {
-  options.darwin.nix.enable = lib.mkEnableOption "nix/nixpkgs config" // {
-    default = true;
-  };
-
   config = lib.mkIf cfg.enable {
     nix = {
       gc = {
@@ -25,5 +21,8 @@ in
 
       settings.trusted-users = [ "@admin" ];
     };
+  };
+  options.darwin.nix.enable = lib.mkEnableOption "nix/nixpkgs config" // {
+    default = true;
   };
 }

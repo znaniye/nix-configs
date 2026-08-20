@@ -7,13 +7,13 @@
   nixos = {
     desktop = {
       enable = true;
+      syncthing.enable = true;
       wayland.enable = true;
       #xserver.enable = true;
       wireguard = {
         address = "192.168.240.15/32";
         privateKeySecretName = "wireguard-private-key-felix";
       };
-      syncthing.enable = true;
     };
     home.extraModules = {
       home-manager.dev = {

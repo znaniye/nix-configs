@@ -6,6 +6,14 @@
   ...
 }:
 {
+  config = lib.mkIf config.nixos.desktop.enable {
+    environment.systemPackages = with pkgs; [
+      heroic
+      tor-browser
+    ];
+    programs.zsh.enable = true;
+
+  };
   imports = [
     ./flatpak.nix
     ./fonts.nix
@@ -29,20 +37,9 @@
     ./xserver.nix
     ./zmk.nix
   ];
-
   options.nixos.desktop = {
     enable = lib.mkEnableOption "desktop config" // {
       default = false; # TODO: improve this (?)
     };
-  };
-
-  config = lib.mkIf config.nixos.desktop.enable {
-    programs.zsh.enable = true;
-
-    environment.systemPackages = with pkgs; [
-      heroic
-      tor-browser
-    ];
-
   };
 }

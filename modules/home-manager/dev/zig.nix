@@ -6,10 +6,6 @@
 }:
 
 {
-  options.home-manager.dev.zig.enable = lib.mkEnableOption "zig config" // {
-    default = false;
-  };
-
   config = lib.mkIf config.home-manager.dev.zig.enable {
     home = {
       packages = with pkgs; [
@@ -19,7 +15,6 @@
     };
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages = lib.mkAfter [ pkgs.zls ];
       extraLuaConfig = lib.mkAfter ''
         vim.lsp.config.zls = {
           cmd = { "${pkgs.zls}/bin/zls" },
@@ -28,6 +23,10 @@
         }
         vim.lsp.enable("zls")
       '';
+      extraPackages = lib.mkAfter [ pkgs.zls ];
     };
+  };
+  options.home-manager.dev.zig.enable = lib.mkEnableOption "zig config" // {
+    default = false;
   };
 }

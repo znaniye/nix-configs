@@ -11,10 +11,10 @@ let
 
   claudeCodeExtensionBase = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     mktplcRef = {
+      hash = "sha256-f+6xXZVb5sYrmrH7eoon6/QoQaTnBuTnb+YnvszqyKA=";
       name = "claude-code";
       publisher = "anthropic";
       version = "2.1.92";
-      hash = "sha256-f+6xXZVb5sYrmrH7eoon6/QoQaTnBuTnb+YnvszqyKA=";
     };
   };
 
@@ -32,9 +32,8 @@ let
   });
 
   vscodiumWithAnthropicEnv = pkgs.symlinkJoin {
-    pname = "vscodium";
-    version = pkgs.vscodium.version;
     paths = [ pkgs.vscodium ];
+    pname = "vscodium";
     postBuild = ''
       rm -f "$out/bin/codium"
       cat > "$out/bin/codium" <<'EOF'
@@ -46,19 +45,15 @@ let
       EOF
       chmod +x "$out/bin/codium"
     '';
+    version = pkgs.vscodium.version;
   };
 in
 {
-  options.home-manager.editor.vscode.enable = lib.mkEnableOption "vscode config" // {
-    default = config.home-manager.editor.enable;
-  };
-
   config = lib.mkIf cfg.enable {
     programs.vscodium = {
       enable = true;
-      package = vscodiumWithAnthropicEnv;
       mutableExtensionsDir = false;
-
+      package = vscodiumWithAnthropicEnv;
       profiles.default = {
         enableMcpIntegration = true;
 
@@ -73,6 +68,11 @@ in
           ];
 
         userSettings = {
+          "[nix]" = {
+            "editor.defaultFormatter" = "jnoortheen.nix-ide";
+          };
+          "chat.mcp.discovery.enabled" = true;
+          "claudeCode.allowDangerouslySkipPermissions" = true;
           "claudeCode.environmentVariables" = [
             {
               name = "ANTHROPIC_BASE_URL";
@@ -83,23 +83,11 @@ in
             name = "AGENT_BROWSER_EXECUTABLE_PATH";
             value = claudeCodeCfg.agentBrowserExecutable;
           };
-          "claudeCode.allowDangerouslySkipPermissions" = true;
           "claudeCode.initialPermissionMode" = "bypassPermissions";
-
-          "workbench.colorTheme" = "Nord";
-          "workbench.editor.openSideBySideDirection" = "right";
-
+          "editor.formatOnSave" = true;
+          "editor.insertSpaces" = true;
           "editor.lineNumbers" = "on";
           "editor.tabSize" = 4;
-          "editor.insertSpaces" = true;
-          "editor.formatOnSave" = true;
-
-          "chat.mcp.discovery.enabled" = true;
-
-          "[nix]" = {
-            "editor.defaultFormatter" = "jnoortheen.nix-ide";
-          };
-
           "nix.enableLanguageServer" = true;
           "nix.serverPath" = "${pkgs.nil}/bin/nil";
           "nix.serverSettings" = {
@@ -109,17 +97,12 @@ in
               };
             };
           };
-
-          "vim.useSystemClipboard" = true;
-          "vim.useCtrlKeys" = true;
-          "vim.leader" = "<space>";
           "vim.handleKeys" = {
             "<C-b>" = true;
             "<C-h>" = true;
             "<C-l>" = true;
           };
-          "vim.surround" = true;
-
+          "vim.leader" = "<space>";
           "vim.normalModeKeyBindingsNonRecursive" = [
             {
               before = [ "<C-l>" ];
@@ -168,10 +151,10 @@ in
               commands = [
                 "workbench.action.terminal.toggleTerminal"
                 {
-                  command = "workbench.action.terminal.sendSequence";
                   args = {
                     text = "lazygit\r";
                   };
+                  command = "workbench.action.terminal.sendSequence";
                 }
               ];
             }
@@ -217,10 +200,10 @@ in
               ];
               commands = [
                 {
-                  command = "workbench.action.findInFiles";
                   args = {
                     isRegex = false;
                   };
+                  command = "workbench.action.findInFiles";
                 }
               ];
             }
@@ -236,8 +219,16 @@ in
               commands = [ "workbench.action.toggleSidebarVisibility" ];
             }
           ];
+          "vim.surround" = true;
+          "vim.useCtrlKeys" = true;
+          "vim.useSystemClipboard" = true;
+          "workbench.colorTheme" = "Nord";
+          "workbench.editor.openSideBySideDirection" = "right";
         };
       };
     };
+  };
+  options.home-manager.editor.vscode.enable = lib.mkEnableOption "vscode config" // {
+    default = config.home-manager.editor.enable;
   };
 }

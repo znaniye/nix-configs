@@ -5,11 +5,8 @@
   ...
 }:
 {
-  options.nixos.desktop.greetd.enable = lib.mkEnableOption "greetd + tuigreet" // {
-    default = config.nixos.desktop.wayland.enable;
-  };
-
   config = lib.mkIf config.nixos.desktop.greetd.enable {
+    environment.systemPackages = [ pkgs.tuigreet ];
     services.greetd = {
       enable = true;
       settings = {
@@ -19,7 +16,8 @@
         };
       };
     };
-
-    environment.systemPackages = [ pkgs.tuigreet ];
+  };
+  options.nixos.desktop.greetd.enable = lib.mkEnableOption "greetd + tuigreet" // {
+    default = config.nixos.desktop.wayland.enable;
   };
 }

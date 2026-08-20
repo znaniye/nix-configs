@@ -17,35 +17,10 @@ let
 in
 {
 
-  mkNixOSConfig =
-    {
-      hostName,
-      configuration ? ../hosts/nixos/${hostName},
-    }:
-    let
-      hostNixpkgs =
-        if hostName == "tortinha" then self.inputs.nixos-raspberrypi.inputs.nixpkgs else nixpkgs;
-    in
-    {
-      nixosConfigurations.${hostName} = hostNixpkgs.lib.nixosSystem {
-        modules = [
-          (setHostname hostName)
-          self.outputs.nixosModules.default
-          configuration
-        ];
-
-        specialArgs = {
-          flake = self;
-          nixos-raspberrypi = self.inputs.nixos-raspberrypi;
-          attic = self.inputs.attic;
-        };
-      };
-    };
-
   mkDarwinConfig =
     {
-      hostName,
       configuration ? ../hosts/darwin/${hostName},
+      hostName,
     }:
     {
       darwinConfigurations.${hostName} = nix-darwin.lib.darwinSystem {
@@ -60,29 +35,51 @@ in
         };
       };
     };
-
   mkHomeConfig =
     {
-      hostName,
       configuration ? ../hosts/home-manager/${hostName},
+      hostName,
       system ? import ../hosts/home-manager/${hostName}/system.nix,
     }:
     {
+      apps.${system}."homeActivations/${hostName}" = {
+        meta.description = "Home activation script for ${hostName}";
+        program = "${self.outputs.homeConfigurations.${hostName}.activationPackage}/activate";
+        type = "app";
+      };
       homeConfigurations.${hostName} = home-manager.lib.homeManagerConfiguration {
-        pkgs = self.outputs.legacyPackages.${system};
+        extraSpecialArgs = {
+          flake = self;
+        };
         modules = [
           self.outputs.homeModules.default
           configuration
         ];
-        extraSpecialArgs = {
-          flake = self;
-        };
+        pkgs = self.outputs.legacyPackages.${system};
       };
+    };
+  mkNixOSConfig =
+    {
+      configuration ? ../hosts/nixos/${hostName},
+      hostName,
+    }:
+    let
+      hostNixpkgs =
+        if hostName == "tortinha" then self.inputs.nixos-raspberrypi.inputs.nixpkgs else nixpkgs;
+    in
+    {
+      nixosConfigurations.${hostName} = hostNixpkgs.lib.nixosSystem {
+        modules = [
+          (setHostname hostName)
+          self.outputs.nixosModules.default
+          configuration
+        ];
 
-      apps.${system}."homeActivations/${hostName}" = {
-        type = "app";
-        program = "${self.outputs.homeConfigurations.${hostName}.activationPackage}/activate";
-        meta.description = "Home activation script for ${hostName}";
+        specialArgs = {
+          attic = self.inputs.attic;
+          flake = self;
+          nixos-raspberrypi = self.inputs.nixos-raspberrypi;
+        };
       };
     };
 }

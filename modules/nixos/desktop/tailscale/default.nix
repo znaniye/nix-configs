@@ -121,58 +121,52 @@ let
 
 in
 {
-  imports = [ ./ossystems.nix ];
-
-  options.nixos.desktop.tailscale.enable = lib.mkEnableOption "tailscale config (client side)" // {
-    default = config.nixos.desktop.enable;
-  };
-
   config = lib.mkMerge [
 
     (lib.mkIf cfg.enable {
-
-      shared.tailscale.enable = true;
 
       services.tailscale = {
         authKeyFile = config.sops.secrets.tailscale-key.path;
         #useRoutingFeatures = if config.nixos.server.tailscale.enable then "both" else "client";
       };
-
+      shared.tailscale.enable = true;
       # Disable wait online as it's causing trouble at rebuild
       # See: https://github.com/NixOS/nixpkgs/issues/180175
       systemd.services.NetworkManager-wait-online.enable = false;
     })
 
     (lib.mkIf (cfg.enable && config.networking.hostName == "tortinha") {
-      systemd.tmpfiles.rules = [
-        "d /var/lib/ts-auth-auto-update 0700 root root -"
-      ];
-
+      systemd.services.ts-auth-auto-update = {
+        after = [ "network-online.target" ];
+        serviceConfig = {
+          Environment = [
+            "HOME=/home/${config.shared.meta.username}"
+          ];
+          ExecStart = "${updateScript}/bin/ts-update-script";
+          RemainAfterExit = true;
+          TimeoutStartSec = "30min";
+          Type = "oneshot";
+          WorkingDirectory = "/var/lib/ts-auth-auto-update";
+        };
+        wants = [ "network-online.target" ];
+      };
       systemd.timers.ts-auth-auto-update =
         let
           date = builtins.fromJSON (builtins.readFile ./update.json);
         in
         {
           description = "Run script 1 day before expiration.";
-          wantedBy = [ "timers.target" ];
           timerConfig.OnCalendar = date.expires;
           timerConfig.Persistent = true;
+          wantedBy = [ "timers.target" ];
         };
-
-      systemd.services.ts-auth-auto-update = {
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          TimeoutStartSec = "30min";
-          WorkingDirectory = "/var/lib/ts-auth-auto-update";
-          Environment = [
-            "HOME=/home/${config.shared.meta.username}"
-          ];
-          ExecStart = "${updateScript}/bin/ts-update-script";
-        };
-      };
+      systemd.tmpfiles.rules = [
+        "d /var/lib/ts-auth-auto-update 0700 root root -"
+      ];
     })
   ];
+  imports = [ ./ossystems.nix ];
+  options.nixos.desktop.tailscale.enable = lib.mkEnableOption "tailscale config (client side)" // {
+    default = config.nixos.desktop.enable;
+  };
 }

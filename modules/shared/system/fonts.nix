@@ -8,8 +8,6 @@ let
   cfg = config.shared.fonts;
 in
 {
-  options.shared.fonts.enable = lib.mkEnableOption "shared font packages";
-
   config = lib.mkIf cfg.enable {
     fonts.packages = with pkgs; [
       nerd-fonts.iosevka
@@ -18,4 +16,5 @@ in
       noto-fonts-cjk-serif
     ];
   };
+  options.shared.fonts.enable = lib.mkEnableOption "shared font packages";
 }

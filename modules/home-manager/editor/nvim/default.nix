@@ -6,32 +6,14 @@
 }:
 {
 
-  options.home-manager.editor.nvim = {
-    enable = lib.mkEnableOption "editor config" // {
-      default = config.home-manager.editor.enable;
-    };
-  };
-
   config = lib.mkIf config.home-manager.editor.nvim.enable {
     programs.neovim = {
-      enable = true;
-
       defaultEditor = true;
-
-      withRuby = false;
-      withNodeJs = false;
-      withPython3 = false;
-
-      viAlias = true;
-      vimAlias = true;
-      vimdiffAlias = true;
-
+      enable = true;
+      extraLuaConfig = lib.mkBefore (builtins.readFile ./config.lua);
       extraPackages = [
         pkgs.stdenv.cc
       ];
-
-      extraLuaConfig = lib.mkBefore (builtins.readFile ./config.lua);
-
       plugins = with pkgs.vimPlugins; [
         nord-nvim
         vim-surround
@@ -44,26 +26,24 @@
         nvim-sops
         nvim-treesitter-textobjects
         {
-          plugin = lazygit-nvim;
-          type = "lua";
           config =
             # lua
             ''
               vim.keymap.set('n', "<leader>lg", ':LazyGit<CR>', {noremap = true})
             '';
+          plugin = lazygit-nvim;
+          type = "lua";
         }
         {
-          plugin = nvim-autopairs;
-          type = "lua";
           config =
             # lua
             ''
               require('nvim-autopairs').setup{}
             '';
+          plugin = nvim-autopairs;
+          type = "lua";
         }
         {
-          plugin = gitsigns-nvim;
-          type = "lua";
           config =
             # lua
             ''
@@ -84,23 +64,23 @@
               end, { desc = 'Reset current line with gitsigns' })
 
             '';
+          plugin = gitsigns-nvim;
+          type = "lua";
         }
         {
-          plugin = comment-nvim;
-          type = "lua";
           config = ''
             require("Comment").setup()
           '';
+          plugin = comment-nvim;
+          type = "lua";
         }
 
         {
+          config = "";
           plugin = vim-visual-multi;
           type = "lua";
-          config = "";
         }
         {
-          plugin = nvim-cmp;
-          type = "lua";
           config = ''
             local cmp = require('cmp')
             cmp.setup{
@@ -119,10 +99,10 @@
               },
             }
           '';
+          plugin = nvim-cmp;
+          type = "lua";
         }
         {
-          plugin = conform-nvim;
-          type = "lua";
           config = ''
             require("conform").setup({
               formatters_by_ft = vim.g.conform_formatters_by_ft or {},
@@ -135,10 +115,10 @@
               },
             })
           '';
+          plugin = conform-nvim;
+          type = "lua";
         }
         {
-          plugin = nvim-treesitter.withAllGrammars;
-          type = "lua";
           config = ''
             local user_treesitter_group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true })
             vim.api.nvim_create_autocmd("FileType", {
@@ -170,17 +150,17 @@
               require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
             end, { silent = true })
           '';
+          plugin = nvim-treesitter.withAllGrammars;
+          type = "lua";
         }
         {
-          plugin = lualine-nvim;
-          type = "lua";
           config = ''
             require('lualine').setup{}
           '';
+          plugin = lualine-nvim;
+          type = "lua";
         }
         {
-          plugin = telescope-nvim;
-          type = "lua";
           config = ''
             require('telescope').setup{
               vim.keymap.set('n', '<Tab><Space>f', ':Telescope find_files<CR>', { silent = true }),
@@ -193,19 +173,19 @@
               end)
             }
           '';
+          plugin = telescope-nvim;
+          type = "lua";
         }
         {
-          plugin = bufferline-nvim;
-          type = "lua";
           config =
             # lua
             ''
               require('bufferline').setup{}
             '';
+          plugin = bufferline-nvim;
+          type = "lua";
         }
         {
-          plugin = alpha-nvim;
-          type = "lua";
           config = ''
             local alpha = require("alpha")
             local dashboard = require("alpha.themes.dashboard")
@@ -229,17 +209,17 @@
             alpha.setup(dashboard.opts)
             vim.keymap.set("n", "<space>a", ":Alpha<CR>", { desc = "Open alpha dashboard" })
           '';
+          plugin = alpha-nvim;
+          type = "lua";
         }
         {
-          plugin = nvim-web-devicons;
-          type = "lua";
           config = ''
             require('nvim-web-devicons').setup{}
           '';
+          plugin = nvim-web-devicons;
+          type = "lua";
         }
         {
-          plugin = nvim-tree-lua;
-          type = "lua";
           config = ''
             require("nvim-tree").setup{
               sync_root_with_cwd = true,
@@ -259,23 +239,36 @@
 
             vim.keymap.set('n', '<C-b>', ':NvimTreeToggle<CR>', { silent = true })
           '';
+          plugin = nvim-tree-lua;
+          type = "lua";
         }
         {
-          plugin = indent-blankline-nvim;
-          type = "lua";
           config = ''
             require("ibl").setup()
           '';
+          plugin = indent-blankline-nvim;
+          type = "lua";
         }
         {
-          plugin = todo-comments-nvim;
-          type = "lua";
           config = ''
             require("todo-comments").setup{
             }
           '';
+          plugin = todo-comments-nvim;
+          type = "lua";
         }
       ];
+      viAlias = true;
+      vimAlias = true;
+      vimdiffAlias = true;
+      withNodeJs = false;
+      withPython3 = false;
+      withRuby = false;
+    };
+  };
+  options.home-manager.editor.nvim = {
+    enable = lib.mkEnableOption "editor config" // {
+      default = config.home-manager.editor.enable;
     };
   };
 }

@@ -1,9 +1,9 @@
 {
-  lib,
-  opsUrl,
-  opsBranch,
-  gitSecretName,
   ciliumVersion,
+  gitSecretName,
+  lib,
+  opsBranch,
+  opsUrl,
 }:
 {
   cilium.content = {
@@ -15,9 +15,8 @@
     };
     spec = {
       bootstrap = true;
-      repo = "https://helm.cilium.io";
       chart = "cilium";
-      version = ciliumVersion;
+      repo = "https://helm.cilium.io";
       targetNamespace = "kube-system";
       valuesContent = ''
         kubeProxyReplacement: true
@@ -37,6 +36,7 @@
           ui:
             enabled: true
       '';
+      version = ciliumVersion;
     };
   };
 
@@ -49,9 +49,9 @@
     };
     spec = {
       interval = "1m";
-      url = opsUrl;
       ref.branch = opsBranch;
       secretRef.name = gitSecretName;
+      url = opsUrl;
     };
   };
 

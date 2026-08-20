@@ -39,66 +39,7 @@ let
   };
 in
 {
-  options.home-manager.dev.claude-code = {
-    enable = lib.mkEnableOption "Claude Code config" // {
-      default = config.home-manager.dev.enable;
-    };
-
-    model = lib.mkOption {
-      type = lib.types.str;
-      default = "claude-opus-5";
-      description = "Default Claude Code model.";
-    };
-
-    anthropicBaseUrl = lib.mkOption {
-      type = lib.types.str;
-      default = "http://192.168.150.11:4444";
-      description = "Base URL for the Anthropic API.";
-    };
-
-    agentBrowserExecutable = lib.mkOption {
-      type = lib.types.str;
-      readOnly = true;
-      default = lib.optionalString isLinux "${pkgs.chromium}/bin/chromium";
-      description = "Browser executable for agent-browser; empty when unavailable on the platform.";
-    };
-
-    giteaMcp = {
-      enable = lib.mkEnableOption "Gitea MCP server integration" // {
-        default = true;
-      };
-    };
-
-    stravaMcp = {
-      enable = lib.mkEnableOption "Strava MCP server integration";
-    };
-
-    intervalsMcp = {
-      enable = lib.mkEnableOption "intervals.icu MCP server integration";
-
-      athleteId = lib.mkOption {
-        type = lib.types.str;
-        default = "i537398";
-        description = "intervals.icu athlete ID (format: iXXXXXX).";
-      };
-    };
-
-    rtk = {
-      enable = lib.mkEnableOption "RTK token-saving Bash proxy" // {
-        default = true;
-      };
-    };
-  };
-
   config = lib.mkIf cfg.enable {
-    home.packages =
-      (with pkgs; [
-        jq
-        agent-browser
-      ])
-      ++ lib.optional isLinux pkgs.chromium
-      ++ lib.optional cfg.rtk.enable pkgs.rtk;
-
     home.activation.claudeCodeOnboarding = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       CLAUDE_JSON="$HOME/.claude.json"
       if [ ! -f "$CLAUDE_JSON" ]; then
@@ -110,7 +51,13 @@ in
       }' "$CLAUDE_JSON" > "$CLAUDE_JSON.tmp"
       run mv "$CLAUDE_JSON.tmp" "$CLAUDE_JSON"
     '';
-
+    home.packages =
+      (with pkgs; [
+        jq
+        agent-browser
+      ])
+      ++ lib.optional isLinux pkgs.chromium
+      ++ lib.optional cfg.rtk.enable pkgs.rtk;
     nixpkgs = {
       config.allowUnfreePredicate =
         pkg:
@@ -119,51 +66,95 @@ in
           "claude"
         ];
     };
-
-    sops.secrets = lib.optionalAttrs cfg.intervalsMcp.enable {
-      intervals-api-key.path = "${config.xdg.configHome}/secrets/intervals-api-key";
-    };
-
     programs.claude-code = {
+      agents = lib.mapAttrs (
+        name: agent: config.shared.codingAgents.renderClaudeAgent name agent
+      ) config.shared.codingAgents.agents;
       enable = true;
-      package = claudeCodeWithEnv;
       mcpServers = {
       }
       // lib.optionalAttrs isLinux {
         pencil = {
-          type = "stdio";
           command = config.shared.mcp.pencil.command;
+          type = "stdio";
         };
       }
       // lib.optionalAttrs cfg.stravaMcp.enable {
         strava = {
-          type = "stdio";
-          command = "${pkgs.nodejs}/bin/npx";
           args = [
             "-y"
             "@r-huijts/strava-mcp-server"
           ];
+          command = "${pkgs.nodejs}/bin/npx";
+          type = "stdio";
         };
       }
       // lib.optionalAttrs cfg.giteaMcp.enable {
         gitea-mcp = {
-          type = "stdio";
           command = "${config.shared.mcp.gitea.wrapper}/bin/gitea-mcp-wrapper";
+          type = "stdio";
         };
       }
       // lib.optionalAttrs cfg.intervalsMcp.enable {
         intervals-icu = {
-          type = "stdio";
           command = "${intervalsMcpWrapper}/bin/intervals-mcp-wrapper";
+          type = "stdio";
         };
       };
-      agents = lib.mapAttrs (
-        name: agent: config.shared.codingAgents.renderClaudeAgent name agent
-      ) config.shared.codingAgents.agents;
+      package = claudeCodeWithEnv;
       settings = {
-        model = cfg.model;
-        skipDangerousModePermissionPrompt = true;
         alwaysThinkingEnabled = true;
+        attribution = {
+          commit = "";
+          pr = "";
+        };
+        enabledPlugins = {
+          "ossystems-commit@ossystems" = true;
+        };
+        # Plugin marketplace configuration
+        extraKnownMarketplaces = {
+          ossystems = {
+            source = {
+              repo = "OSSystems/claude-code-plugin";
+              source = "github";
+            };
+          };
+        };
+        hooks = {
+          Notification = [
+            {
+              hooks = [
+                {
+                  command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Session needs your attention' 2>/dev/null || true";
+                  type = "command";
+                }
+              ];
+              matcher = "";
+            }
+          ];
+          PreToolUse = lib.mkIf cfg.rtk.enable [
+            {
+              hooks = [
+                {
+                  command = "${pkgs.rtk}/bin/rtk hook claude";
+                  type = "command";
+                }
+              ];
+              matcher = "Bash";
+            }
+          ];
+          Stop = [
+            {
+              hooks = [
+                {
+                  command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Task finished' 2>/dev/null || true";
+                  type = "command";
+                }
+              ];
+            }
+          ];
+        };
+        model = cfg.model;
         permissions = {
           allow = [
             "Bash(cat:*)"
@@ -249,59 +240,53 @@ in
             "Bash(sbt publish:*)"
           ];
         };
-        attribution = {
-          commit = "";
-          pr = "";
-        };
-        hooks = {
-          PreToolUse = lib.mkIf cfg.rtk.enable [
-            {
-              matcher = "Bash";
-              hooks = [
-                {
-                  type = "command";
-                  command = "${pkgs.rtk}/bin/rtk hook claude";
-                }
-              ];
-            }
-          ];
-          Notification = [
-            {
-              matcher = "";
-              hooks = [
-                {
-                  type = "command";
-                  command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Session needs your attention' 2>/dev/null || true";
-                }
-              ];
-            }
-          ];
-          Stop = [
-            {
-              hooks = [
-                {
-                  type = "command";
-                  command = "${pkgs.libnotify}/bin/notify-send 'Claude Code' 'Task finished' 2>/dev/null || true";
-                }
-              ];
-            }
-          ];
-        };
-
-        # Plugin marketplace configuration
-        extraKnownMarketplaces = {
-          ossystems = {
-            source = {
-              source = "github";
-              repo = "OSSystems/claude-code-plugin";
-            };
-          };
-        };
-
-        enabledPlugins = {
-          "ossystems-commit@ossystems" = true;
-        };
+        skipDangerousModePermissionPrompt = true;
       };
+    };
+    sops.secrets = lib.optionalAttrs cfg.intervalsMcp.enable {
+      intervals-api-key.path = "${config.xdg.configHome}/secrets/intervals-api-key";
+    };
+  };
+  options.home-manager.dev.claude-code = {
+    agentBrowserExecutable = lib.mkOption {
+      default = lib.optionalString isLinux "${pkgs.chromium}/bin/chromium";
+      description = "Browser executable for agent-browser; empty when unavailable on the platform.";
+      readOnly = true;
+      type = lib.types.str;
+    };
+    anthropicBaseUrl = lib.mkOption {
+      default = "http://192.168.150.11:4444";
+      description = "Base URL for the Anthropic API.";
+      type = lib.types.str;
+    };
+    enable = lib.mkEnableOption "Claude Code config" // {
+      default = config.home-manager.dev.enable;
+    };
+    giteaMcp = {
+      enable = lib.mkEnableOption "Gitea MCP server integration" // {
+        default = true;
+      };
+    };
+    intervalsMcp = {
+      athleteId = lib.mkOption {
+        default = "i537398";
+        description = "intervals.icu athlete ID (format: iXXXXXX).";
+        type = lib.types.str;
+      };
+      enable = lib.mkEnableOption "intervals.icu MCP server integration";
+    };
+    model = lib.mkOption {
+      default = "claude-opus-5";
+      description = "Default Claude Code model.";
+      type = lib.types.str;
+    };
+    rtk = {
+      enable = lib.mkEnableOption "RTK token-saving Bash proxy" // {
+        default = true;
+      };
+    };
+    stravaMcp = {
+      enable = lib.mkEnableOption "Strava MCP server integration";
     };
   };
 }

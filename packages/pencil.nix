@@ -13,15 +13,14 @@ let
   inherit (unfreePkgs) lib appimageTools fetchurl;
 
   src = fetchurl {
-    url = "${releaseBase}/${asset}";
     hash = "sha256-h6wbMltvweK3rKFATyIWvGFTtcLJDqENHMsWGbGkumA=";
+    url = "${releaseBase}/${asset}";
   };
 
   appimageContents = appimageTools.extractType2 { inherit pname version src; };
 in
 appimageTools.wrapType2 {
   inherit pname version src;
-
   extraInstallCommands = ''
     install -Dm444 ${appimageContents}/pencil.desktop -t $out/share/applications
     substituteInPlace $out/share/applications/pencil.desktop \
@@ -30,15 +29,13 @@ appimageTools.wrapType2 {
       ${appimageContents}/usr/share/icons/hicolor/512x512/apps/pencil.png \
       -t $out/share/icons/hicolor/512x512/apps
   '';
-
-  passthru.penSchemaVersion = "2.14";
-
   meta = {
     description = "Pencil.dev — AI-native design tool (design on canvas, land in code)";
     homepage = "https://pencil.dev";
-    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     license = lib.licenses.unfree;
     mainProgram = "pencil";
     platforms = [ "x86_64-linux" ];
+    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
   };
+  passthru.penSchemaVersion = "2.14";
 }

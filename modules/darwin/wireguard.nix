@@ -36,8 +36,6 @@ let
   '';
 in
 {
-  options.darwin.wireguard.enable = lib.mkEnableOption "wireguard config (wg-quick via launchd)";
-
   config = lib.mkMerge [
     {
       home-manager.users.${username}.sops.secrets.${secretName}.path = privateKeyFile;
@@ -47,13 +45,20 @@ in
       environment.etc."resolver/${intranetDomain}".text = ''
         nameserver ${intranetResolver}
       '';
-
+      launchd.daemons.wg-quick-wg0.serviceConfig = {
+        KeepAlive = lib.mkForce true;
+        ProgramArguments = lib.mkForce [
+          "/bin/sh"
+          "-c"
+          "exec ${supervisor}"
+        ];
+        RunAtLoad = true;
+        ThrottleInterval = 30;
+      };
       networking.wg-quick.interfaces.wg0 = {
         address = [ "192.168.240.15/32" ];
-        privateKeyFile = privateKeyFile;
         peers = [
           {
-            publicKey = "7poZW/qGM9HyZuKaA7ryP+EEtuK6b4E+G2sMcbNr6iM=";
             allowedIPs = [
               "192.168.0.0/23"
               "192.168.150.0/24"
@@ -61,20 +66,12 @@ in
             ];
             endpoint = "hep09fmme67.sn.mynetname.net:13231";
             persistentKeepalive = 10;
+            publicKey = "7poZW/qGM9HyZuKaA7ryP+EEtuK6b4E+G2sMcbNr6iM=";
           }
         ];
-      };
-
-      launchd.daemons.wg-quick-wg0.serviceConfig = {
-        ProgramArguments = lib.mkForce [
-          "/bin/sh"
-          "-c"
-          "exec ${supervisor}"
-        ];
-        KeepAlive = lib.mkForce true;
-        RunAtLoad = true;
-        ThrottleInterval = 30;
+        privateKeyFile = privateKeyFile;
       };
     })
   ];
+  options.darwin.wireguard.enable = lib.mkEnableOption "wireguard config (wg-quick via launchd)";
 }

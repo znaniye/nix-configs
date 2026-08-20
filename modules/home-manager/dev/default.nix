@@ -6,29 +6,6 @@
 }:
 
 {
-  imports = [
-    ./cc.nix
-    ./claude-code
-    ./dotnet.nix
-    ./elixir.nix
-    ./glsl.nix
-    ./go.nix
-    ./godot.nix
-    ./haskell.nix
-    ./lua.nix
-    ./nix.nix
-    ./ocaml.nix
-    ./pi-agent
-    ./python.nix
-    ./rust.nix
-    ./typescript.nix
-    ./zig.nix
-  ];
-
-  options.home-manager.dev.enable = lib.mkEnableOption "dev config" // {
-    default = true;
-  };
-
   config = lib.mkIf config.home-manager.dev.enable {
     home.packages = with pkgs; [
       bash-language-server
@@ -45,7 +22,6 @@
       };
 
       neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-        extraPackages = lib.mkAfter [ pkgs.bash-language-server ];
         extraLuaConfig = lib.mkAfter ''
           vim.lsp.config.bash = {
             cmd = { "${pkgs.bash-language-server}/bin/bash-language-server", "start" },
@@ -53,6 +29,7 @@
           }
           vim.lsp.enable("bash")
         '';
+        extraPackages = lib.mkAfter [ pkgs.bash-language-server ];
       };
 
       tealdeer = {
@@ -80,5 +57,26 @@
           }
         '';
     };
+  };
+  imports = [
+    ./cc.nix
+    ./claude-code
+    ./dotnet.nix
+    ./elixir.nix
+    ./glsl.nix
+    ./go.nix
+    ./godot.nix
+    ./haskell.nix
+    ./lua.nix
+    ./nix.nix
+    ./ocaml.nix
+    ./pi-agent
+    ./python.nix
+    ./rust.nix
+    ./typescript.nix
+    ./zig.nix
+  ];
+  options.home-manager.dev.enable = lib.mkEnableOption "dev config" // {
+    default = true;
   };
 }

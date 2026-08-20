@@ -6,36 +6,35 @@
 
 {
 
-  options.nixos.server.pi-hole.enable = lib.mkEnableOption "pihole config" // {
-    default = config.nixos.server.enable;
-  };
-
   config = lib.mkIf config.nixos.server.pi-hole.enable {
+    networking.firewall.allowedTCPPorts = [
+      53
+    ];
+    networking.firewall.allowedUDPPorts = [
+      53
+    ];
     services = {
-      pihole-web = {
-        enable = true;
-        ports = [
-          8053
-        ];
-      };
       pihole-ftl = {
         enable = true;
-        openFirewallDNS = true;
-        openFirewallDHCP = true;
-        queryLogDeleter = {
-          enable = true;
-          age = 120;
-        };
         lists = [
           {
-            url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
             # Alternatively, use the file from nixpkgs. Note its contents won't be
             # automatically updated by Pi-hole, as it would with an online URL.
             # url = "file://${pkgs.stevenblack-blocklist}/hosts";
             description = "Steven Black's unified adlist";
+            url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
           }
         ];
+        openFirewallDHCP = true;
+        openFirewallDNS = true;
+        queryLogDeleter = {
+          age = 120;
+          enable = true;
+        };
         settings = {
+          dhcp = {
+            active = false;
+          };
           dns = {
             domainNeeded = false;
             expandHosts = true;
@@ -48,18 +47,17 @@
               "2620:fe::11"
             ];
           };
-          dhcp = {
-            active = false;
-          };
         };
       };
+      pihole-web = {
+        enable = true;
+        ports = [
+          8053
+        ];
+      };
     };
-
-    networking.firewall.allowedTCPPorts = [
-      53
-    ];
-    networking.firewall.allowedUDPPorts = [
-      53
-    ];
+  };
+  options.nixos.server.pi-hole.enable = lib.mkEnableOption "pihole config" // {
+    default = config.nixos.server.enable;
   };
 }

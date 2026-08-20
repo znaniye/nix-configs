@@ -67,101 +67,47 @@ let
 
   mkAppContainer = environment: {
     inherit image environment;
-    user = "1000:1000";
     dependsOn = [
       "solidtime-database"
       "solidtime-gotenberg"
     ];
-    volumes = [ "solidtime-storage:/var/www/html/storage" ];
     environmentFiles = [ config.sops.templates."solidtime-laravel.env".path ];
     extraOptions = appExtraOptions;
+    user = "1000:1000";
+    volumes = [ "solidtime-storage:/var/www/html/storage" ];
   };
 in
 {
-  options.nixos.server.solidtime = {
-    enable = lib.mkEnableOption "self-hosted Solidtime";
-
-    domain = lib.mkOption {
-      type = lib.types.str;
-      default = "solidtime.znaniye.xyz";
-    };
-
-    superAdmins = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-    };
-  };
-
   config = lib.mkIf cfg.enable {
-    virtualisation.podman.enable = true;
-    virtualisation.oci-containers.backend = "podman";
-
+    services.cloudflared.tunnels."2caba45d-72f1-428d-8263-f6e39c9c626c".ingress.${cfg.domain} =
+      lib.mkIf config.nixos.server.cloudflared.enable
+        {
+          service = "http://localhost:${toString port}";
+        };
     sops.secrets = {
       "solidtime-app-key" = { };
+      "solidtime-db-password" = { };
       "solidtime-passport-private-key" = { };
       "solidtime-passport-public-key" = { };
-      "solidtime-db-password" = { };
     };
-
-    sops.templates."solidtime-laravel.env".content = laravelEnv;
     sops.templates."solidtime-db.env".content = ''
       POSTGRES_PASSWORD=${config.sops.placeholder."solidtime-db-password"}
     '';
-
-    virtualisation.oci-containers.containers = {
-      solidtime-app = (mkAppContainer {
-        CONTAINER_MODE = "http";
-        AUTO_DB_MIGRATE = "true";
-      }) // {
-        ports = [ "127.0.0.1:${toString port}:8000" ];
-      };
-
-      solidtime-scheduler = mkAppContainer {
-        CONTAINER_MODE = "scheduler";
-      };
-
-      solidtime-queue = mkAppContainer {
-        CONTAINER_MODE = "worker";
-        WORKER_COMMAND = "php /var/www/html/artisan queue:work";
-      };
-
-      solidtime-database = {
-        image = "postgres:15";
-        volumes = [ "solidtime-db:/var/lib/postgresql/data" ];
-        environment = {
-          POSTGRES_DB = "solidtime";
-          POSTGRES_USER = "solidtime";
-        };
-        environmentFiles = [ config.sops.templates."solidtime-db.env".path ];
-        extraOptions = [
-          "--network=${network}"
-          "--ip=${dbIp}"
-        ];
-      };
-
-      solidtime-gotenberg = {
-        image = "gotenberg/gotenberg:8";
-        extraOptions = [
-          "--network=${network}"
-          "--ip=${gotenbergIp}"
-        ];
-      };
-    };
-
+    sops.templates."solidtime-laravel.env".content = laravelEnv;
     systemd.services = lib.mkMerge [
       {
         solidtime-network = {
-          wantedBy = [ "multi-user.target" ];
           before = map (n: "${backend}-${n}.service") containers;
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-          };
           path = [ pkgs.podman ];
           script = ''
             podman network exists ${network} \
               || podman network create --disable-dns --subnet ${subnet} --gateway ${gateway} ${network}
           '';
+          serviceConfig = {
+            RemainAfterExit = true;
+            Type = "oneshot";
+          };
+          wantedBy = [ "multi-user.target" ];
         };
       }
       (lib.genAttrs (map (n: "${backend}-${n}") containers) (_: {
@@ -171,10 +117,55 @@ in
         serviceConfig.RestartSec = lib.mkOverride 500 "10s";
       }))
     ];
-
-    services.cloudflared.tunnels."2caba45d-72f1-428d-8263-f6e39c9c626c".ingress.${cfg.domain} =
-      lib.mkIf config.nixos.server.cloudflared.enable {
-        service = "http://localhost:${toString port}";
+    virtualisation.oci-containers.backend = "podman";
+    virtualisation.oci-containers.containers = {
+      solidtime-app =
+        (mkAppContainer {
+          AUTO_DB_MIGRATE = "true";
+          CONTAINER_MODE = "http";
+        })
+        // {
+          ports = [ "127.0.0.1:${toString port}:8000" ];
+        };
+      solidtime-database = {
+        environment = {
+          POSTGRES_DB = "solidtime";
+          POSTGRES_USER = "solidtime";
+        };
+        environmentFiles = [ config.sops.templates."solidtime-db.env".path ];
+        extraOptions = [
+          "--network=${network}"
+          "--ip=${dbIp}"
+        ];
+        image = "postgres:15";
+        volumes = [ "solidtime-db:/var/lib/postgresql/data" ];
       };
+      solidtime-gotenberg = {
+        extraOptions = [
+          "--network=${network}"
+          "--ip=${gotenbergIp}"
+        ];
+        image = "gotenberg/gotenberg:8";
+      };
+      solidtime-queue = mkAppContainer {
+        CONTAINER_MODE = "worker";
+        WORKER_COMMAND = "php /var/www/html/artisan queue:work";
+      };
+      solidtime-scheduler = mkAppContainer {
+        CONTAINER_MODE = "scheduler";
+      };
+    };
+    virtualisation.podman.enable = true;
+  };
+  options.nixos.server.solidtime = {
+    domain = lib.mkOption {
+      default = "solidtime.znaniye.xyz";
+      type = lib.types.str;
+    };
+    enable = lib.mkEnableOption "self-hosted Solidtime";
+    superAdmins = lib.mkOption {
+      default = [ ];
+      type = lib.types.listOf lib.types.str;
+    };
   };
 }

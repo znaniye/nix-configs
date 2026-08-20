@@ -16,53 +16,46 @@ let
     ;
 
   tarball = fetchurl {
-    url = "https://registry.npmjs.org/@pencil.dev/cli/-/cli-${version}.tgz";
     hash = "sha256-fUXDZ60YETUozSE3rcXaSU/OBTx56WMpr9L8buNrBV4=";
+    url = "https://registry.npmjs.org/@pencil.dev/cli/-/cli-${version}.tgz";
   };
 
   manifest = ./package.json;
   lockfile = ./package-lock.json;
 
   pencil-cli = buildNpmPackage {
-    pname = "pencil-cli";
     inherit version;
-    src = tarball;
-
-    postPatch = ''
-      cp ${manifest} package.json
-      cp ${lockfile} package-lock.json
-    '';
-
-    npmDeps = fetchNpmDeps {
-      src = ./.;
-      hash = "sha256-X3raU/UGjxjMiitTEjpKYELsfsMoPjIHjgv2y4DPzBI=";
+    autoPatchelfIgnoreMissingDeps = [ "libtinfo.so.6" ];
+    buildInputs = [ unfreePkgs.stdenv.cc.cc.lib ];
+    dontNpmBuild = true;
+    dontStrip = true;
+    meta = {
+      description = "Pencil.dev CLI — headless .pen design editor and stdio MCP server";
+      homepage = "https://pencil.dev";
+      license = lib.licenses.unfree;
+      mainProgram = "pencil";
+      platforms = [ "x86_64-linux" ];
+      sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     };
-
+    nativeBuildInputs = [ autoPatchelfHook ];
+    npmDeps = fetchNpmDeps {
+      hash = "sha256-X3raU/UGjxjMiitTEjpKYELsfsMoPjIHjgv2y4DPzBI=";
+      src = ./.;
+    };
     npmFlags = [
       "--omit=dev"
       "--ignore-scripts"
     ];
-    dontNpmBuild = true;
-
-    nativeBuildInputs = [ autoPatchelfHook ];
-    buildInputs = [ unfreePkgs.stdenv.cc.cc.lib ];
-    dontStrip = true;
-
-    autoPatchelfIgnoreMissingDeps = [ "libtinfo.so.6" ];
-
+    pname = "pencil-cli";
     postInstall = ''
       ln -s $out/lib/node_modules/@pencil.dev/cli/dist/out/mcp-server-linux-x64 \
         $out/bin/pencil-mcp-server
     '';
-
-    meta = {
-      description = "Pencil.dev CLI — headless .pen design editor and stdio MCP server";
-      homepage = "https://pencil.dev";
-      sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
-      license = lib.licenses.unfree;
-      mainProgram = "pencil";
-      platforms = [ "x86_64-linux" ];
-    };
+    postPatch = ''
+      cp ${manifest} package.json
+      cp ${lockfile} package-lock.json
+    '';
+    src = tarball;
   };
 
   pencil-mcp-bridge = writeShellApplication {
@@ -99,13 +92,13 @@ let
   };
 in
 unfreePkgs.symlinkJoin {
+  meta = pencil-cli.meta // {
+    description = "Pencil.dev CLI, headless MCP bridge, and stdio MCP server";
+  };
   name = "pencil-cli-${version}";
+  passthru.penSchemaVersion = "2.13";
   paths = [
     pencil-cli
     pencil-mcp-bridge
   ];
-  passthru.penSchemaVersion = "2.13";
-  meta = pencil-cli.meta // {
-    description = "Pencil.dev CLI, headless MCP bridge, and stdio MCP server";
-  };
 }

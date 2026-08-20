@@ -1,10 +1,6 @@
 { config, lib, ... }:
 
 {
-  options.nixos.desktop.locale.enable = lib.mkEnableOption "locale config" // {
-    default = config.nixos.desktop.enable;
-  };
-
   config = lib.mkIf config.nixos.desktop.locale.enable {
     # Select internationalisation properties.
     i18n = {
@@ -23,5 +19,8 @@
     };
 
     time.timeZone = lib.mkDefault "America/Sao_Paulo";
+  };
+  options.nixos.desktop.locale.enable = lib.mkEnableOption "locale config" // {
+    default = config.nixos.desktop.enable;
   };
 }

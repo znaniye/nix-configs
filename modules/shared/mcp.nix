@@ -20,40 +20,39 @@ let
   '';
 in
 {
+  config = {
+    sops.secrets.${giteaCfg.tokenSecretName} = { };
+  };
   options.shared.mcp = {
     gitea = {
       host = lib.mkOption {
-        type = lib.types.str;
         default = defaultGiteaHost;
         description = "Gitea host URL used by the MCP server.";
+        type = lib.types.str;
       };
 
       tokenSecretName = lib.mkOption {
-        type = lib.types.str;
         default = defaultGiteaTokenSecretName;
         description = "SOPS key name containing the Gitea PAT token.";
+        type = lib.types.str;
       };
 
       wrapper = lib.mkOption {
-        type = lib.types.package;
-        readOnly = true;
         default = giteaWrapper;
         description = "The gitea-mcp-wrapper derivation.";
+        readOnly = true;
+        type = lib.types.package;
       };
     };
 
     pencil = {
       command = lib.mkOption {
-        type = lib.types.str;
-        readOnly = true;
         default =
           if pkgs.stdenv.hostPlatform.isLinux then "${pkgs.pencil-cli}/bin/pencil-mcp-bridge" else "";
         description = "Command that starts the pencil stdio MCP server (headless bridge).";
+        readOnly = true;
+        type = lib.types.str;
       };
     };
-  };
-
-  config = {
-    sops.secrets.${giteaCfg.tokenSecretName} = { };
   };
 }

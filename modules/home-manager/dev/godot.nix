@@ -6,10 +6,6 @@
 }:
 
 {
-  options.home-manager.dev.godot.enable = lib.mkEnableOption "Godot / GDScript dev" // {
-    default = config.home-manager.desktop.enable;
-  };
-
   config = lib.mkIf config.home-manager.dev.godot.enable {
     home.packages = with pkgs; [
       godot
@@ -43,5 +39,8 @@
         vim.lsp.enable("gdscript")
       '';
     };
+  };
+  options.home-manager.dev.godot.enable = lib.mkEnableOption "Godot / GDScript dev" // {
+    default = config.home-manager.desktop.enable;
   };
 }

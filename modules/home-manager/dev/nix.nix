@@ -9,20 +9,6 @@ let
   cfg = config.home-manager.dev.nix;
 in
 {
-  options.home-manager.dev.nix = {
-    enable = lib.mkEnableOption "Nix config" // {
-      default = config.home-manager.dev.enable;
-    };
-    languageServer = lib.mkOption {
-      type = lib.types.enum [
-        "nixd"
-        "nil"
-      ];
-      description = "Nix language server.";
-      default = "nil";
-    };
-  };
-
   config = lib.mkIf cfg.enable {
     home.packages =
       with pkgs;
@@ -40,14 +26,6 @@ in
       ++ lib.optionals (cfg.languageServer == "nixd") [ nixd ];
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages = lib.mkAfter (
-        [ pkgs.nixfmt ]
-        ++ lib.optionals (cfg.languageServer == "nil") [ pkgs.nil ]
-        ++ lib.optionals (cfg.languageServer == "nixd") [ pkgs.nixd ]
-      );
-
-      plugins = lib.mkAfter (with pkgs.vimPlugins; [ vim-nix ]);
-
       extraLuaConfig = lib.mkAfter (
         ''
           local conform_fts = vim.g.conform_formatters_by_ft or {}
@@ -84,6 +62,25 @@ in
             ''
         )
       );
+      extraPackages = lib.mkAfter (
+        [ pkgs.nixfmt ]
+        ++ lib.optionals (cfg.languageServer == "nil") [ pkgs.nil ]
+        ++ lib.optionals (cfg.languageServer == "nixd") [ pkgs.nixd ]
+      );
+      plugins = lib.mkAfter (with pkgs.vimPlugins; [ vim-nix ]);
+    };
+  };
+  options.home-manager.dev.nix = {
+    enable = lib.mkEnableOption "Nix config" // {
+      default = config.home-manager.dev.enable;
+    };
+    languageServer = lib.mkOption {
+      default = "nil";
+      description = "Nix language server.";
+      type = lib.types.enum [
+        "nixd"
+        "nil"
+      ];
     };
   };
 }

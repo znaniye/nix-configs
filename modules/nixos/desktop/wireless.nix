@@ -6,19 +6,15 @@
 }:
 
 {
-  options.nixos.desktop.wireless.enable = lib.mkEnableOption "Wi-Fi/Bluetooth config" // {
-    default = config.nixos.desktop.enable;
-  };
-
   config = lib.mkIf config.nixos.desktop.wireless.enable {
+    environment.systemPackages = with pkgs; [
+      iw
+      overskride
+    ];
+    hardware.bluetooth.enable = true;
     networking = {
       networkmanager = {
         enable = true;
-        wifi = {
-          powersave = false;
-          backend = "iwd";
-        };
-
         ensureProfiles = {
           environmentFiles = [ config.sops.secrets.wifi.path ];
           profiles = {
@@ -34,34 +30,31 @@
             };
           };
         };
+        wifi = {
+          backend = "iwd";
+          powersave = false;
+        };
       };
     };
-
-    environment.systemPackages = with pkgs; [
-      iw
-      overskride
-    ];
-
-    hardware.bluetooth.enable = true;
-
     programs.nm-applet.enable = true;
-
-    systemd.user.services.nm-applet = {
-      serviceConfig = {
-        # Use exponential restart
-        RestartSteps = 5;
-        RestartMaxDelaySec = 10;
-        Restart = "on-failure";
-      };
-    };
-
     #TODO: common module
     services = {
       resolved = lib.optionalAttrs (!config.nixos.server.pi-hole.enable) {
-        enable = true;
         dnssec = "false";
+        enable = true;
       };
     };
+    systemd.user.services.nm-applet = {
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartMaxDelaySec = 10;
+        # Use exponential restart
+        RestartSteps = 5;
+      };
+    };
+  };
+  options.nixos.desktop.wireless.enable = lib.mkEnableOption "Wi-Fi/Bluetooth config" // {
+    default = config.nixos.desktop.enable;
   };
 
 }

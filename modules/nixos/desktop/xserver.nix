@@ -6,47 +6,41 @@
 }:
 
 {
-  options.nixos.desktop.xserver.enable = lib.mkEnableOption "xserver config" // {
-    default = false;
-  };
-
   config = lib.mkIf config.nixos.desktop.xserver.enable {
+    environment.systemPackages = with pkgs; [ xclip ];
     services = {
       displayManager = {
-        defaultSession = "none+i3";
         autoLogin = {
           enable = true;
           user = config.shared.meta.username;
         };
+        defaultSession = "none+i3";
       };
-
-      xserver = {
-        enable = true;
-
-        xkb = {
-          variant = "abnt2";
-          layout = "br";
-        };
-
-        windowManager.i3.enable = true;
-      };
-
       redshift = {
-        enable = true;
-        provider = "manual";
-        latitude = "-23.5505";
-        longitude = "-46.6333";
-        temperature = {
-          day = 5500;
-          night = 2700;
-        };
         brightness = {
           day = "1";
           night = "0.8";
         };
+        enable = true;
+        latitude = "-23.5505";
+        longitude = "-46.6333";
+        provider = "manual";
+        temperature = {
+          day = 5500;
+          night = 2700;
+        };
+      };
+      xserver = {
+        enable = true;
+        windowManager.i3.enable = true;
+        xkb = {
+          layout = "br";
+          variant = "abnt2";
+        };
       };
     };
-
-    environment.systemPackages = with pkgs; [ xclip ];
+  };
+  options.nixos.desktop.xserver.enable = lib.mkEnableOption "xserver config" // {
+    default = false;
   };
 }

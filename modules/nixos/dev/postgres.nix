@@ -8,49 +8,11 @@ let
   cfg = config.nixos.dev.postgres;
 in
 {
-  options.nixos.dev.postgres = {
-    enable = lib.mkEnableOption "PostgreSQL development config" // {
-      default = config.nixos.dev.enable;
-    };
-
-    tcpip.enable = lib.mkEnableOption "PostgreSQL TCP/IP listener" // {
-      default = true;
-    };
-
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.postgresql_18;
-      description = "PostgreSQL package to use.";
-    };
-
-    settings = {
-      listenAddresses = lib.mkOption {
-        type = lib.types.str;
-        default = "*";
-        description = "Value for postgresql listen_addresses.";
-      };
-
-      port = lib.mkOption {
-        type = lib.types.port;
-        default = 5432;
-        description = "TCP port for PostgreSQL.";
-      };
-
-      passwordEncryption = lib.mkOption {
-        type = lib.types.str;
-        default = "scram-sha-256";
-        description = "Value for postgresql password_encryption.";
-      };
-    };
-  };
-
   config = lib.mkIf cfg.enable {
     services.postgresql = {
       enable = true;
-      package = cfg.package;
-
       enableTCPIP = cfg.tcpip.enable;
-
+      package = cfg.package;
       settings = {
         password_encryption = cfg.settings.passwordEncryption;
       }
@@ -58,6 +20,36 @@ in
         listen_addresses = cfg.settings.listenAddresses;
         port = cfg.settings.port;
       };
+    };
+  };
+  options.nixos.dev.postgres = {
+    enable = lib.mkEnableOption "PostgreSQL development config" // {
+      default = config.nixos.dev.enable;
+    };
+    package = lib.mkOption {
+      default = pkgs.postgresql_18;
+      description = "PostgreSQL package to use.";
+      type = lib.types.package;
+    };
+    settings = {
+      listenAddresses = lib.mkOption {
+        default = "*";
+        description = "Value for postgresql listen_addresses.";
+        type = lib.types.str;
+      };
+      passwordEncryption = lib.mkOption {
+        default = "scram-sha-256";
+        description = "Value for postgresql password_encryption.";
+        type = lib.types.str;
+      };
+      port = lib.mkOption {
+        default = 5432;
+        description = "TCP port for PostgreSQL.";
+        type = lib.types.port;
+      };
+    };
+    tcpip.enable = lib.mkEnableOption "PostgreSQL TCP/IP listener" // {
+      default = true;
     };
   };
 }

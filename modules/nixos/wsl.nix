@@ -8,8 +8,15 @@ let
   cfg = config.nixos.wsl;
 in
 {
+  config = lib.mkIf cfg.enable {
+    programs.zsh.enable = true;
+    wsl = {
+      inherit (cfg) startMenuLaunchers;
+      defaultUser = config.shared.meta.username;
+      enable = true;
+    };
+  };
   imports = [ flake.inputs.nixos-wsl.nixosModules.wsl ];
-
   options.nixos.wsl = {
     enable = lib.mkEnableOption "WSL host config" // {
       default = false;
@@ -18,15 +25,5 @@ in
     startMenuLaunchers = lib.mkEnableOption "WSL start menu launchers" // {
       default = true;
     };
-  };
-
-  config = lib.mkIf cfg.enable {
-    wsl = {
-      enable = true;
-      defaultUser = config.shared.meta.username;
-      inherit (cfg) startMenuLaunchers;
-    };
-
-    programs.zsh.enable = true;
   };
 }

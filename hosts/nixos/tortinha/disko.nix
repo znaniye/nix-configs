@@ -1,72 +1,70 @@
 { lib, ... }:
 let
   firmwarePartition = lib.recursiveUpdate {
-    priority = 1;
-    type = "0700"; # Microsoft basic data
     attributes = [
       0 # Required Partition
     ];
-    size = "1024M";
     content = {
-      type = "filesystem";
       format = "vfat";
       mountOptions = [
         "noatime"
       ];
+      type = "filesystem";
     };
+    priority = 1;
+    size = "1024M";
+    type = "0700"; # Microsoft basic data
   };
 
   espPartition = lib.recursiveUpdate {
-    type = "EF00"; # EFI System Partition (ESP)
     attributes = [
       2 # Legacy BIOS Bootable, for U-Boot to find extlinux config
     ];
-    size = "1024M";
     content = {
-      type = "filesystem";
       format = "vfat";
       mountOptions = [
         "noatime"
         "umask=0077"
       ];
+      type = "filesystem";
     };
+    size = "1024M";
+    type = "EF00"; # EFI System Partition (ESP)
   };
 
 in
 {
   disko.devices = {
     disk.nvme0 = {
-      type = "disk";
-      device = "/dev/nvme0n1";
       content = {
-        type = "gpt";
         partitions = {
 
-          FIRMWARE = firmwarePartition {
-            label = "FIRMWARE";
-            content.mountpoint = "/boot/firmware";
-          };
-
           ESP = espPartition {
-            label = "ESP";
             content.mountpoint = "/boot";
+            label = "ESP";
           };
-
+          FIRMWARE = firmwarePartition {
+            content.mountpoint = "/boot/firmware";
+            label = "FIRMWARE";
+          };
           root = {
-            size = "100%";
-            label = "ROOT";
             content = {
-              type = "filesystem";
               format = "ext4";
-              mountpoint = "/";
               mountOptions = [
                 "defaults"
                 "x-systemd.growfs"
               ];
+              mountpoint = "/";
+              type = "filesystem";
             };
+            label = "ROOT";
+            size = "100%";
           };
         };
+        type = "gpt";
       };
+      device = "/dev/nvme0n1";
+      type = "disk";
     };
   };
 }

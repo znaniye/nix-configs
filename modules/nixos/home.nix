@@ -10,11 +10,6 @@ let
   cfg = config.nixos.home;
 in
 {
-  imports = [
-    (flake.outputs.internal.sharedModules.helpers.mkHomeModule "nixos")
-    flake.inputs.home-manager.nixosModules.home-manager
-  ];
-
   config = lib.mkIf cfg.enable {
 
     nixos.home.extraModules = {
@@ -24,16 +19,20 @@ in
 
     # Define a user account. Don't forget to set a password with ‘passwd’
     users.users.${cfg.username} = {
-      isNormalUser = true;
-      uid = 1000;
       extraGroups = [
         "wheel"
         "networkmanager"
         "video"
       ];
-      shell = pkgs.zsh;
       initialPassword = "changeme";
+      isNormalUser = true;
       openssh.authorizedKeys.keys = config.shared.authorizedKeys;
+      shell = pkgs.zsh;
+      uid = 1000;
     };
   };
+  imports = [
+    (flake.outputs.internal.sharedModules.helpers.mkHomeModule "nixos")
+    flake.inputs.home-manager.nixosModules.home-manager
+  ];
 }

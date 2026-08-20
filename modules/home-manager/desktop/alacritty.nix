@@ -5,33 +5,37 @@
   ...
 }:
 {
-  options.home-manager.desktop.alacritty.enable = lib.mkEnableOption "alacritty config " // {
-    default = config.home-manager.desktop.enable;
-  };
-
   config = lib.mkIf config.home-manager.desktop.alacritty.enable {
     programs.alacritty = {
       enable = true;
 
       settings = {
-        window = {
-          title = "Terminal";
-
-          opacity = 0.92;
-
-          padding = {
-            x = 5;
-            y = 5;
+        colors = {
+          bright = {
+            black = "0x${config.shared.theme.nord.scheme.base03}";
+            blue = "0x${config.shared.theme.nord.scheme.base16}";
+            cyan = "0x${config.shared.theme.nord.scheme.base0C}";
+            green = "0x${config.shared.theme.nord.scheme.base0B}";
+            magenta = "0x${config.shared.theme.nord.scheme.base0E}";
+            red = "0x${config.shared.theme.nord.scheme.base08}";
+            white = "0x${config.shared.theme.nord.scheme.base06}";
+            yellow = "0x${config.shared.theme.nord.scheme.base0A}";
           };
-          dimensions = {
-            lines = 75;
-            columns = 100;
+          normal = {
+            black = "0x${config.shared.theme.nord.scheme.base01}";
+            blue = "0x${config.shared.theme.nord.scheme.base16}";
+            cyan = "0x${config.shared.theme.nord.scheme.base0D}";
+            green = "0x${config.shared.theme.nord.scheme.base0B}";
+            magenta = "0x${config.shared.theme.nord.scheme.base0E}";
+            red = "0x${config.shared.theme.nord.scheme.base08}";
+            white = "0x${config.shared.theme.nord.scheme.base05}";
+            yellow = "0x${config.shared.theme.nord.scheme.base0A}";
           };
-        }
-        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-          option_as_alt = "Both";
+          primary = {
+            background = "0x${config.shared.theme.nord.scheme.base00}";
+            foreground = "0x${config.shared.theme.nord.scheme.base04}";
+          };
         };
-
         font = {
           normal = {
             family = "Iosevka Nerd Font Mono";
@@ -39,34 +43,25 @@
           };
           size = 14;
         };
-
-        colors = {
-          primary = {
-            background = "0x${config.shared.theme.nord.scheme.base00}";
-            foreground = "0x${config.shared.theme.nord.scheme.base04}";
+        window = {
+          dimensions = {
+            columns = 100;
+            lines = 75;
           };
-          normal = {
-            black = "0x${config.shared.theme.nord.scheme.base01}";
-            red = "0x${config.shared.theme.nord.scheme.base08}";
-            green = "0x${config.shared.theme.nord.scheme.base0B}";
-            yellow = "0x${config.shared.theme.nord.scheme.base0A}";
-            blue = "0x${config.shared.theme.nord.scheme.base16}";
-            magenta = "0x${config.shared.theme.nord.scheme.base0E}";
-            cyan = "0x${config.shared.theme.nord.scheme.base0D}";
-            white = "0x${config.shared.theme.nord.scheme.base05}";
+          opacity = 0.92;
+          padding = {
+            x = 5;
+            y = 5;
           };
-          bright = {
-            black = "0x${config.shared.theme.nord.scheme.base03}";
-            red = "0x${config.shared.theme.nord.scheme.base08}";
-            green = "0x${config.shared.theme.nord.scheme.base0B}";
-            yellow = "0x${config.shared.theme.nord.scheme.base0A}";
-            blue = "0x${config.shared.theme.nord.scheme.base16}";
-            magenta = "0x${config.shared.theme.nord.scheme.base0E}";
-            cyan = "0x${config.shared.theme.nord.scheme.base0C}";
-            white = "0x${config.shared.theme.nord.scheme.base06}";
-          };
+          title = "Terminal";
+        }
+        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+          option_as_alt = "Both";
         };
       };
     };
+  };
+  options.home-manager.desktop.alacritty.enable = lib.mkEnableOption "alacritty config " // {
+    default = config.home-manager.desktop.enable;
   };
 }

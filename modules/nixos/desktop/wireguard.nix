@@ -4,24 +4,6 @@ let
   isConfigured = cfg.address != null && cfg.privateKeySecretName != null;
 in
 {
-  options.nixos.desktop.wireguard = {
-    enable = lib.mkEnableOption "wireguard config" // {
-      default = config.nixos.desktop.enable;
-    };
-
-    address = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = "WireGuard address assigned to this host.";
-    };
-
-    privateKeySecretName = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = "Name of the SOPS secret that stores this host WireGuard private key.";
-    };
-  };
-
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
@@ -38,41 +20,51 @@ in
       }
 
       (lib.mkIf isConfigured {
-        sops.secrets.${cfg.privateKeySecretName} = { };
-
         networking.wireguard = {
-          useNetworkd = false;
-
           interfaces = {
             wg0 = {
               ips = [ cfg.address ];
-
-              privateKeyFile = config.sops.secrets.${cfg.privateKeySecretName}.path;
-
               peers = [
                 {
-                  publicKey = "7poZW/qGM9HyZuKaA7ryP+EEtuK6b4E+G2sMcbNr6iM=";
                   allowedIPs = [
                     "192.168.0.0/23"
                     "192.168.150.0/24"
                     "192.168.7.0/24"
                   ];
+                  dynamicEndpointRefreshSeconds = 30;
                   endpoint = "hep09fmme67.sn.mynetname.net:13231";
                   persistentKeepalive = 10;
-                  dynamicEndpointRefreshSeconds = 30;
+                  publicKey = "7poZW/qGM9HyZuKaA7ryP+EEtuK6b4E+G2sMcbNr6iM=";
                 }
               ];
-
               postSetup = ''
                 resolvectl dns    wg0 192.168.0.240
                 #resolvectl dns    wg0 192.168.0.233
                 resolvectl domain wg0 "~intranet.freedom.ind.br"
                 resolvectl dnssec wg0 false
               '';
+              privateKeyFile = config.sops.secrets.${cfg.privateKeySecretName}.path;
             };
           };
+          useNetworkd = false;
         };
+        sops.secrets.${cfg.privateKeySecretName} = { };
       })
     ]
   );
+  options.nixos.desktop.wireguard = {
+    address = lib.mkOption {
+      default = null;
+      description = "WireGuard address assigned to this host.";
+      type = lib.types.nullOr lib.types.str;
+    };
+    enable = lib.mkEnableOption "wireguard config" // {
+      default = config.nixos.desktop.enable;
+    };
+    privateKeySecretName = lib.mkOption {
+      default = null;
+      description = "Name of the SOPS secret that stores this host WireGuard private key.";
+      type = lib.types.nullOr lib.types.str;
+    };
+  };
 }

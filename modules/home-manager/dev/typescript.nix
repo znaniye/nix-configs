@@ -9,16 +9,6 @@ let
   cfg = config.home-manager.dev.typescript;
 in
 {
-  options.home-manager.dev.typescript = {
-    enable = lib.mkEnableOption "TypeScript/JavaScript config" // {
-      default = false;
-    };
-
-    eslint = lib.mkEnableOption "eslint language server" // {
-      default = true;
-    };
-  };
-
   config = lib.mkIf cfg.enable {
     home.packages =
       with pkgs;
@@ -32,15 +22,6 @@ in
       ++ lib.optionals cfg.eslint [ vscode-langservers-extracted ];
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages = lib.mkAfter (
-        [
-          pkgs.typescript-language-server
-          pkgs.prettierd
-          pkgs.prettier
-        ]
-        ++ lib.optionals cfg.eslint [ pkgs.vscode-langservers-extracted ]
-      );
-
       extraLuaConfig = lib.mkAfter (
         ''
           -- conform reads vim.g.conform_formatters_by_ft at setup time. Mutating a
@@ -104,6 +85,23 @@ in
           vim.lsp.enable("eslint")
         ''
       );
+      extraPackages = lib.mkAfter (
+        [
+          pkgs.typescript-language-server
+          pkgs.prettierd
+          pkgs.prettier
+        ]
+        ++ lib.optionals cfg.eslint [ pkgs.vscode-langservers-extracted ]
+      );
+    };
+  };
+  options.home-manager.dev.typescript = {
+    enable = lib.mkEnableOption "TypeScript/JavaScript config" // {
+      default = false;
+    };
+
+    eslint = lib.mkEnableOption "eslint language server" // {
+      default = true;
     };
   };
 }

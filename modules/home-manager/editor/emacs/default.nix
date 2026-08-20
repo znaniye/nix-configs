@@ -5,10 +5,6 @@
   ...
 }:
 {
-  options.home-manager.editor.emacs.enable = lib.mkEnableOption "emacs config" // {
-    default = false;
-  };
-
   config = lib.mkIf config.home-manager.editor.emacs.enable {
 
     programs.emacs = {
@@ -19,5 +15,8 @@
       };
     };
 
+  };
+  options.home-manager.editor.emacs.enable = lib.mkEnableOption "emacs config" // {
+    default = false;
   };
 }

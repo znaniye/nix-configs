@@ -7,15 +7,14 @@ let
   cfg = config.nixos.desktop.openssh;
 in
 {
-  options.nixos.desktop.openssh.enable = lib.mkEnableOption "desktop OpenSSH config" // {
-    default = true;
-  };
-
   config = lib.mkIf (config.nixos.desktop.enable && cfg.enable) {
     services.openssh = {
       enable = lib.mkDefault true;
+      extraConfig = lib.mkAfter ''
+        HostKeyAlgorithms +ssh-rsa
+        PubkeyAcceptedAlgorithms +ssh-rsa
+      '';
       settings = {
-        PermitRootLogin = lib.mkDefault "no";
         Macs = lib.mkDefault [
           "hmac-sha2-512-etm@openssh.com"
           "hmac-sha2-256-etm@openssh.com"
@@ -23,11 +22,11 @@ in
           "hmac-sha2-512"
           "hmac-sha2-256"
         ];
+        PermitRootLogin = lib.mkDefault "no";
       };
-      extraConfig = lib.mkAfter ''
-        HostKeyAlgorithms +ssh-rsa
-        PubkeyAcceptedAlgorithms +ssh-rsa
-      '';
     };
+  };
+  options.nixos.desktop.openssh.enable = lib.mkEnableOption "desktop OpenSSH config" // {
+    default = true;
   };
 }

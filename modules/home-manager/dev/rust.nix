@@ -6,10 +6,6 @@
 }:
 
 {
-  options.home-manager.dev.rust.enable = lib.mkEnableOption "Rust config" // {
-    default = false;
-  };
-
   config = lib.mkIf config.home-manager.dev.rust.enable {
     home = {
       packages = with pkgs; [
@@ -26,13 +22,19 @@
         pkgs.rustfmt
       ];
 
-      plugins = lib.mkAfter (with pkgs.vimPlugins; [
-        {
-          plugin = rustaceanvim;
-          type = "lua";
-          config = '''';
-        }
-      ]);
+      plugins = lib.mkAfter (
+        with pkgs.vimPlugins;
+        [
+          {
+            config = "";
+            plugin = rustaceanvim;
+            type = "lua";
+          }
+        ]
+      );
     };
+  };
+  options.home-manager.dev.rust.enable = lib.mkEnableOption "Rust config" // {
+    default = false;
   };
 }

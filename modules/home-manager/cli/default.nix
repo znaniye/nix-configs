@@ -9,18 +9,6 @@ let
 in
 {
 
-  imports = [
-    ./codex.nix
-    ./git.nix
-    ./lazygit.nix
-    ./tmux.nix
-    ./zsh.nix
-  ];
-
-  options.home-manager.cli.enable = lib.mkEnableOption "cli config " // {
-    default = true;
-  };
-
   config = lib.mkIf cfg.enable {
     home = {
       packages = with pkgs; [
@@ -43,5 +31,15 @@ in
         update_ms = 100;
       };
     };
+  };
+  imports = [
+    ./codex.nix
+    ./git.nix
+    ./lazygit.nix
+    ./tmux.nix
+    ./zsh.nix
+  ];
+  options.home-manager.cli.enable = lib.mkEnableOption "cli config " // {
+    default = true;
   };
 }

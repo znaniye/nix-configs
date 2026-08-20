@@ -42,17 +42,30 @@ let
   };
 in
 {
-  options.home-manager.wm.niri.enable = lib.mkEnableOption "niri config" // {
-    default = lib.attrByPath [ "nixos" "desktop" "wayland" "enable" ] false osCfg;
-  };
-
   config = lib.mkIf config.home-manager.wm.niri.enable {
 
-    xdg.configFile."uwsm/env".source =
-      "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
-
     programs.fuzzel.enable = true;
-
+    services.gammastep = {
+      enable = true;
+      latitude = -19.9167;
+      longitude = -43.9345;
+      provider = "manual";
+    };
+    systemd.user.services = {
+      niri-corne-layout = {
+        Install.WantedBy = [ "niri.service" ];
+        Service = {
+          ExecStart = lib.getExe corneLayout;
+          Restart = "on-failure";
+          RestartSec = 2;
+        };
+        Unit = {
+          After = [ "niri.service" ];
+          Description = "Select niri keyboard layout from connected keyboards";
+          PartOf = [ "niri.service" ];
+        };
+      };
+    };
     wayland.windowManager.niri = {
       enable = true;
       package = pkgs.niri;
@@ -69,7 +82,11 @@ in
           }
           {
             "window-rule"._children = [
-              { match._props = { "app-id" = "^game.*"; }; }
+              {
+                match._props = {
+                  "app-id" = "^game.*";
+                };
+              }
               { "open-floating" = true; }
             ];
           }
@@ -88,30 +105,15 @@ in
             ];
           }
         ];
-
+        binds = defaultKeyBinds // {
+          "Mod+Return" = {
+            spawn = "alacritty";
+          };
+        };
         environment = {
           DISPLAY = ":0";
           QT_QPA_PLATFORM = "wayland";
         };
-
-        output = {
-          _args = [ "eDP-1" ];
-          scale = 1.15;
-        };
-
-        "prefer-no-csd" = { };
-
-        layout = {
-          shadow = {
-            on = { };
-          };
-          "focus-ring" = {
-            on = { };
-            width = 2;
-            "active-color" = config.shared.theme.nord.colors.background.primary;
-          };
-        };
-
         input = {
           keyboard = {
             xkb = {
@@ -119,42 +121,35 @@ in
             };
           };
           touchpad = {
-            tap = { };
+            "click-method" = "clickfinger";
             dwt = { };
             "natural-scroll" = { };
-            "click-method" = "clickfinger";
+            tap = { };
           };
         };
-
-        binds = defaultKeyBinds // {
-          "Mod+Return" = { spawn = "alacritty"; };
+        layout = {
+          "focus-ring" = {
+            "active-color" = config.shared.theme.nord.colors.background.primary;
+            on = { };
+            width = 2;
+          };
+          shadow = {
+            on = { };
+          };
         };
+        output = {
+          _args = [ "eDP-1" ];
+          scale = 1.15;
+        };
+        "prefer-no-csd" = { };
       };
     };
+    xdg.configFile."uwsm/env".source =
+      "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
 
-    systemd.user.services = {
-      niri-corne-layout = {
-        Unit = {
-          Description = "Select niri keyboard layout from connected keyboards";
-          PartOf = [ "niri.service" ];
-          After = [ "niri.service" ];
-        };
-        Service = {
-          ExecStart = lib.getExe corneLayout;
-          Restart = "on-failure";
-          RestartSec = 2;
-        };
-        Install.WantedBy = [ "niri.service" ];
-      };
-    };
-
-    services.gammastep = {
-      enable = true;
-      provider = "manual";
-      latitude = -19.9167;
-      longitude = -43.9345;
-    };
-
+  };
+  options.home-manager.wm.niri.enable = lib.mkEnableOption "niri config" // {
+    default = lib.attrByPath [ "nixos" "desktop" "wayland" "enable" ] false osCfg;
   };
 
 }

@@ -6,14 +6,9 @@
 }:
 
 {
-  options.home-manager.dev.ocaml.enable = lib.mkEnableOption "ocaml config" // {
-    default = false;
-  };
-
   config = lib.mkIf config.home-manager.dev.ocaml.enable {
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages = lib.mkAfter [ pkgs.ocamlPackages.ocaml-lsp ];
       extraLuaConfig = lib.mkAfter ''
         vim.lsp.config.ocamllsp = {
           cmd = { "${pkgs.ocamlPackages.ocaml-lsp}/bin/ocamllsp" },
@@ -22,6 +17,10 @@
         }
         vim.lsp.enable("ocamllsp")
       '';
+      extraPackages = lib.mkAfter [ pkgs.ocamlPackages.ocaml-lsp ];
     };
+  };
+  options.home-manager.dev.ocaml.enable = lib.mkEnableOption "ocaml config" // {
+    default = false;
   };
 }

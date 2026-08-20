@@ -17,12 +17,9 @@
     ./wireguard.nix
     flake.outputs.internal.sharedModules.system
   ];
-
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-darwin";
-
   programs.zsh.enable = lib.mkDefault true;
-
-  users.users.${config.shared.meta.username}.openssh.authorizedKeys.keys = config.shared.authorizedKeys;
-
   system.stateVersion = lib.mkDefault 5;
+  users.users.${config.shared.meta.username}.openssh.authorizedKeys.keys =
+    config.shared.authorizedKeys;
 }

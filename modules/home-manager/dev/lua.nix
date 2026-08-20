@@ -6,10 +6,6 @@
 }:
 
 {
-  options.home-manager.dev.lua.enable = lib.mkEnableOption "Lua config" // {
-    default = false;
-  };
-
   config = lib.mkIf config.home-manager.dev.lua.enable {
     home.packages = with pkgs; [
       lua
@@ -19,24 +15,6 @@
     ];
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages = lib.mkAfter [
-        pkgs.lua-language-server
-        pkgs.stylua
-      ];
-
-      plugins = lib.mkAfter (
-        with pkgs.vimPlugins;
-        [
-          {
-            plugin = lazydev-nvim;
-            type = "lua";
-            config = ''
-              require("lazydev").setup({})
-            '';
-          }
-        ]
-      );
-
       extraLuaConfig = lib.mkAfter ''
         local conform_fts = vim.g.conform_formatters_by_ft or {}
         conform_fts.lua = { "stylua" }
@@ -63,6 +41,25 @@
 
         vim.lsp.enable("lua_ls")
       '';
+      extraPackages = lib.mkAfter [
+        pkgs.lua-language-server
+        pkgs.stylua
+      ];
+      plugins = lib.mkAfter (
+        with pkgs.vimPlugins;
+        [
+          {
+            config = ''
+              require("lazydev").setup({})
+            '';
+            plugin = lazydev-nvim;
+            type = "lua";
+          }
+        ]
+      );
     };
+  };
+  options.home-manager.dev.lua.enable = lib.mkEnableOption "Lua config" // {
+    default = false;
   };
 }

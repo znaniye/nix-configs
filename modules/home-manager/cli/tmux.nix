@@ -5,19 +5,9 @@
   ...
 }:
 {
-  options.home-manager.cli.tmux.enable = lib.mkEnableOption "tmux config" // {
-    default = config.home-manager.cli.enable;
-  };
-
   config = lib.mkIf config.home-manager.cli.tmux.enable {
     programs.tmux = {
       enable = true;
-      plugins = with pkgs.tmuxPlugins; [
-        nord
-        resurrect
-        continuum
-      ];
-
       extraConfig = ''
 
         set -g @plugin 'tmux-plugins/tmux-resurrect'
@@ -28,6 +18,14 @@
 
         set -g @resurrect-strategy-nvim 'session'
       '';
+      plugins = with pkgs.tmuxPlugins; [
+        nord
+        resurrect
+        continuum
+      ];
     };
+  };
+  options.home-manager.cli.tmux.enable = lib.mkEnableOption "tmux config" // {
+    default = config.home-manager.cli.enable;
   };
 }

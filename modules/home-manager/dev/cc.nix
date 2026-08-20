@@ -10,17 +10,12 @@ let
   clangTools = pkgs.clang-tools or llvmPkgs.clang-tools;
 in
 {
-  options.home-manager.dev.cc.enable = lib.mkEnableOption "C/C++ dev" // {
-    default = false;
-  };
-
   config = lib.mkIf config.home-manager.dev.cc.enable {
     home.packages = [
       clangTools
     ];
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages = lib.mkAfter [ clangTools ];
       extraLuaConfig = lib.mkAfter ''
         vim.lsp.config.clangd = {
           cmd = { "${clangTools}/bin/clangd" },
@@ -37,7 +32,10 @@ in
 
         vim.lsp.enable("clangd")
       '';
+      extraPackages = lib.mkAfter [ clangTools ];
     };
   };
+  options.home-manager.dev.cc.enable = lib.mkEnableOption "C/C++ dev" // {
+    default = false;
+  };
 }
-

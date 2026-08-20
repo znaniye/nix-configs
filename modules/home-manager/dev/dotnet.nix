@@ -6,10 +6,6 @@
 }:
 
 {
-  options.home-manager.dev.dotnet.enable = lib.mkEnableOption "dotnet stuff" // {
-    default = false;
-  };
-
   config = lib.mkIf config.home-manager.dev.dotnet.enable {
     home.packages = with pkgs; [
       dotnet-sdk_10
@@ -19,14 +15,6 @@
     ];
 
     programs.neovim = lib.mkIf config.home-manager.editor.nvim.enable {
-      extraPackages = lib.mkAfter [
-        pkgs.csharp-ls
-        pkgs.fsautocomplete
-        pkgs.fantomas
-      ];
-
-      plugins = lib.mkAfter (with pkgs.vimPlugins; [ Ionide-vim ]);
-
       extraLuaConfig = lib.mkAfter ''
         vim.lsp.config.csharp_ls = {
           cmd = { "${pkgs.csharp-ls}/bin/csharp-ls" },
@@ -35,6 +23,15 @@
         }
         vim.lsp.enable("csharp_ls")
       '';
+      extraPackages = lib.mkAfter [
+        pkgs.csharp-ls
+        pkgs.fsautocomplete
+        pkgs.fantomas
+      ];
+      plugins = lib.mkAfter (with pkgs.vimPlugins; [ Ionide-vim ]);
     };
+  };
+  options.home-manager.dev.dotnet.enable = lib.mkEnableOption "dotnet stuff" // {
+    default = false;
   };
 }

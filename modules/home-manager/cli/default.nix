@@ -33,6 +33,7 @@ in
         btop
         ncdu
         sops
+        gh-dash
       ];
     };
 

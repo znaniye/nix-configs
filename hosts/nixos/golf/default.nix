@@ -37,10 +37,22 @@
         haskell.enable = true;
         typescript.enable = true;
         ocaml.enable = true;
+        go.enable = true;
         claude-code.stravaMcp.enable = true;
         claude-code.intervalsMcp.enable = true;
       };
     };
+  };
+
+  zramSwap = {
+    enable = true;
+    memoryPercent = 25;
+  };
+
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 5;
+    enableNotifications = true;
   };
 
   services.hardware.deepcool-digital-linux.enable = true;

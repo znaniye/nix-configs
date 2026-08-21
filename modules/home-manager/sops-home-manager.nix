@@ -27,6 +27,7 @@ in
       default = [
         "anthropic-auth-token"
         "gh-token"
+        "gitea-smace-token"
       ];
       description = "Secret keys from the default sops file materialized under $XDG_CONFIG_HOME/secrets, shared across all hosts.";
       type = lib.types.listOf lib.types.str;

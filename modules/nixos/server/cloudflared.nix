@@ -17,7 +17,7 @@
           default = "http_status:404";
           ingress = {
             "garnix.znaniye.xyz" = {
-              service = "http://localhost:80";
+              service = "http://23.145.72.22:80";
             };
             "gitea.znaniye.xyz" = {
               service = "http://localhost:3000";

@@ -49,7 +49,7 @@
       };
     };
     server.garnix.enable = false;
-    server.garnixRunner.enable = true;
+    server.garnixRunner.enable = false;
     server.gitea.remoteRunner.enable = true;
     server.k3s.enable = true;
   };

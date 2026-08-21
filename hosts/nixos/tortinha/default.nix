@@ -64,33 +64,7 @@ in
     home-manager.dev.enable = false;
   };
   nixos.server.enable = true;
-  nixos.server.garnix = {
-    actionRunnerHost = golfIp;
-    enable = true;
-    localActionRunner = false;
-    remoteBuilders = [
-      {
-        hostname = golfIp;
-        mandatoryFeatures = [ ];
-        maxJobs = 8;
-        name = "golf";
-        speedFactor = 4;
-        supportedFeatures = [
-          "nixos-test"
-          "benchmark"
-          "big-parallel"
-          "kvm"
-        ];
-        # sshKeyPath falls back to remoteBuilders.sshKeyPath, which garnix-secrets
-        # stages from secrets.remoteBuilderSshPath (the action-runner key).
-        systems = [
-          "x86_64-linux"
-          "aarch64-linux"
-        ];
-        user = "nixremote";
-      }
-    ];
-  };
+  nixos.server.garnix.enable = false;
   nixos.server.gitea = {
     actionsSecrets.repositoryNames = [
       "nix-configs"

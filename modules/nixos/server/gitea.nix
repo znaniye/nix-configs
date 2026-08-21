@@ -54,6 +54,7 @@ in
       systemd.services."gitea-runner-${config.networking.hostName}" = {
         after = [ "gitea-remote-runner-token.service" ];
         requires = [ "gitea-remote-runner-token.service" ];
+        serviceConfig.ExecPaths = [ "/var/lib/gitea-runner/${config.networking.hostName}" ];
       };
     })
 

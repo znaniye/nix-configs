@@ -21,6 +21,7 @@ in
         ];
         labels = [ "amd64:host" ];
         name = config.networking.hostName;
+        settings.runner.capacity = 5;
         tokenFile = "/run/gitea-remote-runner/token.env";
         url = "http://192.168.68.111:3000";
       };
